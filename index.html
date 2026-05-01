@@ -507,7 +507,7 @@
     </button>
     <div style="text-align:center; margin-top:0.75rem;">
       <button onclick="saltarApiKey()" style="background:none; border:none; font-size:0.75rem; color:var(--muted); cursor:pointer; text-decoration:underline;">
-        Continuar sin clave (funciones de IA desactivadas)
+        Continuar sin clave (funciones de generación desactivadas)
       </button>
     </div>
   </div>
@@ -1819,9 +1819,14 @@
                 <div style="font-size:0.75rem; color:var(--muted); margin-top:0.3rem;">PDF o Word (.docx)</div>
                 <input type="file" id="file-prog" accept=".pdf,.docx,.txt" style="display:none" onchange="procesarProgExistente(this.files[0])">
               </div>
-              <div id="prog-archivo-ok" style="display:none; margin-top:0.5rem;" class="info-box">
-                <span id="prog-archivo-nombre" style="color:var(--success); font-weight:500;"></span>
-                <button onclick="limpiarProgArchivo()" style="margin-left:1rem; background:none; border:none; color:var(--muted); cursor:pointer; font-size:0.8rem;">✕ Quitar</button>
+              <div id="prog-archivo-ok" style="display:none; margin-top:0.75rem;" class="info-box">
+                <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
+                  <span id="prog-archivo-nombre" style="color:var(--success); font-weight:500; font-size:0.82rem;"></span>
+                  <button onclick="limpiarProgArchivo()" style="background:none; border:none; color:var(--muted); cursor:pointer; font-size:0.8rem;">✕ Quitar</button>
+                </div>
+                <button class="btn btn-primary" onclick="mejorarPuntoProgSubido()" style="width:100%; margin-top:0.6rem; font-size:0.82rem; padding:0.5rem;">
+                  ✨ Mejorar este punto con mi texto como base
+                </button>
               </div>
               <div class="loading" id="loading-prog-archivo">
                 <div class="spinner"></div>
@@ -1879,6 +1884,14 @@
 
           <!-- Instrucción de la sección -->
           <div class="info-box" id="prog-seccion-instruccion" style="margin-bottom:1rem;"></div>
+
+          <!-- Referencia sección por sección -->
+          <div class="field" style="background:var(--cream); border-radius:4px; padding:0.75rem; border-left:3px solid var(--gold);">
+            <label style="font-size:0.8rem; font-weight:600; color:var(--dark);">
+              📄 Pega aquí esta sección de tu programación de referencia <span style="color:var(--muted); font-weight:400;">(opcional — solo esta sección)</span>
+            </label>
+            <textarea id="prog-seccion-referencia" placeholder="Pega el contenido de esta sección concreta de tu programación comprada. La app la adaptará y mejorará..." style="min-height:100px; font-size:0.8rem; margin-top:0.5rem;"></textarea>
+          </div>
 
           <!-- Contexto del opositor para esta sección -->
           <div class="field">
@@ -13511,6 +13524,32 @@ function actualizarTimerSoloLit() {
       display.style.color = '#c0392b';
     }
   }, 1000);
+}
+
+
+// ── Mejorar punto subido de programación ──
+function mejorarPuntoProgSubido() {
+  if (!progTextoExistente) { alert('Primero sube el punto de tu programación.'); return; }
+  // Copy to the section reference field
+  const refField = document.getElementById('prog-seccion-referencia');
+  if (refField) {
+    // Extract the actual content (remove the [SECCIÓN: ...] label if present)
+    let texto = progTextoExistente;
+    if (texto.startsWith('[SECCIÓN:')) {
+      const lineEnd = texto.indexOf('\n\n');
+      if (lineEnd > 0) texto = texto.slice(lineEnd + 2);
+    }
+    refField.value = texto;
+  }
+  // Scroll to the generate button and highlight the reference field
+  const refDiv = refField?.closest('.field');
+  if (refDiv) {
+    refDiv.style.borderColor = 'var(--accent)';
+    refDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => { refDiv.style.borderColor = 'var(--gold)'; }, 2000);
+  }
+  // Auto-trigger generation
+  generarSeccionProg();
 }
 
 </script>
