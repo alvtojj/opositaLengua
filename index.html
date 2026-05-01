@@ -13536,54 +13536,54 @@ function actualizarTimerSoloLit() {
 
 // ── Mejorar punto subido de programación ──
 function mejorarPuntoProgSubido() {
-  if (!progTextoExistente) { alert('Primero sube el punto de tu programación.'); return; }
+  if (!progTextoExistente) {
+    alert('Primero sube el punto de tu programación.');
+    return;
+  }
 
-  // If module not initialized, initialize with INDICE_ESTANDAR
+  // Step 1: Set the index textarea if empty
+  const indiceEl = document.getElementById('prog-indice-texto');
+  if (indiceEl && !indiceEl.value.trim()) {
+    indiceEl.value = INDICE_ESTANDAR.join('\n');
+  }
+
+  // Step 2: Set the section from the punto selector
+  const puntoSel = document.getElementById('prog-punto-selector');
+  const puntoIdx = (puntoSel && puntoSel.value !== '') ? parseInt(puntoSel.value) : 0;
+
+  // Step 3: Initialize if not already done
   if (!progSecciones || progSecciones.length === 0) {
-    // Try to use the index textarea first
-    const indiceEl = document.getElementById('prog-indice-texto');
-    const indiceVal = indiceEl ? indiceEl.value.trim() : '';
-    if (indiceVal) {
-      progSecciones = indiceVal.split('\n').map(s => s.trim()).filter(s => s.length > 2);
-    } else {
-      // Use standard index
-      progSecciones = [...INDICE_ESTANDAR];
-      // Fill the textarea so the module looks initialized
-      if (indiceEl) indiceEl.value = INDICE_ESTANDAR.join('\n');
-    }
+    const indiceTexto = indiceEl ? indiceEl.value.trim() : '';
+    progSecciones = indiceTexto
+      ? indiceTexto.split('\n').map(s => s.trim()).filter(s => s.length > 2)
+      : [...INDICE_ESTANDAR];
     progSeccionActual = 0;
     progContenido = {};
-
-    // Show the construction panel
-    document.querySelectorAll('.prog-fase').forEach(el => el.style.display = 'none');
-    const construccion = document.getElementById('prog-fase-construccion');
-    if (construccion) construccion.style.display = 'block';
-
-    // Hide the inicio card, show the section panel
-    const inicioCard = document.getElementById('prog-inicio-card');
-    if (inicioCard) inicioCard.style.display = 'none';
+    // Show editor
+    document.getElementById('prog-inicio-card').style.display = 'none';
+    document.getElementById('prog-editor-zona').style.display = 'block';
   }
 
-  // Set the section index from the punto selector
-  const puntoSel = document.getElementById('prog-punto-selector');
-  if (puntoSel && puntoSel.value !== '') {
-    const idx2 = parseInt(puntoSel.value);
-    if (!isNaN(idx2) && idx2 < progSecciones.length) progSeccionActual = idx2;
-  }
+  // Step 4: Jump to the selected section
+  progSeccionActual = (!isNaN(puntoIdx) && puntoIdx < progSecciones.length) ? puntoIdx : 0;
 
-  // Copy uploaded text to reference field
-  const refField = document.getElementById('prog-seccion-referencia');
-  if (refField) {
-    let texto = progTextoExistente;
-    if (texto.startsWith('[SECCIÓN:')) {
-      const lineEnd = texto.indexOf('\n\n');
-      if (lineEnd > 0) texto = texto.slice(lineEnd + 2);
+  // Step 5: Show the section panel
+  mostrarSeccionProg();
+
+  // Step 6: Copy uploaded text to reference field (after mostrarSeccionProg resets it)
+  setTimeout(() => {
+    const refField = document.getElementById('prog-seccion-referencia');
+    if (refField) {
+      let texto = progTextoExistente;
+      if (texto.startsWith('[SECCIÓN:')) {
+        const lineEnd = texto.indexOf('\n\n');
+        if (lineEnd > 0) texto = texto.slice(lineEnd + 2);
+      }
+      refField.value = texto;
     }
-    refField.value = texto;
-  }
-
-  // Trigger generation
-  generarSeccionProg();
+    // Step 7: Auto-generate
+    generarSeccionProg();
+  }, 100);
 }
 
 </script>
