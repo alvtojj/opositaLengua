@@ -894,9 +894,9 @@
         <div class="field">
           <label>Número de tarjetas</label>
           <select id="tarjetas-cantidad">
-            <option value="10">10 tarjetas (repaso rápido)</option>
-            <option value="15" selected>15 tarjetas (sesión estándar)</option>
-            <option value="20">20 tarjetas (sesión completa)</option>
+            <option value="5">5 tarjetas (repaso rápido)</option>
+            <option value="8" selected>8 tarjetas (sesión estándar)</option>
+            <option value="12">12 tarjetas (sesión completa)</option>
           </select>
         </div>
 
@@ -1034,9 +1034,9 @@
         <div class="field">
           <label>Número de preguntas</label>
           <select id="test-cantidad">
-            <option value="10">10 preguntas (repaso rápido)</option>
-            <option value="15" selected>15 preguntas (sesión estándar)</option>
-            <option value="20">20 preguntas (sesión completa)</option>
+            <option value="5">5 preguntas (repaso rápido)</option>
+            <option value="10" selected>10 preguntas (sesión estándar)</option>
+            <option value="15">15 preguntas (sesión completa)</option>
           </select>
         </div>
 
@@ -6201,33 +6201,7 @@ Responde siempre en español. El formato debe ser ESQUEMA PURO: titulares, conce
 ${cabeceraTema}
 ${seccionTemaPropio}${biblioSeccion}
 
-FORMATO OBLIGATORIO DEL ESQUEMA — MUY IMPORTANTE:
-El resultado debe ser un esquema puro, NO un resumen ni un texto corrido. Cada línea debe ser un titular, un concepto clave, un nombre, una fecha o una idea sintética. NUNCA párrafos explicativos.
-
-Estructura exacta a seguir:
-
-1. [EPÍGRAFE PRINCIPAL]
-   1.1. [Subepígrafe]
-        - Concepto o idea clave (máx. 1 línea)
-        - Autor / obra / fecha si procede
-        - Término técnico: definición en 5-8 palabras
-   1.2. [Subepígrafe]
-        - ...
-2. [EPÍGRAFE PRINCIPAL]
-   ...
-
-BIBLIOGRAFÍA DE REFERENCIA:
-- Autor, Título, Editorial, Año
-- ...
-
-CONEXIONES CON OTROS TEMAS: Tema X (relación breve), Tema Y (relación breve)
-
-Normas de formato:
-- Sin párrafos. Sin frases largas. Sin "En este apartado veremos...".
-- Cada línea aporta un dato concreto o un concepto.
-- Usa guiones para los puntos de cada subepígrafe.
-- El esquema completo debe cubrir TODO el tema, de principio a fin, sin recortes.
-- Extiéndete todo lo necesario para cubrir el tema entero.`;
+FORMATO DEL ESQUEMA:\nMuy conciso. Sin párrafos. Sin frases largas. Cada línea = un dato concreto, nombre, fecha o concepto en máximo 8 palabras.\n\n1. EPÍGRAFE\n   1.1. Subepígrafe\n        - dato / autor / fecha\n        - término: definición breve\n2. EPÍGRAFE\n   ...\nBIBLIOGRAFÍA: Autor - Título (Año)\nCONEXIONES CON OTROS TEMAS: X, Y\n\nIMPORTANTE: Cubre TODOS los epígrafes del tema. Máximo 4 líneas por subepígrafe. Prioriza completitud sobre extensión.`;
 
   try {
     const respuesta = await callClaude(sistema, mensaje, 4000);
@@ -11584,7 +11558,7 @@ function tarjetas_usarTemario() {
 }
 
 async function generarTarjetas() {
-  const cantidad = parseInt(document.getElementById('tarjetas-cantidad').value) || 15;
+  const cantidad = Math.min(parseInt(document.getElementById('tarjetas-cantidad').value) || 8, 12);
   const tipo = document.getElementById('tarjetas-tipo').value;
   document.getElementById('tarjetas-config').style.display = 'none';
   document.getElementById('loading-tarjetas').classList.add('visible');
@@ -11606,7 +11580,7 @@ async function generarTarjetas() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 4000,
+        max_tokens: 6000,
         system: `Eres un experto en didáctica de Lengua Castellana y Literatura y en la preparación de oposiciones a profesorado en Extremadura. Generas tarjetas de estudio didácticas, completas y rigurosas, basadas en el contenido del tema proporcionado. Devuelves SOLO JSON sin markdown.`,
         messages: [{ role: 'user', content:
           `${temaContexto}
@@ -13513,6 +13487,31 @@ async function procesarUDExistente(file) {
   document.getElementById('loading-ud-archivo').classList.remove('visible');
 }
 
+
+
+// ── Timer bloque literario ──
+let _timerSoloLitInterval = null;
+
+function actualizarTimerSoloLit() {
+  const display = document.getElementById('timer-solo-lit');
+  if (!display) return;
+  const m = Math.floor(timerSoloLitSeconds / 60);
+  const s = timerSoloLitSeconds % 60;
+  display.textContent = `${m}:${s.toString().padStart(2,'0')}`;
+  if (_timerSoloLitInterval) clearInterval(_timerSoloLitInterval);
+  _timerSoloLitInterval = setInterval(() => {
+    if (timerSoloLitSeconds > 0) {
+      timerSoloLitSeconds--;
+      const mm = Math.floor(timerSoloLitSeconds / 60);
+      const ss = timerSoloLitSeconds % 60;
+      display.textContent = `${mm}:${ss.toString().padStart(2,'0')}`;
+    } else {
+      clearInterval(_timerSoloLitInterval);
+      display.textContent = '0:00';
+      display.style.color = '#c0392b';
+    }
+  }, 1000);
+}
 
 </script>
 </body>
