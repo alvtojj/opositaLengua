@@ -482,7 +482,10 @@
   </div>
   <div class="header-sub" style="display:flex; justify-content:space-between; align-items:center;">
     <span>Lengua Castellana y Literatura · Extremadura</span>
-    <button onclick="abrirConfigApiKey()" style="background:none; border:1px solid rgba(255,255,255,0.3); border-radius:3px; color:rgba(255,255,255,0.7); font-size:0.7rem; padding:0.2rem 0.5rem; cursor:pointer;">⚙️ API Key</button>
+    <div style="display:flex; align-items:center; gap:0.75rem;">
+      <span style="font-size:0.68rem; color:rgba(255,255,255,0.5);">Elaborada por Juanjo Álvarez</span>
+      <button onclick="abrirConfigApiKey()" style="background:none; border:1px solid rgba(255,255,255,0.3); border-radius:3px; color:rgba(255,255,255,0.7); font-size:0.7rem; padding:0.2rem 0.5rem; cursor:pointer;">⚙️ API Key</button>
+    </div>
   </div>
 </header>
 
@@ -6956,6 +6959,7 @@ function mostrarSeccionProg() {
     return;
   }
   const seccion = progSecciones[progSeccionActual];
+  if (!seccion) { console.error('Sin sección activa'); return; }
   const progreso = Math.round((progSeccionActual / progSecciones.length) * 100);
   document.getElementById('prog-seccion-titulo').textContent = seccion;
   document.getElementById('prog-seccion-num').textContent = `Sección ${progSeccionActual + 1} de ${progSecciones.length}`;
@@ -6993,6 +6997,7 @@ function mostrarSeccionProg() {
 
 async function generarSeccionProg() {
   const seccion = progSecciones[progSeccionActual];
+  if (!seccion) { console.error('Sin sección activa'); return; }
   const curso = document.getElementById('prog-curso').value;
   const contexto = document.getElementById('prog-contexto').value.trim();
   const inputUsuario = document.getElementById('prog-input-usuario').value.trim();
@@ -7062,6 +7067,7 @@ Redacta la sección completa, con epígrafes si procede, ajustada a la normativa
 async function regenerarSeccionProg() {
   const ajustes = document.getElementById('prog-ajustes').value.trim();
   const seccion = progSecciones[progSeccionActual];
+  if (!seccion) { console.error('Sin sección activa'); return; }
   const textoActual = document.getElementById('prog-resultado-texto').textContent;
   document.getElementById('loading-regenerar-prog').classList.add('visible');
   try {
@@ -7082,6 +7088,7 @@ function aceptarSeccionProg() {
   const secProg = document.getElementById('prog-resultado-titulo')?.textContent || '';
   calRegistrarActividad('programacion', 'Sección aceptada: ' + secProg);
   const seccion = progSecciones[progSeccionActual];
+  if (!seccion) { console.error('Sin sección activa'); return; }
   progContenido[seccion] = document.getElementById('prog-resultado-texto').textContent;
   progSeccionActual++;
   mostrarSeccionProg();
@@ -13530,10 +13537,43 @@ function actualizarTimerSoloLit() {
 // ── Mejorar punto subido de programación ──
 function mejorarPuntoProgSubido() {
   if (!progTextoExistente) { alert('Primero sube el punto de tu programación.'); return; }
-  // Copy to the section reference field
+
+  // If module not initialized, initialize with INDICE_ESTANDAR
+  if (!progSecciones || progSecciones.length === 0) {
+    // Try to use the index textarea first
+    const indiceEl = document.getElementById('prog-indice-texto');
+    const indiceVal = indiceEl ? indiceEl.value.trim() : '';
+    if (indiceVal) {
+      progSecciones = indiceVal.split('\n').map(s => s.trim()).filter(s => s.length > 2);
+    } else {
+      // Use standard index
+      progSecciones = [...INDICE_ESTANDAR];
+      // Fill the textarea so the module looks initialized
+      if (indiceEl) indiceEl.value = INDICE_ESTANDAR.join('\n');
+    }
+    progSeccionActual = 0;
+    progContenido = {};
+
+    // Show the construction panel
+    document.querySelectorAll('.prog-fase').forEach(el => el.style.display = 'none');
+    const construccion = document.getElementById('prog-fase-construccion');
+    if (construccion) construccion.style.display = 'block';
+
+    // Hide the inicio card, show the section panel
+    const inicioCard = document.getElementById('prog-inicio-card');
+    if (inicioCard) inicioCard.style.display = 'none';
+  }
+
+  // Set the section index from the punto selector
+  const puntoSel = document.getElementById('prog-punto-selector');
+  if (puntoSel && puntoSel.value !== '') {
+    const idx2 = parseInt(puntoSel.value);
+    if (!isNaN(idx2) && idx2 < progSecciones.length) progSeccionActual = idx2;
+  }
+
+  // Copy uploaded text to reference field
   const refField = document.getElementById('prog-seccion-referencia');
   if (refField) {
-    // Extract the actual content (remove the [SECCIÓN: ...] label if present)
     let texto = progTextoExistente;
     if (texto.startsWith('[SECCIÓN:')) {
       const lineEnd = texto.indexOf('\n\n');
@@ -13541,14 +13581,8 @@ function mejorarPuntoProgSubido() {
     }
     refField.value = texto;
   }
-  // Scroll to the generate button and highlight the reference field
-  const refDiv = refField?.closest('.field');
-  if (refDiv) {
-    refDiv.style.borderColor = 'var(--accent)';
-    refDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    setTimeout(() => { refDiv.style.borderColor = 'var(--gold)'; }, 2000);
-  }
-  // Auto-trigger generation
+
+  // Trigger generation
   generarSeccionProg();
 }
 
