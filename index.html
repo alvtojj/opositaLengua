@@ -513,7 +513,7 @@
     </button>
     <div style="text-align:center; margin-top:0.75rem;">
       <button onclick="saltarApiKey()" style="background:none; border:none; font-size:0.75rem; color:var(--muted); cursor:pointer; text-decoration:underline;">
-        Continuar sin clave (funciones de IA desactivadas)
+        Continuar sin clave (funciones de generación desactivadas)
       </button>
     </div>
   </div>
@@ -695,28 +695,7 @@
         </div>
 
         <div class="two-col" style="margin-bottom:1.5rem;">
-          <div class="card" style="margin-bottom:0;">
-            <h3 style="font-size:0.95rem;">🎙️ Grabar en directo</h3>
-            <p style="font-size:0.82rem; color:var(--muted); margin-bottom:1rem;">Pulsa para grabar tu lectura desde el micrófono.</p>
-            <div id="rec-estado" style="font-size:0.8rem; color:var(--muted); margin-bottom:0.75rem; min-height:1.2rem;"></div>
-            <div class="btn-row" style="margin-top:0;">
-              <button class="btn btn-primary" id="btn-grabar" onclick="toggleGrabacion()">⏺ Iniciar grabación</button>
-              <button class="btn btn-secondary" id="btn-enviar-audio" onclick="enviarAudioGrabado()" style="display:none">Analizar grabación →</button>
-            </div>
-            <audio id="audio-preview" controls style="width:100%; margin-top:1rem; display:none;"></audio>
-          </div>
-
-          <div class="card" style="margin-bottom:0;">
-            <h3 style="font-size:0.95rem;">📁 Subir audio grabado</h3>
-            <p style="font-size:0.82rem; color:var(--muted); margin-bottom:1rem;">Si ya tienes grabada tu lectura, súbela aquí.</p>
-            <div id="audio-upload-zona" style="border:2px dashed var(--border); border-radius:4px; padding:1rem; text-align:center; cursor:pointer; transition: border-color 0.2s;" onclick="document.getElementById('file-audio').click()" ondragover="event.preventDefault(); this.style.borderColor='var(--accent)'" ondragleave="this.style.borderColor='var(--border)'" ondrop="handleDropAudio(event)">
-              <div style="font-size:1.5rem; margin-bottom:0.4rem;">🎵</div>
-              <div style="font-size:0.82rem; color:var(--muted);">Arrastra aquí tu audio o <span style="color:var(--accent); font-weight:500;">haz clic para seleccionar</span></div>
-              <div style="font-size:0.75rem; color:var(--muted); margin-top:0.3rem;">MP3, WAV, M4A, OGG, WebM</div>
-              <input type="file" id="file-audio" accept="audio/*" style="display:none" onchange="procesarAudioSubido(this.files[0])">
-            </div>
-            <div id="audio-subido-nombre" style="display:none; font-size:0.82rem; color:var(--success); margin-top:0.75rem; padding:0.5rem; background:var(--cream); border-radius:3px;"></div>
-          </div>
+          <div class="info-box" style="margin-bottom:1rem;font-size:0.82rem;">💡 Graba tu defensa con el móvil y usa el campo de mejora para recibir feedback.</div>
         </div>
 
         <div class="loading" id="loading-transcripcion">
@@ -1813,8 +1792,15 @@
             </div>
           </div>
           <div id="prog-upload-col">
+            <div class="field" style="background:var(--cream);border-radius:4px;padding:0.85rem;border-left:3px solid var(--gold);">
+              <label style="font-size:0.85rem;font-weight:600;color:var(--dark);margin-bottom:0.5rem;display:block;">📄 Sube un punto concreto de tu programación de referencia</label>
+              <div style="font-size:0.75rem;color:var(--muted);margin-bottom:0.6rem;">Selecciona el punto y sube solo esa sección.</div>
+              <select id="prog-punto-selector" style="width:100%;padding:0.5rem;border:1px solid var(--border);border-radius:4px;font-size:0.8rem;margin-bottom:0.5rem;background:var(--white);">
+                <option value="">— Selecciona el punto que vas a subir —</option>
+              </select>
+            </div>
             <div class="field">
-              <label>Sube tu programación existente</label>
+              <label>O sube la programación completa como referencia general</label>
               <div id="prog-upload-zona" style="border:2px dashed var(--border); border-radius:4px; padding:1.2rem; text-align:center; cursor:pointer; transition: border-color 0.2s;" onclick="document.getElementById('file-prog').click()" ondragover="event.preventDefault(); this.style.borderColor='var(--accent)'" ondragleave="this.style.borderColor='var(--border)'" ondrop="handleDropProg(event)">
                 <div style="font-size:1.5rem; margin-bottom:0.5rem;">📄</div>
                 <div style="font-size:0.83rem; color:var(--muted);">Arrastra o <span style="color:var(--accent); font-weight:500;">haz clic para seleccionar</span></div>
@@ -1825,6 +1811,9 @@
                 <span id="prog-archivo-nombre" style="color:var(--success); font-weight:500;"></span>
                 <button onclick="limpiarProgArchivo()" style="margin-left:1rem; background:none; border:none; color:var(--muted); cursor:pointer; font-size:0.8rem;">✕ Quitar</button>
               </div>
+              <button class="btn btn-primary" onclick="mejorarPuntoProgSubido()" style="width:100%;margin-top:0.6rem;font-size:0.82rem;padding:0.5rem;">
+                ✨ Mejorar este punto con mi texto como base
+              </button>
               <div class="loading" id="loading-prog-archivo">
                 <div class="spinner"></div>
                 Procesando programación...
@@ -1881,6 +1870,11 @@
 
           <!-- Instrucción de la sección -->
           <div class="info-box" id="prog-seccion-instruccion" style="margin-bottom:1rem;"></div>
+
+          <div class="field" style="background:var(--cream);border-radius:4px;padding:0.75rem;border-left:3px solid var(--gold);">
+            <label style="font-size:0.8rem;font-weight:600;color:var(--dark);">📄 Pega aquí esta sección de tu programación de referencia <span style="color:var(--muted);font-weight:400;">(opcional)</span></label>
+            <textarea id="prog-seccion-referencia" placeholder="Pega el contenido de esta sección de tu programación comprada..." style="min-height:100px;font-size:0.8rem;margin-top:0.5rem;"></textarea>
+          </div>
 
           <!-- Contexto del opositor para esta sección -->
           <div class="field">
@@ -2014,10 +2008,9 @@
             <p style="font-size:0.85rem; font-weight:500; margin-bottom:0.75rem;">🎙️ Grabar defensa</p>
             <div id="rec-estado-defensa-prog" style="font-size:0.8rem; color:var(--muted); min-height:1.2rem; margin-bottom:0.5rem;"></div>
             <div class="btn-row" style="margin-top:0;">
-              <button class="btn btn-primary" id="btn-grabar-defensa-prog" onclick="toggleGrabacionDefensaProg()">⏺ Iniciar</button>
               <button class="btn btn-secondary" id="btn-evaluar-defensa-prog" onclick="evaluarDefensaProg('grabacion')" style="display:none;">Evaluar →</button>
             </div>
-            <audio id="audio-defensa-prog" controls style="width:100%; margin-top:0.75rem; display:none;"></audio>
+            
           </div>
           <div style="border:1px solid var(--border); border-radius:4px; padding:1rem;">
             <p style="font-size:0.85rem; font-weight:500; margin-bottom:0.75rem;">📁 Subir audio</p>
@@ -2129,7 +2122,10 @@
             <label>Sube tu SA existente</label>
             <div id="ud-upload-zona" style="border:2px dashed var(--border); border-radius:4px; padding:1rem; text-align:center; cursor:pointer;" onclick="document.getElementById('file-ud-existente').click()">
               <div style="font-size:1.2rem; margin-bottom:0.3rem;">📄</div>
-              <div style="font-size:0.8rem; color:var(--muted);">PDF o Word (.docx)</div>
+              <div style="font-size:0.8rem;color:var(--muted);">Word (.docx) o PDF</div>
+              <select id="ud-punto-selector" style="width:100%;padding:0.4rem;border:1px solid var(--border);border-radius:4px;font-size:0.78rem;margin-top:0.4rem;background:var(--white);">
+                <option value="">— Selecciona la parte que vas a subir —</option>
+              </select>
               <input type="file" id="file-ud-existente" accept=".pdf,.docx,.txt" style="display:none" onchange="procesarUDExistente(this.files[0])">
             </div>
             <div id="ud-archivo-ok" style="display:none; margin-top:0.5rem; font-size:0.8rem; color:var(--success);"></div>
@@ -2159,6 +2155,11 @@
           </div>
 
           <div class="info-box" id="ud-seccion-instruccion" style="margin-bottom:1rem;"></div>
+          <div class="field" style="background:var(--cream);border-radius:4px;padding:0.75rem;border-left:3px solid var(--gold);">
+            <label style="font-size:0.8rem;font-weight:600;">📄 Pega aquí esta parte de tu SA de referencia <span style="color:var(--muted);font-weight:400;">(opcional)</span></label>
+            <textarea id="ud-seccion-referencia" placeholder="Pega el contenido de esta parte de tu SA de referencia..." style="min-height:80px;font-size:0.8rem;margin-top:0.5rem;"></textarea>
+          </div>
+
           <div class="field">
             <label>Tus ideas para esta sección (opcional)</label>
             <textarea id="ud-input-usuario" placeholder="Deja vacío para generar la sección completa, o escribe tus ideas y se desarrollarán..." style="min-height:110px;"></textarea>
@@ -2295,7 +2296,6 @@
                 <p style="font-size:0.85rem; font-weight:500; margin-bottom:0.75rem;">🎙️ Grabar exposición</p>
                 <div id="rec-estado-ud" style="font-size:0.8rem; color:var(--muted); min-height:1.2rem; margin-bottom:0.5rem;"></div>
                 <div class="btn-row" style="margin-top:0;">
-                  <button class="btn btn-primary" id="btn-grabar-ud" onclick="toggleGrabacionUD()">⏺ Iniciar</button>
                   <button class="btn btn-secondary" id="btn-enviar-ud" onclick="evaluarExposicionUD('grabacion')" style="display:none;">Evaluar →</button>
                 </div>
                 <audio id="audio-preview-ud" controls style="width:100%; margin-top:0.75rem; display:none;"></audio>
@@ -3006,6 +3006,36 @@ EVALUACIÓN EN LAS SA:
 // ═══════════════════════════════════════════════════════
 // GUÍA DE PROGRAMACIÓN DIDÁCTICA
 // ═══════════════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════════
+// BASE CONOCIMIENTO — DISEÑO DE SITUACIONES DE APRENDIZAJE
+// Diánez Muñoz, E. y López Ramos, A. (2022). SM.
+// ═══════════════════════════════════════════════════════
+const BASE_DISENYO_SA = `
+REFERENCIA: Diánez Muñoz, Esther y López Ramos, Alberto. Aprender en contexto: claves para el diseño de situaciones de aprendizaje. Editorial SM, 2022.
+
+CONCEPTO DE SA: Unidad de programación que articula los elementos curriculares en torno a una tarea competencial significativa, contextualizada y auténtica. No es un conjunto de actividades aisladas sino un proceso coherente orientado a un producto o reto real.
+
+CARACTERÍSTICAS ESENCIALES:
+- Contextualización real: aprendizaje en contexto auténtico o verosímil
+- Tarea competencial: moviliza varias competencias a la vez
+- Producto final: tangible y comunicable
+- Conexión curricular: CE, criterios, saberes, descriptores articulados
+- Evaluación integrada: forma parte del proceso
+
+CLAVES PARA UNA SA DE CALIDAD:
+- La tarea competencial es el eje vertebrador de todo
+- El producto final debe ser comunicable (exposición, texto, campaña, proyecto)
+- La evaluación debe ser coherente con la tarea
+- Las actividades deben tener gradación: de lo simple a lo complejo
+- DUA desde el diseño, no como adaptación posterior
+
+ERRORES FRECUENTES:
+- Confundir SA con UD temática
+- Tarea ficticia o forzada
+- Desconexión entre tarea y evaluación
+- Actividades yuxtapuestas sin progresión
+`;
 const GUIA_PROGRAMACION = {
 
   cap1_portada_indice_introduccion: `CAPÍTULO 1: PORTADA, ÍNDICE E INTRODUCCIÓN
@@ -6158,33 +6188,7 @@ Responde siempre en español. El formato debe ser ESQUEMA PURO: titulares, conce
 ${cabeceraTema}
 ${seccionTemaPropio}${biblioSeccion}
 
-FORMATO OBLIGATORIO DEL ESQUEMA — MUY IMPORTANTE:
-El resultado debe ser un esquema puro, NO un resumen ni un texto corrido. Cada línea debe ser un titular, un concepto clave, un nombre, una fecha o una idea sintética. NUNCA párrafos explicativos.
-
-Estructura exacta a seguir:
-
-1. [EPÍGRAFE PRINCIPAL]
-   1.1. [Subepígrafe]
-        - Concepto o idea clave (máx. 1 línea)
-        - Autor / obra / fecha si procede
-        - Término técnico: definición en 5-8 palabras
-   1.2. [Subepígrafe]
-        - ...
-2. [EPÍGRAFE PRINCIPAL]
-   ...
-
-BIBLIOGRAFÍA DE REFERENCIA:
-- Autor, Título, Editorial, Año
-- ...
-
-CONEXIONES CON OTROS TEMAS: Tema X (relación breve), Tema Y (relación breve)
-
-Normas de formato:
-- Sin párrafos. Sin frases largas. Sin "En este apartado veremos...".
-- Cada línea aporta un dato concreto o un concepto.
-- Usa guiones para los puntos de cada subepígrafe.
-- El esquema completo debe cubrir TODO el tema, de principio a fin, sin recortes.
-- Extiéndete todo lo necesario para cubrir el tema entero.`;
+FORMATO DEL ESQUEMA:\nMuy conciso. Sin párrafos. Cada línea = un dato concreto en máximo 8 palabras.\n\n1. EPÍGRAFE\n   1.1. Subepígrafe\n        - dato / autor / fecha\n2. EPÍGRAFE\n   ...\nBIBLIOGRAFÍA: Autor - Título (Año)\nCONEXIONES: X, Y\n\nIMPORTANTE: Cubre TODOS los epígrafes. Máximo 4 líneas por subepígrafe. Prioriza completitud sobre extensión.`;
 
   try {
     const respuesta = await callClaude(sistema, mensaje, 4000);
