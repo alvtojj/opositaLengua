@@ -692,17 +692,9 @@
         </div>
 
         <div class="two-col" style="margin-bottom:1.5rem;">
-          <div class="card" style="margin-bottom:0;">
-            <h3 style="font-size:0.95rem;">🎙️ Grabar en directo</h3>
-            <p style="font-size:0.82rem; color:var(--muted); margin-bottom:1rem;">Pulsa para grabar tu lectura desde el micrófono.</p>
-            <div id="rec-estado" style="font-size:0.8rem; color:var(--muted); margin-bottom:0.75rem; min-height:1.2rem;"></div>
-            <div class="btn-row" style="margin-top:0;">
-              <button class="btn btn-primary" id="btn-grabar" onclick="toggleGrabacion()">⏺ Iniciar grabación</button>
-              <button class="btn btn-secondary" id="btn-enviar-audio" onclick="enviarAudioGrabado()" style="display:none">Analizar grabación →</button>
-            </div>
-            <audio id="audio-preview" controls style="width:100%; margin-top:1rem; display:none;"></audio>
+          <div class="info-box" style="margin-bottom:1rem; font-size:0.82rem;">
+            💡 <strong>Para practicar la exposición oral:</strong> graba con tu móvil u ordenador, escúchala y usa el apartado de mejora de defensa para recibir feedback detallado.
           </div>
-
           <div class="card" style="margin-bottom:0;">
             <h3 style="font-size:0.95rem;">📁 Subir audio grabado</h3>
             <p style="font-size:0.82rem; color:var(--muted); margin-bottom:1rem;">Si ya tienes grabada tu lectura, súbela aquí.</p>
@@ -1985,365 +1977,10 @@
 
     <!-- FASE B: Defensa oral (se activa cuando la programación está lista) -->
     <div id="prog-fase-defensa" style="display:none;">
-      <div class="card">
-        <h3>Defensa oral de la programación</h3>
-        <div class="info-box" style="margin-bottom:1rem;">
-          Dispones de <strong>30 minutos</strong> para defender tu programación ante el tribunal. Sin material auxiliar. Después el tribunal puede hacerte preguntas.
-        </div>
-
-        <!-- Subir defensa redactada -->
-        <div class="card" style="margin-bottom:1rem; border-left:3px solid var(--gold);">
-          <div style="font-size:0.8rem; font-weight:600; color:var(--dark); margin-bottom:0.6rem;">📄 ¿Tienes una defensa ya redactada? Súbela para mejorarla o usarla como guía</div>
-          <div style="font-size:0.78rem; color:var(--muted); margin-bottom:0.75rem;">Se tomará como referencia para ajustar la evaluación de tu exposición oral a tu programación concreta y para ayudarte a mejorarla.</div>
-          <div style="display:flex; gap:0.75rem; align-items:center; flex-wrap:wrap;">
-            <label for="file-defensa-prog-doc" class="btn btn-ghost" style="cursor:pointer; padding:0.4rem 0.9rem; font-size:0.78rem; margin:0;">
-              📎 Subir mi defensa (Word o PDF)
-            </label>
-            <input type="file" id="file-defensa-prog-doc" accept=".pdf,.docx,.doc" style="display:none" onchange="cargarDefensaProgDoc(this.files[0])">
-            <span id="defensa-prog-doc-nombre" style="font-size:0.75rem; color:var(--muted);"></span>
+      <div class="info-box" style="margin-bottom:1rem; font-size:0.82rem;">
+            💡 <strong>Para practicar la exposición oral:</strong> graba con tu móvil u ordenador, escúchala y usa el apartado de mejora de defensa para recibir feedback detallado.
           </div>
-          <div id="defensa-prog-doc-ok" style="display:none; margin-top:0.75rem;">
-            <button class="btn btn-secondary" style="font-size:0.78rem; padding:0.35rem 0.75rem;" onclick="mejorarDefensaProg()">
-              ✨ Ayudarme a mejorar esta defensa
-            </button>
-          </div>
-          <div class="loading" id="loading-defensa-doc" style="margin-top:0.5rem;">
-            <div class="spinner"></div>
-            <span id="loading-defensa-doc-txt">Procesando documento...</span>
-          </div>
-          <div id="mejora-defensa-prog-resultado" style="display:none; margin-top:1rem;">
-            <div class="response-box visible" style="border-left-color:var(--gold);">
-              <div class="response-content" id="mejora-defensa-prog-texto"></div>
-            </div>
-          </div>
-        </div>
-        <div class="timer-box">
-          <span>⏱</span>
-          <span class="timer-display" id="timer-defensa-prog">30:00</span>
-          <button class="btn btn-ghost" style="padding:0.3rem 0.75rem; font-size:0.75rem;" onclick="toggleTimerDefensaProg()" id="btn-timer-defensa-prog">Iniciar</button>
-        </div>
-
-        <div class="two-col" style="margin-top:1.5rem;">
-          <div style="border:1px solid var(--border); border-radius:4px; padding:1rem;">
-            <p style="font-size:0.85rem; font-weight:500; margin-bottom:0.75rem;">🎙️ Grabar defensa</p>
-            <div id="rec-estado-defensa-prog" style="font-size:0.8rem; color:var(--muted); min-height:1.2rem; margin-bottom:0.5rem;"></div>
-            <div class="btn-row" style="margin-top:0;">
-              <button class="btn btn-primary" id="btn-grabar-defensa-prog" onclick="toggleGrabacionDefensaProg()">⏺ Iniciar</button>
-              <button class="btn btn-secondary" id="btn-evaluar-defensa-prog" onclick="evaluarDefensaProg('grabacion')" style="display:none;">Evaluar →</button>
-            </div>
-            <audio id="audio-defensa-prog" controls style="width:100%; margin-top:0.75rem; display:none;"></audio>
-          </div>
-          <div style="border:1px solid var(--border); border-radius:4px; padding:1rem;">
-            <p style="font-size:0.85rem; font-weight:500; margin-bottom:0.75rem;">📁 Subir audio</p>
-            <div style="border:2px dashed var(--border); border-radius:3px; padding:0.75rem; text-align:center; cursor:pointer;" onclick="document.getElementById('file-audio-defensa-prog').click()">
-              <div style="font-size:0.8rem; color:var(--muted);">MP3, WAV, M4A, OGG</div>
-              <input type="file" id="file-audio-defensa-prog" accept="audio/*" style="display:none" onchange="evaluarDefensaProg('archivo', this.files[0])">
-            </div>
-          </div>
-        </div>
-
-        <div class="loading" id="loading-defensa-prog" style="margin-top:1rem;">
-          <div class="spinner"></div>
-          Analizando tu defensa...
-        </div>
-
-        <div class="response-box" id="valoracion-defensa-prog" style="margin-top:1rem;">
-          <h4>📋 Valoración de la defensa oral</h4>
-          <div class="response-content" id="valoracion-defensa-prog-text"></div>
-        </div>
-      </div>
-
-      <!-- Preguntas tribunal programación -->
-      <div class="card">
-        <h3>Preguntas del tribunal</h3>
-        <div id="prog-tribunal-preguntas"></div>
-        <button class="btn btn-secondary" onclick="generarPreguntasTribunalProg()" style="width:100%; margin-top:0.75rem;">
-          Generar preguntas →
-        </button>
-        <div class="loading" id="loading-tribunal-prog"><div class="spinner"></div> Generando...</div>
-        <div id="prog-tribunal-respuesta-zona" style="display:none; margin-top:1rem;">
-          <div class="response-box visible" style="border-left-color:var(--gold); margin-bottom:1rem;">
-            <div class="response-content" id="prog-tribunal-pregunta-activa" style="font-style:italic;"></div>
-          </div>
-          <div class="field">
-            <textarea id="prog-tribunal-respuesta" style="min-height:150px;" placeholder="Escribe tu respuesta..."></textarea>
-          </div>
-          <div class="btn-row">
-            <button class="btn btn-primary" onclick="evaluarRespuestaTribunalProg()">Evaluar →</button>
-            <button class="btn btn-ghost" onclick="document.getElementById('prog-tribunal-respuesta-zona').style.display='none'">Cancelar</button>
-          </div>
-          <div class="loading" id="loading-tribunal-resp-prog"><div class="spinner"></div> Evaluando...</div>
-          <div class="response-box" id="valoracion-tribunal-prog">
-            <h4>📋 Valoración</h4>
-            <div class="response-content" id="valoracion-tribunal-prog-text"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- MÓDULO 4: SITUACIONES DE APRENDIZAJE -->
-  <!-- ═══════════════════════════════════════════ -->
-  <div id="mod-sa" class="module">
-    <div class="module-header">
-      <h2>Módulo de Situación de Aprendizaje</h2>
-      <p>Elabora tus 12-15 situaciones de aprendizaje paso a paso para cualquier curso. Cuando el banco esté completo, practica el sorteo y la defensa oral.</p>
-    </div>
-
-    <div class="info-box" style="margin-bottom:1.5rem;">
-      <strong>Cómo funciona en la oposición:</strong> Presentas entre 12 y 15 Situaciones de Aprendizaje. El día del examen se extraen tres bolas al azar y tú eliges una para exponer. Dispones de <strong>1 hora</strong> de preparación (sin recursos electrónicos) y <strong>30 minutos</strong> para la exposición. El tribunal puede hacerte preguntas.
-    </div>
-
-    <!-- FASE A: Banco de UDs -->
-    <div id="ud-fase-banco">
-      <div class="two-col">
-
-        <!-- Banco de UDs elaboradas -->
-        <div class="card">
-          <h3>Banco de situaciones de aprendizaje</h3>
-          <div id="sa-lista" style="max-height:340px; overflow-y:auto; margin-bottom:1rem;"></div>
-          <div id="ud-contador" style="font-size:0.8rem; color:var(--muted); margin-bottom:1rem;">0 unidades elaboradas (mínimo 12, máximo 15)</div>
-          <div class="btn-row">
-            <button class="btn btn-primary" onclick="simularSorteo()" id="btn-sorteo" disabled>
-              🎲 Simular sorteo →
-            </button>
-          </div>
-        </div>
-
-        <!-- Crear nueva SA -->
-        <div class="card">
-          <h3>Elaborar nueva Situación de Aprendizaje</h3>
-          <div class="info-box" style="margin-bottom:1rem;">
-            La aplicación te guiará sección a sección según el índice de tu programación. Puedes partir de cero o subir una SA existente para adaptarla.
-          </div>
-          <div class="field">
-            <label>Título de la Situación de Aprendizaje</label>
-            <input type="text" id="ud-nueva-titulo" placeholder="Ej: El teatro del Siglo de Oro">
-          </div>
-          <div class="field">
-            <label>Curso</label>
-            <select id="ud-nueva-curso">
-              <option value="1.º ESO">1.º ESO</option>
-              <option value="2.º ESO">2.º ESO</option>
-              <option value="3.º ESO">3.º ESO</option>
-              <option value="4.º ESO">4.º ESO</option>
-              <option value="1.º Bachillerato">1.º Bachillerato</option>
-              <option value="2.º Bachillerato">2.º Bachillerato</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>¿Cómo quieres empezar?</label>
-            <select id="ud-nueva-modo">
-              <option value="cero">Construir desde cero</option>
-              <option value="adaptar">Adaptar una SA existente</option>
-            </select>
-          </div>
-          <div class="field" id="ud-upload-col" style="display:none;">
-            <label>Sube tu SA existente</label>
-            <div id="ud-upload-zona" style="border:2px dashed var(--border); border-radius:4px; padding:1rem; text-align:center; cursor:pointer;" onclick="document.getElementById('file-ud-existente').click()">
-              <div style="font-size:1.2rem; margin-bottom:0.3rem;">📄</div>
-              <div style="font-size:0.8rem; color:var(--muted);">Word (.docx) o PDF</div>
-              <input type="file" id="file-ud-existente" accept=".pdf,.docx,.txt" style="display:none" onchange="procesarUDExistente(this.files[0])">
-            </div>
-            <div style="margin-top:0.5rem;">
-              <label style="font-size:0.75rem; color:var(--muted); display:block; margin-bottom:0.3rem;">¿Qué parte estás subiendo?</label>
-              <select id="ud-punto-selector" style="width:100%; padding:0.4rem; border:1px solid var(--border); border-radius:4px; font-size:0.78rem; background:var(--white);">
-                <option value="">— Selecciona la parte —</option>
-              </select>
-            </div>
-            <div id="ud-archivo-ok" style="display:none; margin-top:0.5rem; font-size:0.8rem; color:var(--success);"></div>
-            <div class="loading" id="loading-ud-archivo"><div class="spinner"></div>Procesando...</div>
-          </div>
-          <button class="btn btn-primary" onclick="iniciarConstruccionUD()" style="width:100%; margin-top:0.5rem;">
-            Comenzar a elaborar →
-          </button>
-          <div class="loading" id="loading-inicio-ud"><div class="spinner"></div>Preparando asistente...</div>
-        </div>
-      </div>
-
-      <!-- Editor SA sección a sección -->
-      <div id="ud-editor-zona" style="display:none;">
-        <div class="card">
-          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem;">
-            <div>
-              <h3 id="ud-editor-titulo" style="font-size:1.05rem;"></h3>
-              <div id="ud-seccion-num" style="font-size:0.78rem; color:var(--muted); margin-top:0.2rem;"></div>
-            </div>
-            <div style="text-align:right;">
-              <div id="ud-progreso-texto" style="font-size:0.78rem; color:var(--muted);"></div>
-              <div style="height:4px; width:160px; background:var(--border); border-radius:2px; margin-top:0.4rem;">
-                <div id="ud-progreso-barra" style="height:100%; background:var(--gold); border-radius:2px; width:0%; transition:width 0.4s;"></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="info-box" id="ud-seccion-instruccion" style="margin-bottom:1rem;"></div>
-          <div class="field" style="background:var(--cream);border-radius:4px;padding:0.75rem;border-left:3px solid var(--gold);">
-            <label style="font-size:0.8rem;font-weight:600;">📄 Pega aquí esta parte de tu SA de referencia <span style="color:var(--muted);font-weight:400;">(opcional — solo esta parte)</span></label>
-            <textarea id="ud-seccion-referencia" placeholder="Pega el contenido de esta parte..." style="min-height:80px;font-size:0.8rem;margin-top:0.5rem;"></textarea>
-          </div>
-
-          <div class="field">
-            <label>Tus ideas para esta sección (opcional)</label>
-            <textarea id="ud-input-usuario" placeholder="Deja vacío para generar la sección completa, o escribe tus ideas y se desarrollarán..." style="min-height:110px;"></textarea>
-          </div>
-          <div class="btn-row">
-            <button class="btn btn-primary" onclick="generarSeccionUD()">Generar esta sección →</button>
-            <button class="btn btn-ghost" onclick="saltarSeccionUD()">Saltar</button>
-          </div>
-          <div class="loading" id="loading-seccion-ud"><div class="spinner"></div>Elaborando sección...</div>
-        </div>
-
-        <div id="ud-seccion-resultado" style="display:none;">
           <div class="card">
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
-              <h3 style="font-size:1rem;" id="ud-resultado-titulo"></h3>
-              <span class="badge badge-accent">Generado</span>
-            </div>
-            <div class="response-box visible">
-              <div class="response-content" id="ud-resultado-texto" style="white-space:pre-wrap;"></div>
-            </div>
-            <div class="field" style="margin-top:1rem;">
-              <label>Ajustes y correcciones</label>
-              <div id="sa-chips" style="display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:0.6rem;"></div>
-              <textarea id="ud-ajustes" placeholder="Escribe tus instrucciones o pulsa una sugerencia..." style="min-height:70px;"></textarea>
-            </div>
-            <div class="btn-row">
-              <button class="btn btn-primary" onclick="aceptarSeccionUD()">Aceptar y continuar →</button>
-              <button class="btn btn-secondary" onclick="regenerarSeccionUD()">Regenerar con ajustes</button>
-              <button class="btn btn-ghost" onclick="editarSADirectamente()" id="btn-editar-sa">✏️ Editar directamente</button>
-            </div>
-            <div id="sa-editor-directo-zona" style="display:none; margin-top:0.75rem;">
-              <div class="field" style="margin:0;">
-                <label>Edición directa</label>
-                <textarea id="sa-editor-directo" style="min-height:300px; font-size:0.85rem;"></textarea>
-              </div>
-              <div class="btn-row" style="margin-top:0.5rem;">
-                <button class="btn btn-primary" onclick="guardarEdicionSA()">Guardar cambios</button>
-                <button class="btn btn-ghost" onclick="cancelarEdicionSA()">Cancelar</button>
-              </div>
-            </div>
-            <div class="loading" id="loading-regenerar-ud"><div class="spinner"></div>Regenerando...</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- SA completada -->
-      <div id="ud-completa-zona" style="display:none;">
-        <div class="card">
-          <h3 id="ud-completa-titulo">✅ Situación de Aprendizaje completada</h3>
-          <div class="info-box" style="margin-bottom:1rem;">La Situación de Aprendizaje está lista. Añádela al banco o expórtala.</div>
-          <div class="btn-row">
-            <button class="btn btn-primary" onclick="añadirUDAlBanco()">+ Añadir al banco de SAs</button>
-            <button class="btn btn-secondary" onclick="exportarUDWord()">⬇ Exportar SA en Word</button>
-            <button class="btn btn-ghost" onclick="verUDCompleta()">Ver SA completa</button>
-          </div>
-          <div class="loading" id="loading-export-ud"><div class="spinner"></div>Generando Word...</div>
-          <div id="ud-vista-completa" style="display:none; margin-top:1rem;">
-            <div class="response-box visible" style="max-height:500px; overflow-y:auto;">
-              <div class="response-content" id="ud-vista-texto" style="white-space:pre-wrap;"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- FASE B: Sorteo y defensa -->
-    <div id="ud-fase-defensa" style="display:none;">
-
-      <!-- Sorteo -->
-      <div class="card" id="ud-sorteo-card">
-        <h3>🎲 Sorteo — Elige tu unidad</h3>
-        <div class="info-box" style="margin-bottom:1rem;">Se han extraído tres bolas al azar. Elige una para preparar tu exposición.</div>
-        <div id="ud-bolas" style="display:flex; gap:1rem; flex-wrap:wrap; margin:1rem 0;"></div>
-        <div id="ud-elegida-zona" style="display:none;">
-          <div class="response-box visible" style="border-left-color:var(--gold); margin-bottom:1rem;">
-            <h4>📌 Unidad elegida</h4>
-            <div id="ud-elegida-texto" style="font-family:'Playfair Display',serif; font-size:1.05rem; font-style:italic;"></div>
-          </div>
-          <div class="btn-row">
-            <button class="btn btn-primary" onclick="prepararExposicion()">Preparar exposición (1h) →</button>
-            <button class="btn btn-ghost" onclick="nuevoSorteo()">Nuevo sorteo</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Preparación y exposición -->
-      <div id="ud-exposicion-zona" style="display:none;">
-        <div class="card">
-          <h3 id="ud-expo-titulo">Preparación de la exposición</h3>
-          <div class="info-box" style="margin-bottom:1rem;">
-            <strong>1 hora</strong> de preparación sin recursos electrónicos. Usa el tiempo para repasar tu Situación de Aprendizaje y estructurar los 30 minutos de exposición.
-          </div>
-          <div class="timer-box" style="margin-bottom:1.5rem;">
-            <span>⏱</span>
-            <span class="timer-display" id="timer-ud">1:00:00</span>
-            <button class="btn btn-ghost" style="padding:0.3rem 0.75rem; font-size:0.75rem;" onclick="toggleTimerUD()" id="btn-timer-ud">Iniciar preparación</button>
-          </div>
-          <div class="field">
-            <label>Notas de preparación (solo para ti)</label>
-            <textarea id="ud-notas" placeholder="Puntos clave, orden de exposición, elementos curriculares a destacar..." style="min-height:150px;"></textarea>
-          </div>
-
-          <!-- Subir defensa SA redactada -->
-          <div class="card" style="margin:1rem 0; border-left:3px solid var(--gold);">
-            <div style="font-size:0.8rem; font-weight:600; color:var(--dark); margin-bottom:0.6rem;">📄 ¿Tienes una defensa ya redactada? Súbela para mejorarla</div>
-            <div style="font-size:0.78rem; color:var(--muted); margin-bottom:0.75rem;">Se tomará como base, se mejorará según los criterios oficiales de la Prueba 2B y te sugiere cómo reforzarla.</div>
-            <div style="display:flex; gap:0.75rem; align-items:center; flex-wrap:wrap;">
-              <label for="file-defensa-sa-doc" class="btn btn-ghost" style="cursor:pointer; padding:0.4rem 0.9rem; font-size:0.78rem; margin:0;">
-                📎 Subir mi defensa (Word o PDF)
-              </label>
-              <input type="file" id="file-defensa-sa-doc" accept=".pdf,.docx,.doc" style="display:none" onchange="cargarDefensaSADoc(this.files[0])">
-              <span id="defensa-sa-doc-nombre" style="font-size:0.75rem; color:var(--muted);"></span>
-            </div>
-            <div id="defensa-sa-doc-ok" style="display:none; margin-top:0.75rem;">
-              <button class="btn btn-secondary" style="font-size:0.78rem; padding:0.35rem 0.75rem;" onclick="mejorarDefensaSA()">
-                ✨ Ayudarme a mejorar esta defensa
-              </button>
-            </div>
-            <div class="loading" id="loading-defensa-sa-doc" style="margin-top:0.5rem;">
-              <div class="spinner"></div>
-              <span>Procesando documento...</span>
-            </div>
-            <div id="mejora-defensa-sa-resultado" style="display:none; margin-top:1rem;">
-              <div class="response-box visible" style="border-left-color:var(--gold);">
-                <div class="response-content" id="mejora-defensa-sa-texto"></div>
-              </div>
-            </div>
-          </div>
-
-          <div style="border-top:1px solid var(--border); padding-top:1.5rem; margin-top:1rem;">
-            <h3 style="font-family:'Playfair Display',serif; font-size:1.05rem; margin-bottom:1rem;">Exposición oral — 30 minutos</h3>
-            <div class="two-col">
-              <div style="border:1px solid var(--border); border-radius:4px; padding:1rem;">
-                <p style="font-size:0.85rem; font-weight:500; margin-bottom:0.75rem;">🎙️ Grabar exposición</p>
-                <div id="rec-estado-ud" style="font-size:0.8rem; color:var(--muted); min-height:1.2rem; margin-bottom:0.5rem;"></div>
-                <div class="btn-row" style="margin-top:0;">
-                  <button class="btn btn-primary" id="btn-grabar-ud" onclick="toggleGrabacionUD()">⏺ Iniciar</button>
-                  <button class="btn btn-secondary" id="btn-enviar-ud" onclick="evaluarExposicionUD('grabacion')" style="display:none;">Evaluar →</button>
-                </div>
-                <audio id="audio-preview-ud" controls style="width:100%; margin-top:0.75rem; display:none;"></audio>
-              </div>
-              <div style="border:1px solid var(--border); border-radius:4px; padding:1rem;">
-                <p style="font-size:0.85rem; font-weight:500; margin-bottom:0.75rem;">📁 Subir audio</p>
-                <div style="border:2px dashed var(--border); border-radius:3px; padding:0.75rem; text-align:center; cursor:pointer;" onclick="document.getElementById('file-audio-ud').click()">
-                  <div style="font-size:0.8rem; color:var(--muted);">MP3, WAV, M4A, OGG</div>
-                  <input type="file" id="file-audio-ud" accept="audio/*" style="display:none" onchange="evaluarExposicionUD('archivo', this.files[0])">
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="loading" id="loading-expo-ud" style="margin-top:1rem;"><div class="spinner"></div>Analizando exposición...</div>
-          <div class="response-box" id="valoracion-expo-ud" style="margin-top:1rem;">
-            <h4>📋 Valoración de la exposición oral</h4>
-            <div class="response-content" id="valoracion-expo-ud-text"></div>
-          </div>
-        </div>
-
-        <!-- Preguntas tribunal SA -->
-        <div class="card">
           <h3>Preguntas del tribunal</h3>
           <div id="ud-preguntas-lista"></div>
           <button class="btn btn-secondary" onclick="generarPreguntasUD()" style="width:100%; margin-top:0.75rem;">Generar preguntas →</button>
@@ -6411,54 +6048,13 @@ function verEsquemaFinal() {
 }
 
 // ── GRABACIÓN DE AUDIO ──
-let mediaRecorder = null;
-let audioChunks = [];
-let grabando = false;
 let textoDesarrollo = '';
 
-function toggleGrabacion() {
-  if (grabando) {
-    detenerGrabacion();
-  } else {
-    iniciarGrabacion();
-  }
-}
 
-async function iniciarGrabacion() {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    audioChunks = [];
-    mediaRecorder = new MediaRecorder(stream);
-    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-    mediaRecorder.onstop = () => {
-      const blob = new Blob(audioChunks, { type: 'audio/webm' });
-      const url = URL.createObjectURL(blob);
-      const preview = document.getElementById('audio-preview');
-      preview.src = url;
-      preview.style.display = 'block';
-      document.getElementById('btn-enviar-audio').style.display = 'inline-flex';
-      window._audioBlob = blob;
-      stream.getTracks().forEach(t => t.stop());
-    };
-    mediaRecorder.start();
-    grabando = true;
-    document.getElementById('btn-grabar').textContent = '⏹ Detener grabación';
-    document.getElementById('btn-grabar').style.background = 'var(--success)';
-    document.getElementById('rec-estado').innerHTML = '<span style="color:var(--accent)">● Grabando...</span>';
-  } catch(e) {
-    alert('No se puede acceder al micrófono. Comprueba los permisos del navegador.');
-  }
-}
 
-function detenerGrabacion() {
-  if (mediaRecorder && grabando) {
-    mediaRecorder.stop();
-    grabando = false;
-    document.getElementById('btn-grabar').textContent = '⏺ Iniciar grabación';
-    document.getElementById('btn-grabar').style.background = '';
-    document.getElementById('rec-estado').textContent = 'Grabación detenida. Escucha la previsualización y pulsa Analizar.';
-  }
-}
+
+
+
 
 async function enviarAudioGrabado() {
   if (!window._audioBlob) return;
@@ -6481,101 +6077,7 @@ async function procesarAudioSubido(file) {
   await analizarAudio(file, file.type || 'audio/mpeg');
 }
 
-async function analizarAudio(blob, mimeType) {
-  document.getElementById('loading-transcripcion').classList.add('visible');
-  document.getElementById('valoracion-lectura').classList.remove('visible');
 
-  try {
-    const base64 = await new Promise((res, rej) => {
-      const reader = new FileReader();
-      reader.onload = () => res(reader.result.split(',')[1]);
-      reader.onerror = rej;
-      reader.readAsDataURL(blob);
-    });
-
-    const tipoSoportado = ['audio/webm','audio/wav','audio/mp3','audio/mpeg','audio/mp4','audio/ogg','audio/flac'].includes(mimeType)
-      ? mimeType : 'audio/webm';
-
-    const textoEscrito = document.getElementById('desarrollo-text').value.trim()
-      || textoDesarrollo
-      || '(El opositor no proporcionó texto escrito previo)';
-
-    const response = await fetch('https://oposita-lengua-proxy.juanjosealvareztorres.workers.dev', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 2000,
-        system: `Eres un evaluador experto de oposiciones a profesorado de Lengua Castellana y Literatura en Extremadura (Convocatoria 2025). Evalúas la lectura oral con el mismo rigor que el tribunal.
-
-CONTEXTO OFICIAL: Tras el examen escrito (Prueba 1B), el opositor lee en voz alta EXACTAMENTE lo que ha escrito. El tribunal tiene copia física. CUALQUIER DESAJUSTE RELEVANTE supone CERO en toda la Prueba 1B.
-
-CRITERIOS OFICIALES:
-CRITERIOS OFICIALES — PRUEBA 1B TEMA (Convocatoria Extremadura 2025). TOTAL: 10 puntos:
-
-CRITERIO 1 — Conocimiento científico-técnico actualizado (6 puntos):
-  • Conocimiento exhaustivo y actualizado del tema, desarrollado de forma equilibrada, clara y precisa.
-  • Contextualiza el tema dentro de la normativa y realidad educativa de Extremadura.
-  • Domina los conceptos específicos y emplea vocabulario técnico preciso.
-  • Realiza fundamentación pedagógica y didáctica con referencias legislativas pertinentes (1 punto de los 6).
-
-CRITERIO 2 — Estructura, desarrollo y originalidad (2 puntos):
-  • Estructura mediante introducción, desarrollo de epígrafes y conclusión coherente.
-  • Integra fuentes bibliográficas y webgráficas completas y actualizadas.
-  • Desarrolla el tema de forma completa, equilibrada y coherente en todos sus apartados.
-  • Plantea el tema de forma original e innovadora.
-
-CRITERIO 3 — Presentación, orden y redacción (1 punto):
-  • Claridad expositiva, argumentación, coherencia y orden lógico en la disposición de apartados.
-  • Presentación adecuada y corrección ortográfica, gramatical y sintáctica.
-  • Propiedad en el uso del lenguaje técnico y riqueza léxica.
-
-CRITERIO 4 — Lectura del tema (1 punto):
-  • Lectura con solvencia, fluidez y claridad.
-  • Exposición ordenada, pronunciación correcta y clara.
-  (Este criterio se aplica en la lectura oral ante el tribunal al día siguiente o en la convocatoria correspondiente.)
-
-CRITERIO 1.6 Prueba 1A (0,5 pts): lectura ordenada, pronunciación correcta y clara, modulación del mensaje, adecuación a la situación comunicativa.
-
-Estructura tu valoración SIEMPRE con estos 8 apartados en negrita:
-
-**1. TRANSCRIPCIÓN LITERAL** — Transcribe todo lo pronunciado.
-**2. FIDELIDAD AL TEXTO ESCRITO ⚠️** — Compara con el texto escrito. Señala omisiones, adiciones, sustituciones. Veredicto: SIN RIESGO / RIESGO LEVE / RIESGO GRAVE DE CERO.
-**3. VELOCIDAD Y RITMO** — Estima palabras por minuto (óptimo 120-160 ppm). ¿Ritmo constante? ¿Demasiado rápido >180 ppm o lento <90 ppm?
-**4. PAUSAS** — ¿Coinciden con signos de puntuación? ¿Pausas de duda excesivas (titubeos, "eee")? ¿Pausas enfáticas en conceptos clave?
-**5. PRONUNCIACIÓN Y DICCIÓN** — Errores de pronunciación, articulación, volumen.
-**6. ENTONACIÓN Y MODULACIÓN** — ¿Curva entonativa refleja la estructura? ¿Natural/comunicativa o mecánica/monótona?
-**7. ADECUACIÓN A LA SITUACIÓN COMUNICATIVA** — ¿Tono formal y académico adecuado al tribunal? ¿Transmite seguridad?
-**8. PUNTUACIÓN Y RECOMENDACIONES** — Nota por dimensión (/10) y nota global (/10). Mínimo 3 recomendaciones concretas y accionables.`,
-        messages: [{
-          role: 'user',
-          content: [
-            {
-              type: 'text',
-              text: `TEXTO ESCRITO POR EL OPOSITOR (copia del tribunal):\n${textoEscrito.slice(0, 4000)}\n\nAnaliza el audio y evalúa todos los criterios:`
-            },
-            {
-              type: 'audio',
-              source: { type: 'base64', media_type: tipoSoportado, data: base64 }
-            }
-          ]
-        }]
-      })
-    });
-
-    const data = await response.json();
-    const texto = data.content?.[0]?.text || 'No se pudo analizar el audio.';
-    document.getElementById('loading-transcripcion').classList.remove('visible');
-    document.getElementById('valoracion-lectura').classList.add('visible');
-    calRegistrarActividad('lectura', 'Lectura oral evaluada: ' + (temaSeleccionado?.titulo || ''));
-    document.getElementById('valoracion-lectura-text').innerHTML =
-      texto.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-  } catch(e) {
-    document.getElementById('loading-transcripcion').classList.remove('visible');
-    document.getElementById('valoracion-lectura').classList.add('visible');
-    document.getElementById('valoracion-lectura-text').textContent = 'Error al procesar el audio: ' + e.message;
-  }
-}
 
 function volverPaso1() {
   document.getElementById('temas-paso2').style.display = 'none';
@@ -6881,9 +6383,6 @@ let progSeccionActual = 0;
 let progContenido = {};
 let progTextoExistente = '';
 let progTribunalPreguntaActual = '';
-let mediaRecorderDefensaProg = null;
-let audioChunksDefensaProg = [];
-let grabandoDefensaProg = false;
 let timerDefensaProgInterval = null;
 let timerDefensaProgRunning = false;
 let timerDefensaProgSeconds = 1800;
@@ -7185,68 +6684,9 @@ function toggleTimerDefensaProg() {
 }
 
 // Grabación defensa prog
-async function toggleGrabacionDefensaProg() {
-  if (grabandoDefensaProg) {
-    mediaRecorderDefensaProg.stop();
-    grabandoDefensaProg = false;
-    document.getElementById('btn-grabar-defensa-prog').textContent = '⏺ Iniciar';
-    document.getElementById('btn-grabar-defensa-prog').style.background = '';
-    document.getElementById('rec-estado-defensa-prog').textContent = 'Grabación detenida. Pulsa Evaluar.';
-  } else {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      audioChunksDefensaProg = [];
-      mediaRecorderDefensaProg = new MediaRecorder(stream);
-      mediaRecorderDefensaProg.ondataavailable = e => audioChunksDefensaProg.push(e.data);
-      mediaRecorderDefensaProg.onstop = () => {
-        const blob = new Blob(audioChunksDefensaProg, { type: 'audio/webm' });
-        window._audioBlobDefensaProg = blob;
-        const url = URL.createObjectURL(blob);
-        document.getElementById('audio-defensa-prog').src = url;
-        document.getElementById('audio-defensa-prog').style.display = 'block';
-        document.getElementById('btn-evaluar-defensa-prog').style.display = 'inline-flex';
-        stream.getTracks().forEach(t => t.stop());
-      };
-      mediaRecorderDefensaProg.start();
-      grabandoDefensaProg = true;
-      document.getElementById('btn-grabar-defensa-prog').textContent = '⏹ Detener';
-      document.getElementById('btn-grabar-defensa-prog').style.background = 'var(--success)';
-      document.getElementById('rec-estado-defensa-prog').innerHTML = '<span style="color:var(--accent)">● Grabando...</span>';
-    } catch(e) { alert('No se puede acceder al micrófono.'); }
-  }
-}
 
-async function evaluarDefensaProg(tipo, archivo) {
-  const blob = tipo === 'grabacion' ? window._audioBlobDefensaProg : archivo;
-  const mimeType = tipo === 'grabacion' ? 'audio/webm' : (archivo?.type || 'audio/mpeg');
-  if (!blob) return;
-  document.getElementById('loading-defensa-prog').classList.add('visible');
-  try {
-    const base64 = await fileToBase64(blob);
-    const curso = document.getElementById('prog-curso')?.value || '3.º ESO';
-    const resp = await fetch('https://oposita-lengua-proxy.juanjosealvareztorres.workers.dev', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 1000,
-        system: `Eres tribunal de oposiciones de Lengua Castellana y Literatura en Extremadura (Convocatoria 2025). Evalúas la defensa oral de la programación didáctica según los criterios oficiales de la Prueba 2A:
 
-CRITERIO 1 — Justificación y contextualización (1 punto): normativa vigente, contextualización al centro y entorno, PEC.
-CRITERIO 2 — Estructura y concreción (3,5 puntos): todos los elementos de la PD, objetivos y competencias, secuenciación de saberes en las SA, transversales, educación inclusiva, metodología con recursos digitales, bibliografía actualizada.
-CRITERIO 3 — Evaluación (1,5 puntos): tipos e instrumentos de evaluación, evaluación inicial, indicadores de logro.
-CRITERIO 4 — Defensa oral (1 punto): claridad, fluidez, corrección lingüística, vocabulario técnico preciso.
-CRITERIO 5 — Preguntas del tribunal (1,5 puntos): respuestas adecuadas a las preguntas del tribunal.
 
-Duración máxima de la defensa: 30 minutos. TOTAL: 10 puntos.`,
-        messages: [{ role: 'user', content: [
-          { type: 'text', text: `Evalúa esta defensa oral de la Programación Didáctica de Lengua Castellana y Literatura para ${curso}. Valora criterio a criterio según los criterios oficiales (1-5). Da una nota orientativa por criterio y recomendaciones concretas para mejorar.` },
-          { type: 'audio', source: { type: 'base64', media_type: mimeType, data: base64 } }
-        ]}]})
-    });
-    const _rt = await resp.text(); let data; try { data = JSON.parse(_rt); } catch(e) { throw new Error('Error de conexión.'); }
-    document.getElementById('valoracion-defensa-prog-text').textContent = data.content?.[0]?.text || 'Sin respuesta.';
-    document.getElementById('valoracion-defensa-prog').classList.add('visible');
-  } catch(e) { alert('Error: ' + e.message); }
-  document.getElementById('loading-defensa-prog').classList.remove('visible');
-}
 
 async function generarPreguntasTribunalProg() {
   document.getElementById('loading-tribunal-prog').classList.add('visible');
@@ -7312,9 +6752,6 @@ let udPreguntaActual = '';
 let timerUDInterval = null;
 let timerUDRunning = false;
 let timerUDSeconds = 3600;
-let mediaRecorderUD = null;
-let audioChunksUD = [];
-let grabandoUD = false;
 
 // Safe event listener - element may not exist on all pages
 (function() {
@@ -7660,36 +7097,7 @@ function toggleTimerUD() {
   }
 }
 
-async function toggleGrabacionUD() {
-  if (grabandoUD) {
-    mediaRecorderUD.stop();
-    grabandoUD = false;
-    document.getElementById('btn-grabar-ud').textContent = '⏺ Iniciar';
-    document.getElementById('btn-grabar-ud').style.background = '';
-    document.getElementById('rec-estado-ud').textContent = 'Grabación detenida.';
-  } else {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      audioChunksUD = [];
-      mediaRecorderUD = new MediaRecorder(stream);
-      mediaRecorderUD.ondataavailable = e => audioChunksUD.push(e.data);
-      mediaRecorderUD.onstop = () => {
-        const blob = new Blob(audioChunksUD, { type: 'audio/webm' });
-        window._audioBlobUD = blob;
-        const url = URL.createObjectURL(blob);
-        document.getElementById('audio-preview-ud').src = url;
-        document.getElementById('audio-preview-ud').style.display = 'block';
-        document.getElementById('btn-enviar-ud').style.display = 'inline-flex';
-        stream.getTracks().forEach(t => t.stop());
-      };
-      mediaRecorderUD.start();
-      grabandoUD = true;
-      document.getElementById('btn-grabar-ud').textContent = '⏹ Detener';
-      document.getElementById('btn-grabar-ud').style.background = 'var(--success)';
-      document.getElementById('rec-estado-ud').innerHTML = '<span style="color:var(--accent)">● Grabando...</span>';
-    } catch(e) { alert('No se puede acceder al micrófono.'); }
-  }
-}
+
 
 async function evaluarExposicionUD(tipo, archivo) {
   const blob = tipo === 'grabacion' ? window._audioBlobUD : archivo;
