@@ -6108,7 +6108,7 @@ function fileToBase64(file) {
 
 // ── Proxy helper — all direct API calls use this ──
 async function fetchProxy(bodyObj) {
-  const apiKey = localStorage.getItem('opositaLengua_apikey') || '';
+  const apiKey = getApiKeyCookie();
   const resp = await fetch('https://oposita-lengua-proxy.juanjosealvareztorres.workers.dev', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -6122,7 +6122,7 @@ async function fetchProxy(bodyObj) {
 }
 
 async function callClaude(systemPrompt, userMessage, maxTokens = 1000) {
-  const apiKey = localStorage.getItem('opositaLengua_apikey') || '';
+  const apiKey = getApiKeyCookie();
   if (!apiKey) { mostrarOverlayApiKey(); throw new Error('Introduce tu clave de API.'); }
   const response = await fetch('https://oposita-lengua-proxy.juanjosealvareztorres.workers.dev', {
     method: 'POST',
@@ -6133,7 +6133,7 @@ async function callClaude(systemPrompt, userMessage, maxTokens = 1000) {
   let data;
   try { data = JSON.parse(text); } catch(e) { throw new Error('Error de conexión. Inténtalo de nuevo.'); }
   if (data.error) {
-    if (data.error.type === 'authentication_error') { localStorage.removeItem('opositaLengua_apikey'); mostrarOverlayApiKey(); throw new Error('Clave incorrecta.'); }
+    if (data.error.type === 'authentication_error') { removeApiKeyCookie(); mostrarOverlayApiKey(); throw new Error('Clave incorrecta.'); }
     throw new Error(data.error.message || JSON.stringify(data.error));
   }
   const texto = data.content?.[0]?.text;
@@ -13392,7 +13392,7 @@ function mostrarOverlayApiKey() {
 
 function abrirConfigApiKey() {
   const input = document.getElementById('apikey-input');
-  const stored = localStorage.getItem('opositaLengua_apikey') || '';
+  const stored = getApiKeyCookie();
   if (input && stored) {
     input.value = stored.slice(0,8) + '...' + stored.slice(-4);
   }
@@ -13412,7 +13412,7 @@ function guardarApiKey() {
     return;
   }
 
-  localStorage.setItem('opositaLengua_apikey', val);
+  setApiKeyCookie(val);
   const overlay = document.getElementById('apikey-overlay');
   if (overlay) overlay.style.display = 'none';
   if (errorDiv) errorDiv.style.display = 'none';
@@ -13432,7 +13432,7 @@ function saltarApiKey() {
 
 // Check on load: show overlay if no key stored
 document.addEventListener('DOMContentLoaded', () => {
-  const stored = localStorage.getItem('opositaLengua_apikey');
+  const stored = getApiKeyCookie();
   if (!stored) {
     setTimeout(() => mostrarOverlayApiKey(), 800);
   }
@@ -13634,6 +13634,30 @@ function mejorarPuntoProgSubido() {
     // Step 7: Auto-generate
     generarSeccionProg();
   }, 100);
+}
+
+
+// ── Gestión de API key con cookies persistentes ──
+function setApiKeyCookie(key) {
+  const expires = new Date();
+  expires.setFullYear(expires.getFullYear() + 2); // 2 años
+  document.cookie = 'opositaLengua_apikey=' + encodeURIComponent(key) + '; expires=' + expires.toUTCString() + '; path=/; SameSite=Lax';
+  localStorage.setItem('opositaLengua_apikey', key); // backup
+}
+
+function getApiKeyCookie() {
+  // Try cookie first, then localStorage as fallback
+  const cookies = document.cookie.split(';');
+  for (let c of cookies) {
+    const [k, v] = c.trim().split('=');
+    if (k === 'opositaLengua_apikey') return decodeURIComponent(v || '');
+  }
+  return localStorage.getItem('opositaLengua_apikey') || '';
+}
+
+function removeApiKeyCookie() {
+  document.cookie = 'opositaLengua_apikey=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+  localStorage.removeItem('opositaLengua_apikey');
 }
 
 </script>
