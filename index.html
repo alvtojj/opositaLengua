@@ -471,6 +471,63 @@
     letter-spacing: 0.06em;
     margin-bottom: 0.4rem;
   }
+
+/* ── Bottom navigation — app nativa ── */
+#bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: var(--ink);
+  border-top: 1px solid rgba(255,255,255,0.1);
+  flex-direction: row;
+  align-items: stretch;
+  z-index: 1000;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+.bottom-tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  font-size: 0.6rem;
+  gap: 2px;
+  transition: color 0.2s;
+  padding: 6px 0;
+}
+.bottom-tab.active {
+  color: var(--gold);
+}
+.bottom-tab-icon {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+.bottom-tab-label {
+  font-size: 0.58rem;
+  font-family: 'DM Sans', sans-serif;
+  letter-spacing: 0.02em;
+}
+
+/* En app nativa: ocultar nav superior, mostrar inferior, añadir padding */
+body.is-app nav:not(#bottom-nav) {
+  display: none !important;
+}
+body.is-app #bottom-nav {
+  display: flex !important;
+}
+body.is-app main {
+  padding-bottom: 68px;
+}
+body.is-app header {
+  padding-top: env(safe-area-inset-top, 0);
+}
 </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
   <link rel="manifest" href="manifest.json">
@@ -2477,6 +2534,30 @@
 
 
 </main>
+
+<!-- NAVEGACIÓN INFERIOR — solo en app nativa -->
+<nav id="bottom-nav">
+  <button class="bottom-tab active" onclick="showModule('temas')">
+    <span class="bottom-tab-icon">📚</span>
+    <span class="bottom-tab-label">Temas</span>
+  </button>
+  <button class="bottom-tab" onclick="showModule('practica')">
+    <span class="bottom-tab-icon">✍️</span>
+    <span class="bottom-tab-label">Práctica</span>
+  </button>
+  <button class="bottom-tab" onclick="showModule('programacion')">
+    <span class="bottom-tab-icon">📋</span>
+    <span class="bottom-tab-label">Prog.</span>
+  </button>
+  <button class="bottom-tab" onclick="showModule('sa')">
+    <span class="bottom-tab-icon">🎯</span>
+    <span class="bottom-tab-label">SA</span>
+  </button>
+  <button class="bottom-tab" onclick="showModule('calendario')">
+    <span class="bottom-tab-icon">📅</span>
+    <span class="bottom-tab-label">Calendario</span>
+  </button>
+</nav>
 
 <script>// ═══════════════════════════════════════════════════════
 // MARCO LEGAL — DECRETO 110/2022 EXTREMADURA
@@ -4944,6 +5025,7 @@ function showModule(name) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById('mod-' + name).classList.add('active');
   event.target.classList.add('active');
+  syncBottomNav(name);
   // When returning to temas, reset to paso1 and re-render grid
   if (name === 'temas') {
     setTimeout(() => {
@@ -13244,6 +13326,27 @@ function mejorarPuntoProgSubido() {
     if (!stored) setTimeout(() => mostrarOverlayApiKey(), 800);
   });
 })();
+
+
+// ── Detect native app and activate bottom nav ──
+(function() {
+  const isStandalone = window.navigator.standalone ||
+    window.matchMedia('(display-mode: standalone)').matches ||
+    document.referrer.includes('android-app://') ||
+    typeof window.Capacitor !== 'undefined';
+  
+  if (isStandalone) {
+    document.body.classList.add('is-app');
+  }
+})();
+
+// Update bottom nav when module changes
+function syncBottomNav(name) {
+  const names = ['temas','practica','programacion','sa','calendario'];
+  document.querySelectorAll('.bottom-tab').forEach((b, i) => {
+    b.classList.toggle('active', names[i] === name);
+  });
+}
 
 </script>
 </body>
