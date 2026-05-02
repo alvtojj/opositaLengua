@@ -476,8 +476,7 @@
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icons/icon-180.png">
   <meta name="theme-color" content="#2c2c2c">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="OpositaLengua">
 </head>
 <body>
@@ -488,10 +487,8 @@
   </div>
   <div class="header-sub" style="display:flex; justify-content:space-between; align-items:center;">
     <span></span>
-    <div style="display:flex; align-items:center; gap:0.75rem;">
-      <span style="font-size:0.6rem; color:rgba(255,255,255,0.4);">Elaborada por Juanjo Álvarez</span>
+    <span style="font-size:0.6rem; color:rgba(255,255,255,0.4);">Elaborada por Juanjo Álvarez</span>
       <button onclick="abrirConfigApiKey()" style="background:none; border:1px solid rgba(255,255,255,0.3); border-radius:3px; color:rgba(255,255,255,0.7); font-size:0.7rem; padding:0.2rem 0.5rem; cursor:pointer;">⚙️ API Key</button>
-    </div>
   </div>
 </header>
 
@@ -516,7 +513,7 @@
     </button>
     <div style="text-align:center; margin-top:0.75rem;">
       <button onclick="saltarApiKey()" style="background:none; border:none; font-size:0.75rem; color:var(--muted); cursor:pointer; text-decoration:underline;">
-        Continuar sin clave (funciones de generación desactivadas)
+        Continuar sin clave (funciones de IA desactivadas)
       </button>
     </div>
   </div>
@@ -698,9 +695,17 @@
         </div>
 
         <div class="two-col" style="margin-bottom:1.5rem;">
-          <div class="info-box" style="margin-bottom:1rem; font-size:0.82rem;">
-            💡 <strong>Para practicar la exposición oral:</strong> graba con tu móvil u ordenador, escúchala y usa el apartado de mejora de defensa para recibir feedback detallado.
+          <div class="card" style="margin-bottom:0;">
+            <h3 style="font-size:0.95rem;">🎙️ Grabar en directo</h3>
+            <p style="font-size:0.82rem; color:var(--muted); margin-bottom:1rem;">Pulsa para grabar tu lectura desde el micrófono.</p>
+            <div id="rec-estado" style="font-size:0.8rem; color:var(--muted); margin-bottom:0.75rem; min-height:1.2rem;"></div>
+            <div class="btn-row" style="margin-top:0;">
+              <button class="btn btn-primary" id="btn-grabar" onclick="toggleGrabacion()">⏺ Iniciar grabación</button>
+              <button class="btn btn-secondary" id="btn-enviar-audio" onclick="enviarAudioGrabado()" style="display:none">Analizar grabación →</button>
+            </div>
+            <audio id="audio-preview" controls style="width:100%; margin-top:1rem; display:none;"></audio>
           </div>
+
           <div class="card" style="margin-bottom:0;">
             <h3 style="font-size:0.95rem;">📁 Subir audio grabado</h3>
             <p style="font-size:0.82rem; color:var(--muted); margin-bottom:1rem;">Si ya tienes grabada tu lectura, súbela aquí.</p>
@@ -895,9 +900,9 @@
         <div class="field">
           <label>Número de tarjetas</label>
           <select id="tarjetas-cantidad">
-            <option value="5">5 tarjetas (repaso rápido)</option>
-            <option value="8" selected>8 tarjetas (sesión estándar)</option>
-            <option value="12">12 tarjetas (sesión completa)</option>
+            <option value="10">10 tarjetas (repaso rápido)</option>
+            <option value="15" selected>15 tarjetas (sesión estándar)</option>
+            <option value="20">20 tarjetas (sesión completa)</option>
           </select>
         </div>
 
@@ -1035,9 +1040,9 @@
         <div class="field">
           <label>Número de preguntas</label>
           <select id="test-cantidad">
-            <option value="5">5 preguntas (repaso rápido)</option>
-            <option value="10" selected>10 preguntas (sesión estándar)</option>
-            <option value="15">15 preguntas (sesión completa)</option>
+            <option value="10">10 preguntas (repaso rápido)</option>
+            <option value="15" selected>15 preguntas (sesión estándar)</option>
+            <option value="20">20 preguntas (sesión completa)</option>
           </select>
         </div>
 
@@ -1808,26 +1813,17 @@
             </div>
           </div>
           <div id="prog-upload-col">
-            <div class="field" style="background:var(--cream); border-radius:4px; padding:0.85rem; border-left:3px solid var(--gold);">
-              <label style="font-size:0.85rem; font-weight:600; color:var(--dark); margin-bottom:0.5rem; display:block;">📄 Sube un punto concreto de tu programación de referencia</label>
-              <div style="font-size:0.75rem; color:var(--muted); margin-bottom:0.6rem;">Selecciona el punto y sube solo esa sección. La app la adaptará y mejorará.</div>
-              <select id="prog-punto-selector" style="width:100%; padding:0.5rem; border:1px solid var(--border); border-radius:4px; font-size:0.8rem; margin-bottom:0.5rem; background:var(--white);">
-                <option value="">— Selecciona el punto que vas a subir —</option>
-              </select>
+            <div class="field">
+              <label>Sube tu programación existente</label>
               <div id="prog-upload-zona" style="border:2px dashed var(--border); border-radius:4px; padding:1.2rem; text-align:center; cursor:pointer; transition: border-color 0.2s;" onclick="document.getElementById('file-prog').click()" ondragover="event.preventDefault(); this.style.borderColor='var(--accent)'" ondragleave="this.style.borderColor='var(--border)'" ondrop="handleDropProg(event)">
                 <div style="font-size:1.5rem; margin-bottom:0.5rem;">📄</div>
                 <div style="font-size:0.83rem; color:var(--muted);">Arrastra o <span style="color:var(--accent); font-weight:500;">haz clic para seleccionar</span></div>
                 <div style="font-size:0.75rem; color:var(--muted); margin-top:0.3rem;">PDF o Word (.docx)</div>
                 <input type="file" id="file-prog" accept=".pdf,.docx,.txt" style="display:none" onchange="procesarProgExistente(this.files[0])">
               </div>
-              <div id="prog-archivo-ok" style="display:none; margin-top:0.75rem;" class="info-box">
-                <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
-                  <span id="prog-archivo-nombre" style="color:var(--success); font-weight:500; font-size:0.82rem;"></span>
-                  <button onclick="limpiarProgArchivo()" style="background:none; border:none; color:var(--muted); cursor:pointer; font-size:0.8rem;">✕ Quitar</button>
-                </div>
-                <button class="btn btn-primary" onclick="mejorarPuntoProgSubido()" style="width:100%; margin-top:0.6rem; font-size:0.82rem; padding:0.5rem;">
-                  ✨ Mejorar este punto con mi texto como base
-                </button>
+              <div id="prog-archivo-ok" style="display:none; margin-top:0.5rem;" class="info-box">
+                <span id="prog-archivo-nombre" style="color:var(--success); font-weight:500;"></span>
+                <button onclick="limpiarProgArchivo()" style="margin-left:1rem; background:none; border:none; color:var(--muted); cursor:pointer; font-size:0.8rem;">✕ Quitar</button>
               </div>
               <div class="loading" id="loading-prog-archivo">
                 <div class="spinner"></div>
@@ -1885,14 +1881,6 @@
 
           <!-- Instrucción de la sección -->
           <div class="info-box" id="prog-seccion-instruccion" style="margin-bottom:1rem;"></div>
-
-          <!-- Referencia sección por sección -->
-          <div class="field" style="background:var(--cream); border-radius:4px; padding:0.75rem; border-left:3px solid var(--gold);">
-            <label style="font-size:0.8rem; font-weight:600; color:var(--dark);">
-              📄 Pega aquí esta sección de tu programación de referencia <span style="color:var(--muted); font-weight:400;">(opcional — solo esta sección)</span>
-            </label>
-            <textarea id="prog-seccion-referencia" placeholder="Pega el contenido de esta sección concreta de tu programación comprada. La app la adaptará y mejorará..." style="min-height:100px; font-size:0.8rem; margin-top:0.5rem;"></textarea>
-          </div>
 
           <!-- Contexto del opositor para esta sección -->
           <div class="field">
@@ -1983,10 +1971,354 @@
 
     <!-- FASE B: Defensa oral (se activa cuando la programación está lista) -->
     <div id="prog-fase-defensa" style="display:none;">
-      <div class="info-box" style="margin-bottom:1rem; font-size:0.82rem;">
-            💡 <strong>Para practicar la exposición oral:</strong> graba con tu móvil u ordenador, escúchala y usa el apartado de mejora de defensa para recibir feedback detallado.
+      <div class="card">
+        <h3>Defensa oral de la programación</h3>
+        <div class="info-box" style="margin-bottom:1rem;">
+          Dispones de <strong>30 minutos</strong> para defender tu programación ante el tribunal. Sin material auxiliar. Después el tribunal puede hacerte preguntas.
+        </div>
+
+        <!-- Subir defensa redactada -->
+        <div class="card" style="margin-bottom:1rem; border-left:3px solid var(--gold);">
+          <div style="font-size:0.8rem; font-weight:600; color:var(--dark); margin-bottom:0.6rem;">📄 ¿Tienes una defensa ya redactada? Súbela para mejorarla o usarla como guía</div>
+          <div style="font-size:0.78rem; color:var(--muted); margin-bottom:0.75rem;">Se tomará como referencia para ajustar la evaluación de tu exposición oral a tu programación concreta y para ayudarte a mejorarla.</div>
+          <div style="display:flex; gap:0.75rem; align-items:center; flex-wrap:wrap;">
+            <label for="file-defensa-prog-doc" class="btn btn-ghost" style="cursor:pointer; padding:0.4rem 0.9rem; font-size:0.78rem; margin:0;">
+              📎 Subir mi defensa (Word o PDF)
+            </label>
+            <input type="file" id="file-defensa-prog-doc" accept=".pdf,.docx,.doc" style="display:none" onchange="cargarDefensaProgDoc(this.files[0])">
+            <span id="defensa-prog-doc-nombre" style="font-size:0.75rem; color:var(--muted);"></span>
           </div>
+          <div id="defensa-prog-doc-ok" style="display:none; margin-top:0.75rem;">
+            <button class="btn btn-secondary" style="font-size:0.78rem; padding:0.35rem 0.75rem;" onclick="mejorarDefensaProg()">
+              ✨ Ayudarme a mejorar esta defensa
+            </button>
+          </div>
+          <div class="loading" id="loading-defensa-doc" style="margin-top:0.5rem;">
+            <div class="spinner"></div>
+            <span id="loading-defensa-doc-txt">Procesando documento...</span>
+          </div>
+          <div id="mejora-defensa-prog-resultado" style="display:none; margin-top:1rem;">
+            <div class="response-box visible" style="border-left-color:var(--gold);">
+              <div class="response-content" id="mejora-defensa-prog-texto"></div>
+            </div>
+          </div>
+        </div>
+        <div class="timer-box">
+          <span>⏱</span>
+          <span class="timer-display" id="timer-defensa-prog">30:00</span>
+          <button class="btn btn-ghost" style="padding:0.3rem 0.75rem; font-size:0.75rem;" onclick="toggleTimerDefensaProg()" id="btn-timer-defensa-prog">Iniciar</button>
+        </div>
+
+        <div class="two-col" style="margin-top:1.5rem;">
+          <div style="border:1px solid var(--border); border-radius:4px; padding:1rem;">
+            <p style="font-size:0.85rem; font-weight:500; margin-bottom:0.75rem;">🎙️ Grabar defensa</p>
+            <div id="rec-estado-defensa-prog" style="font-size:0.8rem; color:var(--muted); min-height:1.2rem; margin-bottom:0.5rem;"></div>
+            <div class="btn-row" style="margin-top:0;">
+              <button class="btn btn-primary" id="btn-grabar-defensa-prog" onclick="toggleGrabacionDefensaProg()">⏺ Iniciar</button>
+              <button class="btn btn-secondary" id="btn-evaluar-defensa-prog" onclick="evaluarDefensaProg('grabacion')" style="display:none;">Evaluar →</button>
+            </div>
+            <audio id="audio-defensa-prog" controls style="width:100%; margin-top:0.75rem; display:none;"></audio>
+          </div>
+          <div style="border:1px solid var(--border); border-radius:4px; padding:1rem;">
+            <p style="font-size:0.85rem; font-weight:500; margin-bottom:0.75rem;">📁 Subir audio</p>
+            <div style="border:2px dashed var(--border); border-radius:3px; padding:0.75rem; text-align:center; cursor:pointer;" onclick="document.getElementById('file-audio-defensa-prog').click()">
+              <div style="font-size:0.8rem; color:var(--muted);">MP3, WAV, M4A, OGG</div>
+              <input type="file" id="file-audio-defensa-prog" accept="audio/*" style="display:none" onchange="evaluarDefensaProg('archivo', this.files[0])">
+            </div>
+          </div>
+        </div>
+
+        <div class="loading" id="loading-defensa-prog" style="margin-top:1rem;">
+          <div class="spinner"></div>
+          Analizando tu defensa...
+        </div>
+
+        <div class="response-box" id="valoracion-defensa-prog" style="margin-top:1rem;">
+          <h4>📋 Valoración de la defensa oral</h4>
+          <div class="response-content" id="valoracion-defensa-prog-text"></div>
+        </div>
+      </div>
+
+      <!-- Preguntas tribunal programación -->
+      <div class="card">
+        <h3>Preguntas del tribunal</h3>
+        <div id="prog-tribunal-preguntas"></div>
+        <button class="btn btn-secondary" onclick="generarPreguntasTribunalProg()" style="width:100%; margin-top:0.75rem;">
+          Generar preguntas →
+        </button>
+        <div class="loading" id="loading-tribunal-prog"><div class="spinner"></div> Generando...</div>
+        <div id="prog-tribunal-respuesta-zona" style="display:none; margin-top:1rem;">
+          <div class="response-box visible" style="border-left-color:var(--gold); margin-bottom:1rem;">
+            <div class="response-content" id="prog-tribunal-pregunta-activa" style="font-style:italic;"></div>
+          </div>
+          <div class="field">
+            <textarea id="prog-tribunal-respuesta" style="min-height:150px;" placeholder="Escribe tu respuesta..."></textarea>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="evaluarRespuestaTribunalProg()">Evaluar →</button>
+            <button class="btn btn-ghost" onclick="document.getElementById('prog-tribunal-respuesta-zona').style.display='none'">Cancelar</button>
+          </div>
+          <div class="loading" id="loading-tribunal-resp-prog"><div class="spinner"></div> Evaluando...</div>
+          <div class="response-box" id="valoracion-tribunal-prog">
+            <h4>📋 Valoración</h4>
+            <div class="response-content" id="valoracion-tribunal-prog-text"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- MÓDULO 4: SITUACIONES DE APRENDIZAJE -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div id="mod-sa" class="module">
+    <div class="module-header">
+      <h2>Módulo de Situación de Aprendizaje</h2>
+      <p>Elabora tus 12-15 situaciones de aprendizaje paso a paso para cualquier curso. Cuando el banco esté completo, practica el sorteo y la defensa oral.</p>
+    </div>
+
+    <div class="info-box" style="margin-bottom:1.5rem;">
+      <strong>Cómo funciona en la oposición:</strong> Presentas entre 12 y 15 Situaciones de Aprendizaje. El día del examen se extraen tres bolas al azar y tú eliges una para exponer. Dispones de <strong>1 hora</strong> de preparación (sin recursos electrónicos) y <strong>30 minutos</strong> para la exposición. El tribunal puede hacerte preguntas.
+    </div>
+
+    <!-- FASE A: Banco de UDs -->
+    <div id="ud-fase-banco">
+      <div class="two-col">
+
+        <!-- Banco de UDs elaboradas -->
+        <div class="card">
+          <h3>Banco de situaciones de aprendizaje</h3>
+          <div id="sa-lista" style="max-height:340px; overflow-y:auto; margin-bottom:1rem;"></div>
+          <div id="ud-contador" style="font-size:0.8rem; color:var(--muted); margin-bottom:1rem;">0 unidades elaboradas (mínimo 12, máximo 15)</div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="simularSorteo()" id="btn-sorteo" disabled>
+              🎲 Simular sorteo →
+            </button>
+          </div>
+        </div>
+
+        <!-- Crear nueva SA -->
+        <div class="card">
+          <h3>Elaborar nueva Situación de Aprendizaje</h3>
+          <div class="info-box" style="margin-bottom:1rem;">
+            La aplicación te guiará sección a sección según el índice de tu programación. Puedes partir de cero o subir una SA existente para adaptarla.
+          </div>
+          <div class="field">
+            <label>Título de la Situación de Aprendizaje</label>
+            <input type="text" id="ud-nueva-titulo" placeholder="Ej: El teatro del Siglo de Oro">
+          </div>
+          <div class="field">
+            <label>Curso</label>
+            <select id="ud-nueva-curso">
+              <option value="1.º ESO">1.º ESO</option>
+              <option value="2.º ESO">2.º ESO</option>
+              <option value="3.º ESO">3.º ESO</option>
+              <option value="4.º ESO">4.º ESO</option>
+              <option value="1.º Bachillerato">1.º Bachillerato</option>
+              <option value="2.º Bachillerato">2.º Bachillerato</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>¿Cómo quieres empezar?</label>
+            <select id="ud-nueva-modo">
+              <option value="cero">Construir desde cero</option>
+              <option value="adaptar">Adaptar una SA existente</option>
+            </select>
+          </div>
+          <div class="field" id="ud-upload-col" style="display:none;">
+            <label>Sube tu SA existente</label>
+            <div id="ud-upload-zona" style="border:2px dashed var(--border); border-radius:4px; padding:1rem; text-align:center; cursor:pointer;" onclick="document.getElementById('file-ud-existente').click()">
+              <div style="font-size:1.2rem; margin-bottom:0.3rem;">📄</div>
+              <div style="font-size:0.8rem; color:var(--muted);">PDF o Word (.docx)</div>
+              <input type="file" id="file-ud-existente" accept=".pdf,.docx,.txt" style="display:none" onchange="procesarUDExistente(this.files[0])">
+            </div>
+            <div id="ud-archivo-ok" style="display:none; margin-top:0.5rem; font-size:0.8rem; color:var(--success);"></div>
+            <div class="loading" id="loading-ud-archivo"><div class="spinner"></div>Procesando...</div>
+          </div>
+          <button class="btn btn-primary" onclick="iniciarConstruccionUD()" style="width:100%; margin-top:0.5rem;">
+            Comenzar a elaborar →
+          </button>
+          <div class="loading" id="loading-inicio-ud"><div class="spinner"></div>Preparando asistente...</div>
+        </div>
+      </div>
+
+      <!-- Editor SA sección a sección -->
+      <div id="ud-editor-zona" style="display:none;">
+        <div class="card">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem;">
+            <div>
+              <h3 id="ud-editor-titulo" style="font-size:1.05rem;"></h3>
+              <div id="ud-seccion-num" style="font-size:0.78rem; color:var(--muted); margin-top:0.2rem;"></div>
+            </div>
+            <div style="text-align:right;">
+              <div id="ud-progreso-texto" style="font-size:0.78rem; color:var(--muted);"></div>
+              <div style="height:4px; width:160px; background:var(--border); border-radius:2px; margin-top:0.4rem;">
+                <div id="ud-progreso-barra" style="height:100%; background:var(--gold); border-radius:2px; width:0%; transition:width 0.4s;"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-box" id="ud-seccion-instruccion" style="margin-bottom:1rem;"></div>
+          <div class="field">
+            <label>Tus ideas para esta sección (opcional)</label>
+            <textarea id="ud-input-usuario" placeholder="Deja vacío para generar la sección completa, o escribe tus ideas y se desarrollarán..." style="min-height:110px;"></textarea>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="generarSeccionUD()">Generar esta sección →</button>
+            <button class="btn btn-ghost" onclick="saltarSeccionUD()">Saltar</button>
+          </div>
+          <div class="loading" id="loading-seccion-ud"><div class="spinner"></div>Elaborando sección...</div>
+        </div>
+
+        <div id="ud-seccion-resultado" style="display:none;">
           <div class="card">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+              <h3 style="font-size:1rem;" id="ud-resultado-titulo"></h3>
+              <span class="badge badge-accent">Generado</span>
+            </div>
+            <div class="response-box visible">
+              <div class="response-content" id="ud-resultado-texto" style="white-space:pre-wrap;"></div>
+            </div>
+            <div class="field" style="margin-top:1rem;">
+              <label>Ajustes y correcciones</label>
+              <div id="sa-chips" style="display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:0.6rem;"></div>
+              <textarea id="ud-ajustes" placeholder="Escribe tus instrucciones o pulsa una sugerencia..." style="min-height:70px;"></textarea>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-primary" onclick="aceptarSeccionUD()">Aceptar y continuar →</button>
+              <button class="btn btn-secondary" onclick="regenerarSeccionUD()">Regenerar con ajustes</button>
+              <button class="btn btn-ghost" onclick="editarSADirectamente()" id="btn-editar-sa">✏️ Editar directamente</button>
+            </div>
+            <div id="sa-editor-directo-zona" style="display:none; margin-top:0.75rem;">
+              <div class="field" style="margin:0;">
+                <label>Edición directa</label>
+                <textarea id="sa-editor-directo" style="min-height:300px; font-size:0.85rem;"></textarea>
+              </div>
+              <div class="btn-row" style="margin-top:0.5rem;">
+                <button class="btn btn-primary" onclick="guardarEdicionSA()">Guardar cambios</button>
+                <button class="btn btn-ghost" onclick="cancelarEdicionSA()">Cancelar</button>
+              </div>
+            </div>
+            <div class="loading" id="loading-regenerar-ud"><div class="spinner"></div>Regenerando...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SA completada -->
+      <div id="ud-completa-zona" style="display:none;">
+        <div class="card">
+          <h3 id="ud-completa-titulo">✅ Situación de Aprendizaje completada</h3>
+          <div class="info-box" style="margin-bottom:1rem;">La Situación de Aprendizaje está lista. Añádela al banco o expórtala.</div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="añadirUDAlBanco()">+ Añadir al banco de SAs</button>
+            <button class="btn btn-secondary" onclick="exportarUDWord()">⬇ Exportar SA en Word</button>
+            <button class="btn btn-ghost" onclick="verUDCompleta()">Ver SA completa</button>
+          </div>
+          <div class="loading" id="loading-export-ud"><div class="spinner"></div>Generando Word...</div>
+          <div id="ud-vista-completa" style="display:none; margin-top:1rem;">
+            <div class="response-box visible" style="max-height:500px; overflow-y:auto;">
+              <div class="response-content" id="ud-vista-texto" style="white-space:pre-wrap;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FASE B: Sorteo y defensa -->
+    <div id="ud-fase-defensa" style="display:none;">
+
+      <!-- Sorteo -->
+      <div class="card" id="ud-sorteo-card">
+        <h3>🎲 Sorteo — Elige tu unidad</h3>
+        <div class="info-box" style="margin-bottom:1rem;">Se han extraído tres bolas al azar. Elige una para preparar tu exposición.</div>
+        <div id="ud-bolas" style="display:flex; gap:1rem; flex-wrap:wrap; margin:1rem 0;"></div>
+        <div id="ud-elegida-zona" style="display:none;">
+          <div class="response-box visible" style="border-left-color:var(--gold); margin-bottom:1rem;">
+            <h4>📌 Unidad elegida</h4>
+            <div id="ud-elegida-texto" style="font-family:'Playfair Display',serif; font-size:1.05rem; font-style:italic;"></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="prepararExposicion()">Preparar exposición (1h) →</button>
+            <button class="btn btn-ghost" onclick="nuevoSorteo()">Nuevo sorteo</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preparación y exposición -->
+      <div id="ud-exposicion-zona" style="display:none;">
+        <div class="card">
+          <h3 id="ud-expo-titulo">Preparación de la exposición</h3>
+          <div class="info-box" style="margin-bottom:1rem;">
+            <strong>1 hora</strong> de preparación sin recursos electrónicos. Usa el tiempo para repasar tu Situación de Aprendizaje y estructurar los 30 minutos de exposición.
+          </div>
+          <div class="timer-box" style="margin-bottom:1.5rem;">
+            <span>⏱</span>
+            <span class="timer-display" id="timer-ud">1:00:00</span>
+            <button class="btn btn-ghost" style="padding:0.3rem 0.75rem; font-size:0.75rem;" onclick="toggleTimerUD()" id="btn-timer-ud">Iniciar preparación</button>
+          </div>
+          <div class="field">
+            <label>Notas de preparación (solo para ti)</label>
+            <textarea id="ud-notas" placeholder="Puntos clave, orden de exposición, elementos curriculares a destacar..." style="min-height:150px;"></textarea>
+          </div>
+
+          <!-- Subir defensa SA redactada -->
+          <div class="card" style="margin:1rem 0; border-left:3px solid var(--gold);">
+            <div style="font-size:0.8rem; font-weight:600; color:var(--dark); margin-bottom:0.6rem;">📄 ¿Tienes una defensa ya redactada? Súbela para mejorarla</div>
+            <div style="font-size:0.78rem; color:var(--muted); margin-bottom:0.75rem;">Se tomará como base, se mejorará según los criterios oficiales de la Prueba 2B y te sugiere cómo reforzarla.</div>
+            <div style="display:flex; gap:0.75rem; align-items:center; flex-wrap:wrap;">
+              <label for="file-defensa-sa-doc" class="btn btn-ghost" style="cursor:pointer; padding:0.4rem 0.9rem; font-size:0.78rem; margin:0;">
+                📎 Subir mi defensa (Word o PDF)
+              </label>
+              <input type="file" id="file-defensa-sa-doc" accept=".pdf,.docx,.doc" style="display:none" onchange="cargarDefensaSADoc(this.files[0])">
+              <span id="defensa-sa-doc-nombre" style="font-size:0.75rem; color:var(--muted);"></span>
+            </div>
+            <div id="defensa-sa-doc-ok" style="display:none; margin-top:0.75rem;">
+              <button class="btn btn-secondary" style="font-size:0.78rem; padding:0.35rem 0.75rem;" onclick="mejorarDefensaSA()">
+                ✨ Ayudarme a mejorar esta defensa
+              </button>
+            </div>
+            <div class="loading" id="loading-defensa-sa-doc" style="margin-top:0.5rem;">
+              <div class="spinner"></div>
+              <span>Procesando documento...</span>
+            </div>
+            <div id="mejora-defensa-sa-resultado" style="display:none; margin-top:1rem;">
+              <div class="response-box visible" style="border-left-color:var(--gold);">
+                <div class="response-content" id="mejora-defensa-sa-texto"></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="border-top:1px solid var(--border); padding-top:1.5rem; margin-top:1rem;">
+            <h3 style="font-family:'Playfair Display',serif; font-size:1.05rem; margin-bottom:1rem;">Exposición oral — 30 minutos</h3>
+            <div class="two-col">
+              <div style="border:1px solid var(--border); border-radius:4px; padding:1rem;">
+                <p style="font-size:0.85rem; font-weight:500; margin-bottom:0.75rem;">🎙️ Grabar exposición</p>
+                <div id="rec-estado-ud" style="font-size:0.8rem; color:var(--muted); min-height:1.2rem; margin-bottom:0.5rem;"></div>
+                <div class="btn-row" style="margin-top:0;">
+                  <button class="btn btn-primary" id="btn-grabar-ud" onclick="toggleGrabacionUD()">⏺ Iniciar</button>
+                  <button class="btn btn-secondary" id="btn-enviar-ud" onclick="evaluarExposicionUD('grabacion')" style="display:none;">Evaluar →</button>
+                </div>
+                <audio id="audio-preview-ud" controls style="width:100%; margin-top:0.75rem; display:none;"></audio>
+              </div>
+              <div style="border:1px solid var(--border); border-radius:4px; padding:1rem;">
+                <p style="font-size:0.85rem; font-weight:500; margin-bottom:0.75rem;">📁 Subir audio</p>
+                <div style="border:2px dashed var(--border); border-radius:3px; padding:0.75rem; text-align:center; cursor:pointer;" onclick="document.getElementById('file-audio-ud').click()">
+                  <div style="font-size:0.8rem; color:var(--muted);">MP3, WAV, M4A, OGG</div>
+                  <input type="file" id="file-audio-ud" accept="audio/*" style="display:none" onchange="evaluarExposicionUD('archivo', this.files[0])">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="loading" id="loading-expo-ud" style="margin-top:1rem;"><div class="spinner"></div>Analizando exposición...</div>
+          <div class="response-box" id="valoracion-expo-ud" style="margin-top:1rem;">
+            <h4>📋 Valoración de la exposición oral</h4>
+            <div class="response-content" id="valoracion-expo-ud-text"></div>
+          </div>
+        </div>
+
+        <!-- Preguntas tribunal SA -->
+        <div class="card">
           <h3>Preguntas del tribunal</h3>
           <div id="ud-preguntas-lista"></div>
           <button class="btn btn-secondary" onclick="generarPreguntasUD()" style="width:100%; margin-top:0.75rem;">Generar preguntas →</button>
@@ -2673,58 +3005,6 @@ EVALUACIÓN EN LAS SA:
 
 // ═══════════════════════════════════════════════════════
 // GUÍA DE PROGRAMACIÓN DIDÁCTICA
-// ═══════════════════════════════════════════════════════
-// BASE CONOCIMIENTO — DISEÑO DE SITUACIONES DE APRENDIZAJE
-// Diánez Muñoz, E. y López Ramos, A. (2022). Aprender en contexto:
-// claves para el diseño de situaciones de aprendizaje. SM.
-// ═══════════════════════════════════════════════════════
-const BASE_DISENYO_SA = `
-REFERENCIA: Diánez Muñoz, Esther y López Ramos, Alberto. Aprender en contexto: claves para el diseño de situaciones de aprendizaje. Editorial SM, 2022.
-
-CONCEPTO DE SITUACIÓN DE APRENDIZAJE (SA):
-Una SA es una unidad de programación que articula los elementos curriculares en torno a una tarea competencial significativa, contextualizada y auténtica. No es un conjunto de actividades aisladas, sino un proceso coherente orientado a un producto o reto real que desarrolla competencias.
-
-CARACTERÍSTICAS ESENCIALES DE UNA SA:
-- Contextualización real: el aprendizaje se sitúa en un contexto auténtico o verosímil que da sentido a la tarea
-- Tarea competencial: existe una tarea integradora que moviliza varias competencias a la vez
-- Producto final: la SA culmina en un producto o resultado tangible y comunicable
-- Conexión curricular: se articulan CE, criterios de evaluación, saberes básicos y descriptores de competencia
-- Evaluación integrada: la evaluación forma parte del proceso, no solo del resultado
-
-ESTRUCTURA DE UNA SA SEGÚN EL LIBRO:
-1. TÍTULO Y JUSTIFICACIÓN: el título debe reflejar el reto o tarea central. La justificación explica por qué esa tarea es relevante, significativa y conectada con la realidad del alumnado.
-2. CONTEXTO DE APLICACIÓN: curso, centro, características del grupo, contexto sociocultural. Justifica las decisiones didácticas en función del contexto real.
-3. TAREA COMPETENCIAL: descripción del reto o problema que el alumnado debe resolver. Debe ser auténtica, retadora y dar sentido a los aprendizajes. Explica qué va a hacer el alumnado y para qué.
-4. OBJETIVOS: conectar los objetivos de etapa con los objetivos específicos de aprendizaje de la SA. Los objetivos de aprendizaje deben ser observables y medibles.
-5. PERFIL COMPETENCIAL: identificar las CC que se trabajan, sus descriptores operativos del Perfil de Salida y los retos del siglo XXI (sostenibilidad, digitalización, pensamiento crítico, ciudadanía global).
-6. CE Y CRITERIOS DE EVALUACIÓN: seleccionar las CE de Lengua Castellana y Literatura que se movilizan. Los criterios de evaluación concretan qué se va a observar y valorar.
-7. SABERES BÁSICOS: seleccionar los saberes básicos que se trabajan. Deben estar al servicio de la tarea, no ser un fin en sí mismos.
-8. TRANSVERSALIDAD: identificar conexiones con otras materias y con los elementos transversales del currículo (TIC, emprendimiento, educación cívica...).
-9. PERSPECTIVA DE GÉNERO Y ODS: cómo contribuye la SA a la igualdad de género, la coeducación y los Objetivos de Desarrollo Sostenible de la Agenda 2030.
-10. ATENCIÓN A LA DIVERSIDAD Y DUA: medidas de diseño universal para el aprendizaje. Múltiples formas de representación, acción/expresión y motivación. Adaptaciones para distintos perfiles.
-11. METODOLOGÍA: justificar las decisiones metodológicas (ABP, aprendizaje cooperativo, gamificación, flipped classroom...). Coherencia entre metodología y tarea competencial.
-12. RECURSOS: materiales, recursos digitales, espacios, tiempos. Justificar su adecuación a la tarea y al contexto.
-13. SECUENCIACIÓN DE ACTIVIDADES: descripción detallada de las actividades organizadas en fases (activación, desarrollo, producto final, evaluación). Cada actividad tiene objetivo, descripción, agrupamiento, tiempo y materiales. Las actividades deben tener progresión y coherencia interna.
-14. EVALUACIÓN: instrumentos de evaluación (rúbricas, listas de cotejo, portfolio, diario de aprendizaje...), criterios de calificación, evaluación formativa y sumativa, autoevaluación y coevaluación del alumnado, evaluación de la práctica docente.
-15. BIBLIOGRAFÍA: referencias bibliográficas en formato APA. Incluir legislación, recursos digitales y obras de referencia.
-
-CLAVES PARA UNA SA DE CALIDAD (según Diánez y López):
-- La tarea competencial debe ser el eje vertebrador de todo: si la tarea es sólida, el resto fluye
-- Evitar la "costura curricular": no se trata de coser actividades inconexas sino de diseñar un proceso con sentido
-- El producto final debe ser comunicable: una exposición, un texto, una campaña, un proyecto... algo que pueda compartirse
-- La evaluación debe ser coherente con la tarea: evaluar con los mismos instrumentos que se usan para aprender
-- Las actividades de la secuencia deben tener gradación: de lo simple a lo complejo, de lo guiado a lo autónomo
-- La contextualización es imprescindible: el alumnado debe percibir que el aprendizaje tiene sentido fuera del aula
-- DUA desde el diseño: pensar en la diversidad desde el principio, no como adaptación posterior
-
-ERRORES FRECUENTES EN EL DISEÑO DE SA:
-- Confundir SA con UD temática: una SA no es un tema del libro organizado en actividades
-- Tarea ficticia o forzada: la tarea debe ser verosímil y motivadora
-- Desconexión entre tarea y evaluación: evaluar contenidos cuando la tarea pide competencias
-- Actividades yuxtapuestas sin progresión: cada actividad debe preparar la siguiente
-- Criterios de evaluación desconectados de la tarea: los criterios deben derivarse de lo que la tarea exige
-`;
-
 // ═══════════════════════════════════════════════════════
 const GUIA_PROGRAMACION = {
 
@@ -4509,7 +4789,7 @@ const INDICE_SA = [
   "2. Contexto de aplicación",
   "3. Justificación de la SA y descripción de la tarea competencial",
   "4. Objetivos de etapa y objetivos de aprendizaje",
-  "5. Perfil competencial de salida. Competencias clave. Descriptores operativos. Retos y desafíos",
+  "5. Perfil competencial de salida. Competencias clave. Descriptores operativos. Retos y desafíos del siglo XXI",
   "6. Competencias específicas. Criterios de evaluación",
   "7. Saberes básicos",
   "8. Contenidos transversales",
@@ -5667,8 +5947,8 @@ function handleDrop(e) {
 async function procesarArchivoTema(file) {
   if (!file) return;
   const ext = file.name.split('.').pop().toLowerCase();
-  if (!['pdf', 'docx', 'doc', 'odt', 'txt'].includes(ext)) {
-    alert('Formato no admitido. Usa Word (.docx), PDF o texto plano (.txt).');
+  if (!['pdf', 'docx', 'doc', 'txt'].includes(ext)) {
+    alert('Formato no admitido. Usa PDF, Word (.docx) o texto plano.');
     return;
   }
 
@@ -5680,57 +5960,76 @@ async function procesarArchivoTema(file) {
   document.getElementById('loading-archivo').classList.add('visible');
 
   try {
+    const base64 = await fileToBase64(file);
+
     if (ext === 'txt') {
-      window._temaPropio = (await file.text()).slice(0, 12000);
-
-    } else if (ext === 'docx') {
-      // Use mammoth - no API needed
-      const ab = await file.arrayBuffer();
-      const result = await mammoth.extractRawText({ arrayBuffer: ab });
-      const texto = result.value.trim();
-      if (!texto || texto.length < 20) throw new Error('No se pudo extraer texto del archivo .docx.');
-      window._temaPropio = texto.slice(0, 12000);
-
-    } else if (ext === 'doc') {
-      throw new Error('El formato .doc no está soportado. Guarda como .docx desde Word o LibreOffice (Archivo → Guardar como → Word 2007-365).');
-
-    } else if (ext === 'odt') {
-      const base64 = await fileToBase64(file);
-      const data = await fetchProxy({
-        model: 'claude-sonnet-4-6', max_tokens: 3000,
-        messages: [{ role: 'user', content: [
-          { type: 'document', source: { type: 'base64', media_type: 'application/vnd.oasis.opendocument.text', data: base64 } },
-          { type: 'text', text: 'Extrae todo el texto de este documento. Solo el texto, sin comentarios.' }
-        ]}]
-      });
-      const texto = data.content?.[0]?.text || '';
-      if (!texto.trim()) throw new Error('No se pudo extraer texto del .odt. Prueba a guardarlo como .docx.');
+      // TXT: read directly without API
+      const texto = await file.text();
       window._temaPropio = texto.slice(0, 12000);
 
     } else if (ext === 'pdf') {
-      const base64 = await fileToBase64(file);
-      const data = await fetchProxy({
-        model: 'claude-sonnet-4-6', max_tokens: 3000,
-        messages: [{ role: 'user', content: [
-          { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: base64 } },
-          { type: 'text', text: 'Extrae y devuelve todo el texto de este documento. Solo el texto, sin comentarios.' }
-        ]}]
+      const resp = await fetch('https://oposita-lengua-proxy.juanjosealvareztorres.workers.dev', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 1000,
+          messages: [{
+            role: 'user',
+            content: [
+              { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: base64 } },
+              { type: 'text', text: 'Extrae y devuelve todo el texto de este documento. Devuelve únicamente el texto extraído, sin comentarios ni explicaciones.' }
+            ]
+          }]
+        })
       });
-      const texto = data.content?.[0]?.text || '';
-      if (!texto.trim()) throw new Error('El PDF no tiene texto seleccionable. Usa un archivo Word (.docx).');
-      window._temaPropio = texto.slice(0, 12000);
+      const _rt = await resp.text(); let data; try { data = JSON.parse(_rt); } catch(e) { throw new Error('Error de conexión.'); }
+      if (data.error) throw new Error(data.error.message || 'Error de API');
+      const extraido = data.content?.[0]?.text || '';
+      if (!extraido.trim()) throw new Error('No se pudo extraer texto del PDF.');
+      window._temaPropio = extraido.slice(0, 12000);
+
+    } else {
+      // .docx — la API de Anthropic solo admite .docx moderno, no .doc antiguo
+      // Para .doc avisamos al usuario de que convierta
+      if (ext === 'doc') {
+        throw new Error('El formato .doc (Word antiguo) no está soportado. Guarda el archivo como .docx desde Word y vuelve a subirlo.');
+      }
+      const resp = await fetch('https://oposita-lengua-proxy.juanjosealvareztorres.workers.dev', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 1000,
+          messages: [{
+            role: 'user',
+            content: [
+              { type: 'document', source: { type: 'base64', media_type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', data: base64 } },
+              { type: 'text', text: 'Extrae y devuelve todo el texto de este documento. Devuelve únicamente el texto extraído, sin comentarios ni explicaciones.' }
+            ]
+          }]
+        })
+      });
+      const _rt = await resp.text(); let data; try { data = JSON.parse(_rt); } catch(e) { throw new Error('Error de conexión.'); }
+      if (data.error) throw new Error(data.error.message || 'Error de API');
+      const extraido = data.content?.[0]?.text || '';
+      if (!extraido.trim()) throw new Error('No se pudo extraer texto del documento.');
+      window._temaPropio = extraido.slice(0, 12000);
     }
 
-    // Success
-    document.getElementById('archivo-nombre').textContent = file.name;
-    document.getElementById('archivo-cargado').style.display = 'flex';
+    // Éxito: mostrar confirmación y activar botón
+    document.getElementById('archivo-nombre').textContent = '✓ ' + file.name + ' cargado correctamente';
+    document.getElementById('archivo-cargado').style.display = 'block';
     document.getElementById('upload-zona').style.borderColor = 'var(--success)';
     document.getElementById('btn-esquema').disabled = false;
 
-  } catch(e) {
+  } catch (e) {
     alert('Error al procesar el archivo: ' + e.message);
+    window._temaPropio = '';
     document.getElementById('upload-zona').style.borderColor = 'var(--border)';
+    document.getElementById('btn-esquema').disabled = !temaSeleccionado;
   }
+
   document.getElementById('loading-archivo').classList.remove('visible');
 }
 
@@ -5749,7 +6048,6 @@ function fileToBase64(file) {
 // API ANTHROPIC
 // ═══════════════════════════════════════════════════════
 
-// ── Proxy helper — all direct API calls use this ──
 async function fetchProxy(bodyObj) {
   const apiKey = getApiKeyCookie();
   const resp = await fetch('https://oposita-lengua-proxy.juanjosealvareztorres.workers.dev', {
@@ -5759,7 +6057,7 @@ async function fetchProxy(bodyObj) {
   });
   const text = await resp.text();
   let data;
-  try { data = JSON.parse(text); } catch(e) { throw new Error('Respuesta inesperada del servidor.'); }
+  try { data = JSON.parse(text); } catch(e) { throw new Error('Respuesta inesperada.'); }
   if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
   return data;
 }
@@ -5860,7 +6158,33 @@ Responde siempre en español. El formato debe ser ESQUEMA PURO: titulares, conce
 ${cabeceraTema}
 ${seccionTemaPropio}${biblioSeccion}
 
-FORMATO DEL ESQUEMA:\nMuy conciso. Sin párrafos. Sin frases largas. Cada línea = un dato concreto, nombre, fecha o concepto en máximo 8 palabras.\n\n1. EPÍGRAFE\n   1.1. Subepígrafe\n        - dato / autor / fecha\n        - término: definición breve\n2. EPÍGRAFE\n   ...\nBIBLIOGRAFÍA: Autor - Título (Año)\nCONEXIONES CON OTROS TEMAS: X, Y\n\nIMPORTANTE: Cubre TODOS los epígrafes del tema. Máximo 4 líneas por subepígrafe. Prioriza completitud sobre extensión.`;
+FORMATO OBLIGATORIO DEL ESQUEMA — MUY IMPORTANTE:
+El resultado debe ser un esquema puro, NO un resumen ni un texto corrido. Cada línea debe ser un titular, un concepto clave, un nombre, una fecha o una idea sintética. NUNCA párrafos explicativos.
+
+Estructura exacta a seguir:
+
+1. [EPÍGRAFE PRINCIPAL]
+   1.1. [Subepígrafe]
+        - Concepto o idea clave (máx. 1 línea)
+        - Autor / obra / fecha si procede
+        - Término técnico: definición en 5-8 palabras
+   1.2. [Subepígrafe]
+        - ...
+2. [EPÍGRAFE PRINCIPAL]
+   ...
+
+BIBLIOGRAFÍA DE REFERENCIA:
+- Autor, Título, Editorial, Año
+- ...
+
+CONEXIONES CON OTROS TEMAS: Tema X (relación breve), Tema Y (relación breve)
+
+Normas de formato:
+- Sin párrafos. Sin frases largas. Sin "En este apartado veremos...".
+- Cada línea aporta un dato concreto o un concepto.
+- Usa guiones para los puntos de cada subepígrafe.
+- El esquema completo debe cubrir TODO el tema, de principio a fin, sin recortes.
+- Extiéndete todo lo necesario para cubrir el tema entero.`;
 
   try {
     const respuesta = await callClaude(sistema, mensaje, 4000);
@@ -6414,21 +6738,23 @@ async function procesarProgExistente(file) {
   if (!file) return;
   document.getElementById('loading-prog-archivo').classList.add('visible');
   try {
-    const ext = file.name.split('.').pop().toLowerCase();
-    let texto = '';
-    if (ext === 'docx') { const ab = await file.arrayBuffer(); const r = await mammoth.extractRawText({ arrayBuffer: ab }); texto = r.value.trim(); }
-    else if (ext === 'txt') { texto = await file.text(); }
-    else if (ext === 'pdf') {
-      const base64 = await fileToBase64(file);
-      const data = await fetchProxy({ model: 'claude-sonnet-4-6', max_tokens: 4000, messages: [{ role: 'user', content: [{ type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: base64 } }, { type: 'text', text: 'Extrae todo el texto.' }] }] });
-      texto = data.content?.[0]?.text || '';
-    } else throw new Error('Usa .docx, .txt o .pdf.');
-    if (!texto.trim()) throw new Error('No se pudo extraer texto.');
-    progTextoExistente = texto.slice(0, 15000);
+    const base64 = await fileToBase64(file);
+    const media = file.name.endsWith('.pdf') ? 'application/pdf'
+      : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+    const resp = await fetch('https://oposita-lengua-proxy.juanjosealvareztorres.workers.dev', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 1000,
+        messages: [{ role: 'user', content: [
+          { type: 'document', source: { type: 'base64', media_type: media, data: base64 } },
+          { type: 'text', text: 'Extrae todo el texto de este documento. Solo el texto, sin comentarios.' }
+        ]}]})
+    });
+    const _rt = await resp.text(); let data; try { data = JSON.parse(_rt); } catch(e) { throw new Error('Error de conexión.'); }
+    progTextoExistente = (data.content?.[0]?.text || '').slice(0, 15000);
     document.getElementById('prog-archivo-nombre').textContent = '✓ ' + file.name;
     document.getElementById('prog-archivo-ok').style.display = 'block';
     document.getElementById('prog-upload-zona').style.borderColor = 'var(--success)';
-  } catch(e) { alert('Error: ' + e.message); }
+  } catch(e) { alert('Error al procesar: ' + e.message); }
   document.getElementById('loading-prog-archivo').classList.remove('visible');
 }
 
@@ -6464,7 +6790,6 @@ function mostrarSeccionProg() {
     return;
   }
   const seccion = progSecciones[progSeccionActual];
-  if (!seccion) { console.error('Sin sección activa'); return; }
   const progreso = Math.round((progSeccionActual / progSecciones.length) * 100);
   document.getElementById('prog-seccion-titulo').textContent = seccion;
   document.getElementById('prog-seccion-num').textContent = `Sección ${progSeccionActual + 1} de ${progSecciones.length}`;
@@ -6502,23 +6827,16 @@ function mostrarSeccionProg() {
 
 async function generarSeccionProg() {
   const seccion = progSecciones[progSeccionActual];
-  if (!seccion) { console.error('Sin sección activa'); return; }
   const curso = document.getElementById('prog-curso').value;
   const contexto = document.getElementById('prog-contexto').value.trim();
   const inputUsuario = document.getElementById('prog-input-usuario').value.trim();
   document.getElementById('loading-seccion-prog').classList.add('visible');
 
-  const seccionReferencia = document.getElementById('prog-seccion-referencia')?.value?.trim() || '';
-  const seccionExistente = seccionReferencia
+  const seccionExistente = progTextoExistente
     ? `
 
-SECCIÓN DE REFERENCIA (adaptar y mejorar — no copiar literalmente):
-${seccionReferencia.slice(0, 4000)}`
-    : progTextoExistente
-    ? `
-
-REFERENCIA GENERAL:
-${progTextoExistente.slice(0, 1500)}`
+CONTENIDO DE REFERENCIA (programación existente a adaptar y reescribir con estilo propio, sin copiar literalmente):
+${progTextoExistente.slice(0, 3000)}`
     : '';
 
   const sistema = `Eres experto en didáctica de Lengua Castellana y Literatura y en legislación educativa española.
@@ -6572,7 +6890,6 @@ Redacta la sección completa, con epígrafes si procede, ajustada a la normativa
 async function regenerarSeccionProg() {
   const ajustes = document.getElementById('prog-ajustes').value.trim();
   const seccion = progSecciones[progSeccionActual];
-  if (!seccion) { console.error('Sin sección activa'); return; }
   const textoActual = document.getElementById('prog-resultado-texto').textContent;
   document.getElementById('loading-regenerar-prog').classList.add('visible');
   try {
@@ -6593,7 +6910,6 @@ function aceptarSeccionProg() {
   const secProg = document.getElementById('prog-resultado-titulo')?.textContent || '';
   calRegistrarActividad('programacion', 'Sección aceptada: ' + secProg);
   const seccion = progSecciones[progSeccionActual];
-  if (!seccion) { console.error('Sin sección activa'); return; }
   progContenido[seccion] = document.getElementById('prog-resultado-texto').textContent;
   progSeccionActual++;
   mostrarSeccionProg();
@@ -6774,17 +7090,19 @@ async function procesarUDExistente(file) {
   if (!file) return;
   document.getElementById('loading-ud-archivo').classList.add('visible');
   try {
-    const ext = file.name.split('.').pop().toLowerCase();
-    let texto = '';
-    if (ext === 'docx') { const ab = await file.arrayBuffer(); const r = await mammoth.extractRawText({ arrayBuffer: ab }); texto = r.value.trim(); }
-    else if (ext === 'txt') { texto = await file.text(); }
-    else if (ext === 'pdf') {
-      const base64 = await fileToBase64(file);
-      const data = await fetchProxy({ model: 'claude-sonnet-4-6', max_tokens: 4000, messages: [{ role: 'user', content: [{ type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: base64 } }, { type: 'text', text: 'Extrae todo el texto.' }] }] });
-      texto = data.content?.[0]?.text || '';
-    } else throw new Error('Usa .docx, .txt o .pdf.');
-    if (!texto.trim()) throw new Error('No se pudo extraer texto.');
-    udTextoExistente = texto.slice(0, 10000);
+    const base64 = await fileToBase64(file);
+    const media = file.name.endsWith('.pdf') ? 'application/pdf'
+      : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+    const resp = await fetch('https://oposita-lengua-proxy.juanjosealvareztorres.workers.dev', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 1000,
+        messages: [{ role: 'user', content: [
+          { type: 'document', source: { type: 'base64', media_type: media, data: base64 } },
+          { type: 'text', text: 'Extrae todo el texto de este documento. Solo el texto.' }
+        ]}]})
+    });
+    const _rt = await resp.text(); let data; try { data = JSON.parse(_rt); } catch(e) { throw new Error('Error de conexión.'); }
+    udTextoExistente = (data.content?.[0]?.text || '').slice(0, 10000);
     document.getElementById('ud-archivo-ok').textContent = '✓ ' + file.name + ' cargado';
     document.getElementById('ud-archivo-ok').style.display = 'block';
   } catch(e) { alert('Error: ' + e.message); }
@@ -6836,15 +7154,11 @@ async function generarSeccionUD() {
   const inputUsuario = document.getElementById('ud-input-usuario').value.trim();
   document.getElementById('loading-seccion-ud').classList.add('visible');
 
-  const refExistente = (document.getElementById('ud-seccion-referencia')?.value?.trim() || '')
+  const refExistente = udTextoExistente
     ? `
 
-PARTE DE REFERENCIA:
-${(document.getElementById('ud-seccion-referencia')?.value?.trim() || '').slice(0, 4000)}`
-    : udTextoExistente ? `
-
-REFERENCIA GENERAL SA:
-${udTextoExistente.slice(0, 1500)}` : '';
+SA DE REFERENCIA (adaptar con estilo propio):
+${udTextoExistente.slice(0, 2000)}` : '';
 
   // Map each section to its specific guide
   const guiaSecciones = {
@@ -8713,56 +9027,6 @@ Y sin embargo los libros mueren. Los pergaminos se pudren, el papel amarillea y 
     tipo: "Texto argumentativo-reflexivo. Ensayo literario.",
     autor_solucion: "Antonio Muñoz Molina",
     fenomenos: "Paradoja central (solo y acompañado) / personificación del libro / gradación de los verbos en la adversativa (no te abandonan, no se cansan, no te mienten) / distinción engaño de libros / engaño de personas / léxico de la compañía y la fidelidad / uso del tú apelativo inclusivo"
-  },
-  {
-    texto: `Así que cuando descubrí en la acera de enfrente a una chica que se apeaba de un coche y decía adiós con la mano a alguien que se había quedado al volante esperando verla entrar en su portal, toqué la bocina repetidamente y bajé la ventanilla.
-—¡Oiga, por favor! ¡Oiga!
-El conductor volvió la cabeza. O sea que me había oído, que le traspasaba a otro mi pesadilla. Me miró como si no diera crédito a sus ojos, se bajó del coche y cruzó la calzada.
-—¿Qué haces tú aquí? —preguntó.
-—Pues ya ves, espiarte.
-Le vi en el rostro ese agotamiento de quien se esfuerza por encontrar una explicación después de haber dado muchas a lo largo del día. Y las que le faltaban cuando llegara a casa. Me dio pena.
-—Bueno —dijo—, es una chica que trabaja conmigo, no te vayas a creer.
-Estaba evidentemente turbado. Me eché a reír.
-—Pero papá, por Dios, si yo no creo nada, ¿me ves cara de Sherlock Holmes?, no pierdas el sentido del humor. Y vete a tranquilizarla, anda —añadí con los ojos fijos en la acera opuesta—, que nos mira un poco mosca.`,
-    fuente: "Narrativa española contemporánea.",
-    tipo: "Texto narrativo. Diálogo y narración en primera persona.",
-    autor_solucion: "Carmen Martín Gaite",
-    fenomenos: "Narrador en primera persona con focalización interna / diálogo directo integrado / caracterización del padre a través de detalles físicos (gafas sucias, tic de la mandíbula) / ironía y humor en el discurso de la narradora / inversión de roles adulto-hijo / léxico coloquial y registro oral / sintaxis fragmentada que imita el pensamiento / metáfora del timón invisible"
-  },
-  {
-    texto: `Ahora sólo soy huesos. Los peces me conocen
-y atraviesan confiados las cuencas de mis ojos.
-Se han disuelto mis manos en la sal y mis piernas
-crecen entre raíces en las rocas y el fango.
-Recuerdo vagamente mi vida y sueño a veces
-que hay plantas abisales coronando mi cráneo.
-Por la noche mis huesos están tristes y echan
-de menos el sonido de un corazón latiendo
-y el pulso de la carne
-que sirvió de alimento a la fauna marina.
-Es la vuelta al origen. Me resigno y me digo
-que ya andarán mis ojos entre perlas y estrellas,
-como siempre quisieron cuando sólo eran ojos,
-ni claros ni serenos, de un hombre en un naufragio.`,
-    fuente: "Poesía española contemporánea.",
-    tipo: "Texto poético. Verso libre. Voz del muerto.",
-    autor_solucion: "Luis García Montero (atrib.) o poesía de la experiencia",
-    fenomenos: "Voz enunciativa del muerto / verso libre con medida variable / imagen del naufragio como metáfora de la vida / personificación de los huesos / isotopía del mar y la disolución / oxímoron entre muerte y conciencia / final con quiasmo (ojos/ojos) / tono elegíaco / intertextualidad con Machado en el cierre"
-  },
-  {
-    texto: `Cuando el hijo del carpintero cumplió diecisiete años, se dispuso a cumplir el destino que predijeron los oráculos en el día de su nacimiento, así que abandonó la aldea y se encaminó al palacio del rey para conquistar la mano de la princesa y convertirse en heredero del trono. Tendría que superar numerosos peligros en el trayecto, pero, según los augurios, sólo uno de ellos era tan espantoso y extraordinario como para impedir el logro de su objetivo. «Cuídate de las insidias y asechanzas del guardián con un parche en el ojo izquierdo, porque ni el fuego ni la cólera darán tregua a su maldad», había dicho el oráculo. De modo que el hijo del carpintero recorrió los bosques y cruzó los ríos y atravesó las montañas del país camino del palacio, venciendo sin dificultad los obstáculos que salían a su paso, porque era intrépido y valiente. A la orilla del mar, en efecto, en los restos de un barco que había naufragado tiempo atrás, encontró un viejo pirata con barba y un parche en el ojo izquierdo. Al hijo del carpintero le pareció una persona inofensiva y nada terrible, incluso afable, pero, cumpliendo su destino, lo mató con un golpe de remo en la cabeza y lo arrojó al agua.`,
-    fuente: "Cuento. Narrativa española contemporánea.",
-    tipo: "Texto narrativo. Cuento de estructura clásica con inversión irónica.",
-    autor_solucion: "Luis Mateo Díez",
-    fenomenos: "Estructura de cuento popular (fórmulas de inicio, oráculo, viaje del héroe) / ironía trágica: el héroe cumple exactamente lo que debía evitar / narrador omnisciente en tercera persona / sintaxis acumulativa con polisíndeton (y...y...y) / discurso indirecto libre / léxico del relato oral / final abierto con segunda trampa del destino / intertextualidad con la tragedia griega (oráculo de Edipo)"
-  },
-  {
-    texto: `No eran los mejores tiempos para soñar. Desde el relato del náufrago me habían aconsejado que permaneciera un tiempo fuera de Colombia mientras se aliviaba la situación por las amenazas de muerte, reales o ficticias, que nos llegaban por diversos medios. Fue lo primero en que pensé cuando Luis Gabriel Cano me preguntó sin preámbulos qué pensaba hacer el miércoles próximo. Como no tenía ningún plan me dijo con su flema de costumbre que preparara mis papeles para viajar como enviado especial del periódico a la Conferencia de los Cuatro Grandes, que se reunía la semana siguiente en Ginebra.
-Lo primero que hice fue llamar por teléfono a mi madre. La noticia le pareció tan grande que me preguntó si me refería a alguna finca que se llamaba Ginebra. «Es una ciudad de Suiza», le dije. Sin inmutarse, con su serenidad interminable para asimilar los estropicios menos pensados de sus hijos, me preguntó hasta cuándo estaría allá, y le contesté que volvería a más tardar en dos semanas. En realidad, iba sólo por los cuatro días que duraba la reunión. Sin embargo, por razones que no tuvieron nada que ver con mi voluntad, no me demoré dos semanas sino casi tres años.`,
-    fuente: "Autobiografía. Narrativa hispanoamericana.",
-    tipo: "Texto narrativo autobiográfico.",
-    autor_solucion: "Gabriel García Márquez, Vivir para contarla",
-    fenomenos: "Narrador autobiográfico en primera persona / estructura retrospectiva / humor e ironía en el diálogo con la madre / frase célebre de la madre como cierre memorable / léxico periodístico y coloquial / alusión intertextual al relato del náufrago / mezcla de lo público y lo privado / analepsis y prolepsis / ritmo acumulativo en la enumeración de documentos"
   }
 ];
 
@@ -9854,7 +10118,47 @@ async function iniciarSoloLiterario() {
 
 Época solicitada: ${epocaTexto}.
 
-CORPUS (dominio público — reproduce íntegramente):\nMedieval: Manrique, romances, Berceo. Renacimiento: Garcilaso, Fray Luis, San Juan. Barroco: Quevedo, Góngora, Lope, Sor Juana. Romanticismo: Bécquer, Espronceda. Modernismo/98: Machado, Darío, Juan Ramón. Vanguardia: Lorca, Alberti, Cernuda, Aleixandre. Posguerra: Hierro, Blas de Otero, Celaya. Contemporáneo: Gil de Biedma, Ángel González. Hispanoam.: Neruda, Vallejo, Paz.\n\nDevuelve SOLO este JSON sin explicaciones ni markdown:
+CORPUS DE REFERENCIA (dominio público — reproduce íntegramente):
+
+MEDIEVAL: jarchas; fragmentos del Cantar de Mio Cid; Berceo (Milagros); Arcipreste de Hita (Libro de Buen Amor); Marqués de Santillana (serranillas); Jorge Manrique (Coplas a la muerte de su padre); romances del Romancero; cancioneros s.XV.
+
+RENACIMIENTO s.XVI: Garcilaso — Soneto I "Cuando me paro a contemplar mi estado", Soneto X "¡Oh dulces prendas!", Soneto XXIII "En tanto que de rosa y azucena", fragmentos de la Égloga I; Fray Luis de León — "Oda a la vida retirada", "Noche serena"; San Juan de la Cruz — "Noche oscura del alma", "Llama de amor viva"; Santa Teresa — "Vivo sin vivir en mí".
+
+BARROCO s.XVII: Quevedo — "Amor constante más allá de la muerte", "Miré los muros de la patria mía", "Poderoso caballero es don Dinero", sonetos morales; Góngora — "Mientras por competir con tu cabello", letrillas burlescas; Lope de Vega — sonetos; Sor Juana Inés — "Hombres necios que acusáis".
+
+ROMANTICISMO s.XIX: Espronceda — "Canción del pirata"; Bécquer — Rimas (I, IV, VII, XI, XIII, XXI, XXIV, XXXVIII, LIII, LXVI, LXXVI); Rosalía de Castro — poemas de En las orillas del Sar.
+
+MODERNISMO/98 (1900-1915): Rubén Darío — "Sonatina", "Lo fatal", "Canción de otoño en primavera"; Antonio Machado — "Retrato", "Caminante son tus huellas", "He andado muchos caminos"; Juan Ramón Jiménez — "El viaje definitivo", "Vino primero pura".
+
+GENERACIÓN DEL 27 (fallecidos antes de 1955, dominio público): Lorca (†1936) — "Romance sonámbulo", "La casada infiel", "Verde que te quiero verde", fragmentos del "Llanto por Ignacio Sánchez Mejías"; Alberti (obras anteriores a 1936) — "Se equivocó la paloma"; Salinas — "Para vivir no quiero"; Guillén — "Beato sillón".
+
+POESÍA DE POSGUERRA Y SOCIAL (dominio público — fallecidos antes de 1955):
+Dámaso Alonso (†1990) — NO dominio público aún.
+Miguel Hernández (†1942) — "El herido", "Nanas de la cebolla", "Llegó con tres heridas", "Vientos del pueblo me llevan", "El niño yuntero", sonetos del "Rayo que no cesa" (dominio público desde 2012).
+León Felipe (†1968) — NO aún.
+NOTA: Para autores fallecidos entre 1955-1980 (Blas de Otero †1979, Gabriel Celaya †1991, José Hierro †2002, Ángel González †2008, Gil de Biedma †1990, Claudio Rodríguez †1999, Francisco Brines †2021, Antonio Gamoneda vivo): reproducir SOLO poemas expresamente en dominio público o generar texto "en el estilo de" indicándolo claramente en el campo "autor".
+
+DOMINIO PÚBLICO CONFIRMADO 2026 (fallecidos en 1955 o antes):
+— Miguel Hernández (†1942): todos sus poemas.
+— Antonio Machado (†1939): toda su obra.
+— Federico García Lorca (†1936): toda su obra.
+— Juan Ramón Jiménez (†1958) — NO aún (dominio público en 2029).
+— Vicente Aleixandre (†1984) — NO aún.
+— Rafael Alberti (†1999) — NO aún. Solo obras publicadas antes de 1926 (dominio público por antigüedad de publicación en algunos países, pero en España NO — usar con cautela, mejor citar obras anteriores a 1926).
+— Pedro Salinas (†1951): dominio público desde 2022. Toda su obra.
+— Jorge Guillén (†1984): NO aún.
+— Luis Cernuda (†1963): dominio público desde 2034. NO aún.
+— Gerardo Diego (†1987): NO aún.
+— Rubén Darío (†1916): dominio público total.
+
+REGLAS ABSOLUTAS:
+- Reproduce el texto EXACTO y COMPLETO (o fragmento de 12-30 versos si es largo)
+- El campo "poema" NO incluye autor, título ni fecha
+- El poema debe tener marcas internas claras para identificar época, corriente y autor
+- Para autores NO en dominio público: genera texto "en el estilo de" e indícalo en el campo "autor" como "Texto en el estilo de [Autor]"
+- Varía autores: no repitas el mismo en llamadas consecutivas
+
+Devuelve SOLO este JSON sin explicaciones ni markdown:
 {
   "poema": "texto completo y exacto del poema, sin autor ni título",
   "titulo": "título real del poema",
@@ -9865,12 +10169,10 @@ CORPUS (dominio público — reproduce íntegramente):\nMedieval: Manrique, roma
   "corriente": "corriente o movimiento literario específico",
   "claves_identificacion": "3-5 marcas internas del texto (léxico, métrica, temas, recursos) que delatan época y autor, con citas del poema"
 }`,
-        2000
+        1500
       );
 
-      console.log('POEM RESP:', resp ? resp.slice(0,200) : 'VACÍO');
-      let clean = resp.replace(/```json|```/g, '').trim();
-      if (!clean.endsWith('}')) { const lb = clean.lastIndexOf('}'); if (lb>0) clean=clean.slice(0,lb+1); }
+      const clean = resp.replace(/```json|```/g, '').trim();
       soloLitData = JSON.parse(clean);
 
     } catch(e) {
@@ -9926,12 +10228,6 @@ CORPUS (dominio público — reproduce íntegramente):\nMedieval: Manrique, roma
     return; // End of IA path
 } // end iniciarSoloLiterario
 
-function getPlanosSeleccionados() {
-  return Array.from(document.querySelectorAll('.plano-check:checked')).map(c => c.value);
-}
-
-const NOMBRE_PLANOS = { 'fonico': 'Fónico-fonológico', 'morfosintactico': 'Morfosintáctico', 'lexico': 'Léxico-semántico', 'pragmatico': 'Pragmático-textual', 'estilistico': 'Estilístico-literario' };
-
 async function iniciarAnalisisProsa() {
   const planos = getPlanosSeleccionados();
   const textoProp = document.getElementById('prosa-texto-propio').value.trim();
@@ -9972,13 +10268,21 @@ async function iniciarAnalisisProsa() {
       // 50% chance to use priority banco text directly
       if (BANCO_TEXTOS_PROSA && BANCO_TEXTOS_PROSA.length > 0 && Math.random() < 0.35) {
         const t = BANCO_TEXTOS_PROSA[Math.floor(Math.random() * BANCO_TEXTOS_PROSA.length)];
-        const bd = { texto: t.texto, fuente: t.fuente, tipo: t.tipo, autor_estilo: t.autor_solucion, es_texto_real: true, fenomenos_destacados: t.fenomenos };
+        const respBanco = JSON.stringify({
+          texto: t.texto,
+          fuente: t.fuente,
+          tipo: t.tipo,
+          autor_estilo: t.autor_solucion,
+          es_texto_real: true,
+          fenomenos_destacados: t.fenomenos
+        });
         document.getElementById('loading-prosa').classList.remove('visible');
+        const bd = JSON.parse(respBanco);
         const planos = Array.from(document.querySelectorAll('.plano-check:checked')).map(c => c.value);
         const preguntas = await generarPreguntasProsa(bd.texto, planos.length ? planos : ['morfosintactico','lexico']);
         prosaData = bd;
         document.getElementById('prosa-texto-display').textContent = bd.texto;
-        document.getElementById('prosa-texto-fuente').textContent = '';
+        document.getElementById('prosa-texto-fuente').textContent = bd.fuente;
         document.getElementById('prosa-examen-titulo').textContent = 'Análisis de prosa — texto de práctica prioritario';
         const zona = document.getElementById('prosa-preguntas-zona');
         zona.innerHTML = '';
@@ -10024,7 +10328,7 @@ Devuelve SOLO este JSON:
 
     // Populate UI
     document.getElementById('prosa-texto-display').textContent = textoFinal;
-    document.getElementById('prosa-texto-fuente').textContent = '';
+    document.getElementById('prosa-texto-fuente').textContent = fuenteFinal;
     document.getElementById('prosa-examen-titulo').textContent = `Análisis de prosa — ${planos.map(p => NOMBRE_PLANOS[p]).join(' + ')}`;
 
     const zona = document.getElementById('prosa-preguntas-zona');
@@ -11042,7 +11346,7 @@ function tarjetas_usarTemario() {
 }
 
 async function generarTarjetas() {
-  const cantidad = Math.min(parseInt(document.getElementById('tarjetas-cantidad').value) || 8, 12);
+  const cantidad = parseInt(document.getElementById('tarjetas-cantidad').value) || 15;
   const tipo = document.getElementById('tarjetas-tipo').value;
   document.getElementById('tarjetas-config').style.display = 'none';
   document.getElementById('loading-tarjetas').classList.add('visible');
@@ -11064,7 +11368,7 @@ async function generarTarjetas() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 6000,
+        max_tokens: 4000,
         system: `Eres un experto en didáctica de Lengua Castellana y Literatura y en la preparación de oposiciones a profesorado en Extremadura. Generas tarjetas de estudio didácticas, completas y rigurosas, basadas en el contenido del tema proporcionado. Devuelves SOLO JSON sin markdown.`,
         messages: [{ role: 'user', content:
           `${temaContexto}
@@ -11092,18 +11396,10 @@ Devuelve SOLO este JSON:
       })
     });
 
-    const respText = await resp.text();
-    let data;
-    try { data = JSON.parse(respText); } catch(e) { throw new Error('Error de conexión con el servidor.'); }
-    if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
+    const _rt = await resp.text(); let data; try { data = JSON.parse(_rt); } catch(e) { throw new Error('Error de conexión.'); }
     const raw = data.content?.[0]?.text || '';
     const clean = raw.replace(/```json|```/g, '').trim();
-    let parsed;
-    try {
-      let cleanFixed = clean;
-      if (!cleanFixed.endsWith('}')) { const lb = cleanFixed.lastIndexOf('}'); if (lb>0) cleanFixed=cleanFixed.slice(0,lb+1); }
-      parsed = JSON.parse(cleanFixed);
-    } catch(e) { throw new Error('Error al procesar la respuesta. Inténtalo de nuevo.'); }
+    const parsed = JSON.parse(clean);
 
     tarjetasMazo = parsed.tarjetas.map(t => ({ ...t, sabida: null }));
     tarjetasMazoActivo = [...tarjetasMazo.map((_, i) => i)];
@@ -12277,18 +12573,10 @@ Devuelve SOLO este JSON:
       })
     });
 
-    const respText = await resp.text();
-    let data;
-    try { data = JSON.parse(respText); } catch(e) { throw new Error('Error de conexión con el servidor.'); }
-    if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
+    const _rt = await resp.text(); let data; try { data = JSON.parse(_rt); } catch(e) { throw new Error('Error de conexión.'); }
     const raw = data.content?.[0]?.text || '';
     const clean = raw.replace(/```json|```/g, '').trim();
-    let parsed;
-    try {
-      let cleanFixed = clean;
-      if (!cleanFixed.endsWith('}')) { const lb = cleanFixed.lastIndexOf('}'); if (lb>0) cleanFixed=cleanFixed.slice(0,lb+1); }
-      parsed = JSON.parse(cleanFixed);
-    } catch(e) { throw new Error('Error al procesar la respuesta. Inténtalo de nuevo.'); }
+    const parsed = JSON.parse(clean);
 
     testPreguntas = parsed.preguntas;
     testTituloTema = parsed.titulo || testTituloTema;
@@ -12854,225 +13142,104 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-// ═══════════════════════════════════════════════════════
-// SELECTORES PUNTO POR PUNTO — PROG Y SA
-// ═══════════════════════════════════════════════════════
-
-// Populate prog punto selector from INDICE_ESTANDAR
-(function() {
-  document.addEventListener('DOMContentLoaded', function() {
-    // Prog selector
-    const progSel = document.getElementById('prog-punto-selector');
-    if (progSel && typeof INDICE_ESTANDAR !== 'undefined') {
-      INDICE_ESTANDAR.forEach((punto, i) => {
-        const opt = document.createElement('option');
-        opt.value = i;
-        opt.textContent = punto;
-        progSel.appendChild(opt);
-      });
-    }
-    // SA selector
-    const udSel = document.getElementById('ud-punto-selector');
-    if (udSel && typeof INDICE_SA !== 'undefined') {
-      INDICE_SA.forEach((punto, i) => {
-        const opt = document.createElement('option');
-        opt.value = i;
-        opt.textContent = punto;
-        udSel.appendChild(opt);
-      });
-    }
-  });
-})();
-
-// Override procesarProgExistente to use selected punto
-const _origProcesarProgExistente = procesarProgExistente;
-async function procesarProgExistente(file) {
-  if (!file) return;
-  const puntoSel = document.getElementById('prog-punto-selector');
-  const puntoIdx = puntoSel ? parseInt(puntoSel.value) : NaN;
-  const puntoNombre = (!isNaN(puntoIdx) && typeof INDICE_ESTANDAR !== 'undefined')
-    ? INDICE_ESTANDAR[puntoIdx] : '';
-
-  document.getElementById('loading-prog-archivo').classList.add('visible');
-  try {
-    const ext = file.name.split('.').pop().toLowerCase();
-    let texto = '';
-    if (ext === 'docx') {
-      const ab = await file.arrayBuffer();
-      const result = await mammoth.extractRawText({ arrayBuffer: ab });
-      texto = result.value.trim();
-    } else if (ext === 'txt') {
-      texto = await file.text();
-    } else if (ext === 'pdf') {
-      const base64 = await fileToBase64(file);
-      const data = await fetchProxy({ model: 'claude-sonnet-4-6', max_tokens: 4000,
-        messages: [{ role: 'user', content: [
-          { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: base64 } },
-          { type: 'text', text: 'Extrae todo el texto. Solo el texto, sin comentarios.' }
-        ]}]});
-      texto = data.content?.[0]?.text || '';
-    } else throw new Error('Usa .docx, .txt o .pdf.');
-    if (!texto.trim()) throw new Error('No se pudo extraer texto.');
-
-    // Store with punto label for context
-    progTextoExistente = puntoNombre
-      ? `[SECCIÓN: ${puntoNombre}]\n\n${texto.slice(0, 15000)}`
-      : texto.slice(0, 15000);
-
-    const label = puntoNombre
-      ? `✓ ${file.name} — ${puntoNombre}`
-      : `✓ ${file.name}`;
-    document.getElementById('prog-archivo-nombre').textContent = label;
-    document.getElementById('prog-archivo-ok').style.display = 'block';
-    document.getElementById('prog-upload-zona').style.borderColor = 'var(--success)';
-  } catch(e) { alert('Error: ' + e.message); }
-  document.getElementById('loading-prog-archivo').classList.remove('visible');
+// ── Cookie helpers for API key ──
+function setApiKeyCookie(key) {
+  const expires = new Date();
+  expires.setFullYear(expires.getFullYear() + 2);
+  document.cookie = 'opositaLengua_apikey=' + encodeURIComponent(key) + '; expires=' + expires.toUTCString() + '; path=/; SameSite=Lax';
+  localStorage.setItem('opositaLengua_apikey', key);
 }
-
-// Override procesarUDExistente to use selected punto
-async function procesarUDExistente(file) {
-  if (!file) return;
-  const puntoSel = document.getElementById('ud-punto-selector');
-  const puntoIdx = puntoSel ? parseInt(puntoSel.value) : NaN;
-  const puntoNombre = (!isNaN(puntoIdx) && typeof INDICE_SA !== 'undefined')
-    ? INDICE_SA[puntoIdx] : '';
-
-  document.getElementById('loading-ud-archivo').classList.add('visible');
-  try {
-    const ext = file.name.split('.').pop().toLowerCase();
-    let texto = '';
-    if (ext === 'docx') {
-      const ab = await file.arrayBuffer();
-      const result = await mammoth.extractRawText({ arrayBuffer: ab });
-      texto = result.value.trim();
-    } else if (ext === 'txt') {
-      texto = await file.text();
-    } else if (ext === 'pdf') {
-      const base64 = await fileToBase64(file);
-      const data = await fetchProxy({ model: 'claude-sonnet-4-6', max_tokens: 4000,
-        messages: [{ role: 'user', content: [
-          { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: base64 } },
-          { type: 'text', text: 'Extrae todo el texto.' }
-        ]}]});
-      texto = data.content?.[0]?.text || '';
-    } else throw new Error('Usa .docx, .txt o .pdf.');
-    if (!texto.trim()) throw new Error('No se pudo extraer texto.');
-
-    udTextoExistente = puntoNombre
-      ? `[PARTE: ${puntoNombre}]\n\n${texto.slice(0, 10000)}`
-      : texto.slice(0, 10000);
-
-    const label = puntoNombre
-      ? `✓ ${file.name} — ${puntoNombre}`
-      : `✓ ${file.name}`;
-    document.getElementById('ud-archivo-ok').textContent = label;
-    document.getElementById('ud-archivo-ok').style.display = 'block';
-  } catch(e) { alert('Error: ' + e.message); }
-  document.getElementById('loading-ud-archivo').classList.remove('visible');
+function getApiKeyCookie() {
+  const cookies = document.cookie.split(';');
+  for (let c of cookies) {
+    const parts = c.trim().split('=');
+    if (parts[0] === 'opositaLengua_apikey') return decodeURIComponent(parts.slice(1).join('=') || '');
+  }
+  return localStorage.getItem('opositaLengua_apikey') || '';
 }
-
-
+function removeApiKeyCookie() {
+  document.cookie = 'opositaLengua_apikey=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+  localStorage.removeItem('opositaLengua_apikey');
+}
 
 // ── Timer bloque literario ──
 let _timerSoloLitInterval = null;
-
 function actualizarTimerSoloLit() {
   const display = document.getElementById('timer-solo-lit');
   if (!display) return;
   const m = Math.floor(timerSoloLitSeconds / 60);
   const s = timerSoloLitSeconds % 60;
-  display.textContent = `${m}:${s.toString().padStart(2,'0')}`;
+  display.textContent = m + ':' + s.toString().padStart(2,'0');
   if (_timerSoloLitInterval) clearInterval(_timerSoloLitInterval);
   _timerSoloLitInterval = setInterval(() => {
     if (timerSoloLitSeconds > 0) {
       timerSoloLitSeconds--;
       const mm = Math.floor(timerSoloLitSeconds / 60);
       const ss = timerSoloLitSeconds % 60;
-      display.textContent = `${mm}:${ss.toString().padStart(2,'0')}`;
+      display.textContent = mm + ':' + ss.toString().padStart(2,'0');
     } else {
       clearInterval(_timerSoloLitInterval);
       display.textContent = '0:00';
-      display.style.color = '#c0392b';
     }
   }, 1000);
 }
 
+// ── NOMBRE_PLANOS ──
+function getPlanosSeleccionados() {
+  return Array.from(document.querySelectorAll('.plano-check:checked')).map(c => c.value);
+}
+const NOMBRE_PLANOS = { 'fonico': 'Fónico-fonológico', 'morfosintactico': 'Morfosintáctico', 'lexico': 'Léxico-semántico', 'pragmatico': 'Pragmático-textual', 'estilistico': 'Estilístico-literario' };
 
 // ── Mejorar punto subido de programación ──
 function mejorarPuntoProgSubido() {
-  if (!progTextoExistente) {
-    alert('Primero sube el punto de tu programación.');
-    return;
-  }
-
-  // Step 1: Set the index textarea if empty
+  if (!progTextoExistente) { alert('Primero sube el punto de tu programación.'); return; }
   const indiceEl = document.getElementById('prog-indice-texto');
-  if (indiceEl && !indiceEl.value.trim()) {
-    indiceEl.value = INDICE_ESTANDAR.join('\n');
-  }
-
-  // Step 2: Set the section from the punto selector
+  if (indiceEl && !indiceEl.value.trim()) indiceEl.value = INDICE_ESTANDAR.join('\n');
   const puntoSel = document.getElementById('prog-punto-selector');
   const puntoIdx = (puntoSel && puntoSel.value !== '') ? parseInt(puntoSel.value) : 0;
-
-  // Step 3: Initialize if not already done
   if (!progSecciones || progSecciones.length === 0) {
     const indiceTexto = indiceEl ? indiceEl.value.trim() : '';
-    progSecciones = indiceTexto
-      ? indiceTexto.split('\n').map(s => s.trim()).filter(s => s.length > 2)
-      : [...INDICE_ESTANDAR];
-    progSeccionActual = 0;
-    progContenido = {};
-    // Show editor
+    progSecciones = indiceTexto ? indiceTexto.split('\n').map(s => s.trim()).filter(s => s.length > 2) : [...INDICE_ESTANDAR];
+    progSeccionActual = 0; progContenido = {};
     document.getElementById('prog-inicio-card').style.display = 'none';
     document.getElementById('prog-editor-zona').style.display = 'block';
   }
-
-  // Step 4: Jump to the selected section
   progSeccionActual = (!isNaN(puntoIdx) && puntoIdx < progSecciones.length) ? puntoIdx : 0;
-
-  // Step 5: Show the section panel
   mostrarSeccionProg();
-
-  // Step 6: Copy uploaded text to reference field (after mostrarSeccionProg resets it)
   setTimeout(() => {
     const refField = document.getElementById('prog-seccion-referencia');
     if (refField) {
       let texto = progTextoExistente;
-      if (texto.startsWith('[SECCIÓN:')) {
-        const lineEnd = texto.indexOf('\n\n');
-        if (lineEnd > 0) texto = texto.slice(lineEnd + 2);
-      }
+      if (texto.startsWith('[SECCIÓN:')) { const le = texto.indexOf('\n\n'); if (le > 0) texto = texto.slice(le+2); }
       refField.value = texto;
     }
-    // Step 7: Auto-generate
     generarSeccionProg();
   }, 100);
 }
 
-
-// ── Gestión de API key con cookies persistentes ──
-function setApiKeyCookie(key) {
-  const expires = new Date();
-  expires.setFullYear(expires.getFullYear() + 2); // 2 años
-  document.cookie = 'opositaLengua_apikey=' + encodeURIComponent(key) + '; expires=' + expires.toUTCString() + '; path=/; SameSite=Lax';
-  localStorage.setItem('opositaLengua_apikey', key); // backup
-}
-
-function getApiKeyCookie() {
-  // Try cookie first, then localStorage as fallback
-  const cookies = document.cookie.split(';');
-  for (let c of cookies) {
-    const [k, v] = c.trim().split('=');
-    if (k === 'opositaLengua_apikey') return decodeURIComponent(v || '');
-  }
-  return localStorage.getItem('opositaLengua_apikey') || '';
-}
-
-function removeApiKeyCookie() {
-  document.cookie = 'opositaLengua_apikey=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-  localStorage.removeItem('opositaLengua_apikey');
-}
+// ── Selectores punto por punto ──
+(function() {
+  document.addEventListener('DOMContentLoaded', function() {
+    const progSel = document.getElementById('prog-punto-selector');
+    if (progSel && typeof INDICE_ESTANDAR !== 'undefined') {
+      INDICE_ESTANDAR.forEach((punto, i) => {
+        const opt = document.createElement('option');
+        opt.value = i; opt.textContent = punto;
+        progSel.appendChild(opt);
+      });
+    }
+    const udSel = document.getElementById('ud-punto-selector');
+    if (udSel && typeof INDICE_SA !== 'undefined') {
+      INDICE_SA.forEach((punto, i) => {
+        const opt = document.createElement('option');
+        opt.value = i; opt.textContent = punto;
+        udSel.appendChild(opt);
+      });
+    }
+    const stored = getApiKeyCookie();
+    if (!stored) setTimeout(() => mostrarOverlayApiKey(), 800);
+  });
+})();
 
 </script>
 </body>
