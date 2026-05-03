@@ -2177,6 +2177,12 @@ body.is-app header {
           </div>
           <div class="field" id="ud-upload-col" style="display:none;">
             <label>Sube tu SA existente</label>
+            <div class="field" style="background:var(--cream);border-radius:4px;padding:0.75rem;border-left:3px solid var(--gold);margin-bottom:0.5rem;">
+              <label style="font-size:0.82rem;font-weight:600;display:block;margin-bottom:0.4rem;">📄 ¿Qué parte vas a subir?</label>
+              <select id="ud-punto-selector" style="width:100%;padding:0.4rem;border:1px solid var(--border);border-radius:4px;font-size:0.78rem;background:var(--white);">
+                <option value="">— Selecciona la parte —</option>
+              </select>
+            </div>
             <div id="ud-upload-zona" style="border:2px dashed var(--border); border-radius:4px; padding:1rem; text-align:center; cursor:pointer;" id="ud-drop-zone" onclick="document.getElementById('file-ud-existente').click()">
               <div style="font-size:1.2rem; margin-bottom:0.3rem;">📄</div>
               <div style="font-size:0.8rem;color:var(--muted);">Word (.docx) o PDF</div>
