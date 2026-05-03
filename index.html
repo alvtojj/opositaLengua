@@ -2177,7 +2177,7 @@ body.is-app header {
           </div>
           <div class="field" id="ud-upload-col" style="display:none;">
             <label>Sube tu SA existente</label>
-            <div id="ud-upload-zona" style="border:2px dashed var(--border); border-radius:4px; padding:1rem; text-align:center; cursor:pointer;" onclick="document.getElementById('file-ud-existente').click()">
+            <div id="ud-upload-zona" style="border:2px dashed var(--border); border-radius:4px; padding:1rem; text-align:center; cursor:pointer;" id="ud-drop-zone" onclick="if(document.getElementById('ud-punto-selector').value !== '') document.getElementById('file-ud-existente').click(); else alert('Primero selecciona qué parte vas a subir.')">
               <div style="font-size:1.2rem; margin-bottom:0.3rem;">📄</div>
               <div style="font-size:0.8rem;color:var(--muted);">Word (.docx) o PDF</div>
               <select id="ud-punto-selector" style="width:100%;padding:0.4rem;border:1px solid var(--border);border-radius:4px;font-size:0.78rem;margin-top:0.4rem;background:var(--white);">
@@ -6059,89 +6059,45 @@ function handleDrop(e) {
 async function procesarArchivoTema(file) {
   if (!file) return;
   const ext = file.name.split('.').pop().toLowerCase();
-  if (!['pdf', 'docx', 'doc', 'txt'].includes(ext)) {
-    alert('Formato no admitido. Usa PDF, Word (.docx) o texto plano.');
+  if (!['pdf','docx','doc','txt'].includes(ext)) {
+    alert('Formato no admitido. Usa .docx, .pdf o .txt');
     return;
   }
-
-  // Reset state
   window._temaPropio = '';
   document.getElementById('btn-esquema').disabled = !temaSeleccionado;
   document.getElementById('archivo-cargado').style.display = 'none';
   document.getElementById('upload-zona').style.borderColor = 'var(--border)';
   document.getElementById('loading-archivo').classList.add('visible');
-
   try {
-    const base64 = await fileToBase64(file);
-
     if (ext === 'txt') {
-      // TXT: read directly without API
-      const texto = await file.text();
+      window._temaPropio = (await file.text()).slice(0, 12000);
+    } else if (ext === 'docx') {
+      const ab = await file.arrayBuffer();
+      const result = await mammoth.extractRawText({ arrayBuffer: ab });
+      const texto = result.value.trim();
+      if (!texto || texto.length < 20) throw new Error('No se pudo extraer texto del .docx.');
       window._temaPropio = texto.slice(0, 12000);
-
+    } else if (ext === 'doc') {
+      throw new Error('Formato .doc no soportado. Guarda como .docx.');
     } else if (ext === 'pdf') {
-      const resp = await fetch('https://oposita-lengua-proxy.juanjosealvareztorres.workers.dev', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 1000,
-          messages: [{
-            role: 'user',
-            content: [
-              { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: base64 } },
-              { type: 'text', text: 'Extrae y devuelve todo el texto de este documento. Devuelve únicamente el texto extraído, sin comentarios ni explicaciones.' }
-            ]
-          }]
-        })
-      });
-      const _rt = await resp.text(); let data; try { data = JSON.parse(_rt); } catch(e) { throw new Error('Error de conexión.'); }
-      if (data.error) throw new Error(data.error.message || 'Error de API');
-      const extraido = data.content?.[0]?.text || '';
-      if (!extraido.trim()) throw new Error('No se pudo extraer texto del PDF.');
-      window._temaPropio = extraido.slice(0, 12000);
-
-    } else {
-      // .docx — la API de Anthropic solo admite .docx moderno, no .doc antiguo
-      // Para .doc avisamos al usuario de que convierta
-      if (ext === 'doc') {
-        throw new Error('El formato .doc (Word antiguo) no está soportado. Guarda el archivo como .docx desde Word y vuelve a subirlo.');
-      }
-      const resp = await fetch('https://oposita-lengua-proxy.juanjosealvareztorres.workers.dev', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 1000,
-          messages: [{
-            role: 'user',
-            content: [
-              { type: 'document', source: { type: 'base64', media_type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', data: base64 } },
-              { type: 'text', text: 'Extrae y devuelve todo el texto de este documento. Devuelve únicamente el texto extraído, sin comentarios ni explicaciones.' }
-            ]
-          }]
-        })
-      });
-      const _rt = await resp.text(); let data; try { data = JSON.parse(_rt); } catch(e) { throw new Error('Error de conexión.'); }
-      if (data.error) throw new Error(data.error.message || 'Error de API');
-      const extraido = data.content?.[0]?.text || '';
-      if (!extraido.trim()) throw new Error('No se pudo extraer texto del documento.');
-      window._temaPropio = extraido.slice(0, 12000);
+      const base64 = await fileToBase64(file);
+      const data = await fetchProxy({ model: 'claude-sonnet-4-6', max_tokens: 3000,
+        messages: [{ role: 'user', content: [
+          { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: base64 } },
+          { type: 'text', text: 'Extrae todo el texto. Solo el texto.' }
+        ]}]});
+      const texto = data.content?.[0]?.text || '';
+      if (!texto.trim()) throw new Error('PDF sin texto seleccionable. Usa .docx.');
+      window._temaPropio = texto.slice(0, 12000);
     }
-
-    // Éxito: mostrar confirmación y activar botón
-    document.getElementById('archivo-nombre').textContent = '✓ ' + file.name + ' cargado correctamente';
-    document.getElementById('archivo-cargado').style.display = 'block';
+    document.getElementById('archivo-nombre').textContent = file.name;
+    document.getElementById('archivo-cargado').style.display = 'flex';
     document.getElementById('upload-zona').style.borderColor = 'var(--success)';
     document.getElementById('btn-esquema').disabled = false;
-
-  } catch (e) {
-    alert('Error al procesar el archivo: ' + e.message);
-    window._temaPropio = '';
+  } catch(e) {
+    alert('Error: ' + e.message);
     document.getElementById('upload-zona').style.borderColor = 'var(--border)';
-    document.getElementById('btn-esquema').disabled = !temaSeleccionado;
   }
-
   document.getElementById('loading-archivo').classList.remove('visible');
 }
 
@@ -6824,23 +6780,33 @@ async function procesarProgExistente(file) {
   if (!file) return;
   document.getElementById('loading-prog-archivo').classList.add('visible');
   try {
-    const base64 = await fileToBase64(file);
-    const media = file.name.endsWith('.pdf') ? 'application/pdf'
-      : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-    const resp = await fetch('https://oposita-lengua-proxy.juanjosealvareztorres.workers.dev', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 1000,
+    const ext = file.name.split('.').pop().toLowerCase();
+    let texto = '';
+    if (ext === 'docx') {
+      const ab = await file.arrayBuffer();
+      const r = await mammoth.extractRawText({ arrayBuffer: ab });
+      texto = r.value.trim();
+    } else if (ext === 'txt') {
+      texto = await file.text();
+    } else if (ext === 'pdf') {
+      const base64 = await fileToBase64(file);
+      const data = await fetchProxy({ model: 'claude-sonnet-4-6', max_tokens: 4000,
         messages: [{ role: 'user', content: [
-          { type: 'document', source: { type: 'base64', media_type: media, data: base64 } },
-          { type: 'text', text: 'Extrae todo el texto de este documento. Solo el texto, sin comentarios.' }
-        ]}]})
-    });
-    const _rt = await resp.text(); let data; try { data = JSON.parse(_rt); } catch(e) { throw new Error('Error de conexión.'); }
-    progTextoExistente = (data.content?.[0]?.text || '').slice(0, 15000);
-    document.getElementById('prog-archivo-nombre').textContent = '✓ ' + file.name;
+          { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: base64 } },
+          { type: 'text', text: 'Extrae todo el texto.' }
+        ]}]});
+      texto = data.content?.[0]?.text || '';
+    } else throw new Error('Usa .docx, .txt o .pdf.');
+    if (!texto.trim()) throw new Error('No se pudo extraer texto.');
+    const puntoSel = document.getElementById('prog-punto-selector');
+    const puntoIdx = puntoSel && puntoSel.value !== '' ? parseInt(puntoSel.value) : NaN;
+    const puntoNombre = (!isNaN(puntoIdx) && typeof INDICE_ESTANDAR !== 'undefined') ? INDICE_ESTANDAR[puntoIdx] : '';
+    progTextoExistente = puntoNombre ? `[SECCIÓN: ${puntoNombre}]\n\n${texto.slice(0,15000)}` : texto.slice(0,15000);
+    const label = puntoNombre ? `✓ ${file.name} — ${puntoNombre}` : `✓ ${file.name}`;
+    document.getElementById('prog-archivo-nombre').textContent = label;
     document.getElementById('prog-archivo-ok').style.display = 'block';
     document.getElementById('prog-upload-zona').style.borderColor = 'var(--success)';
-  } catch(e) { alert('Error al procesar: ' + e.message); }
+  } catch(e) { alert('Error: ' + e.message); }
   document.getElementById('loading-prog-archivo').classList.remove('visible');
 }
 
@@ -6878,7 +6844,9 @@ function mostrarSeccionProg() {
   const seccion = progSecciones[progSeccionActual];
   const progreso = Math.round((progSeccionActual / progSecciones.length) * 100);
   document.getElementById('prog-seccion-titulo').textContent = seccion;
-  document.getElementById('prog-seccion-num').textContent = `Sección ${progSeccionActual + 1} de ${progSecciones.length}`;
+  const cursoActual = document.getElementById('prog-curso')?.value || '1ESO';
+  const cursoLabels = {'1ESO':'1º ESO','2ESO':'2º ESO','3ESO':'3º ESO','4ESO':'4º ESO','1BACH':'1º Bachillerato','2BACH':'2º Bachillerato'};
+  document.getElementById('prog-seccion-num').textContent = `Sección ${progSeccionActual + 1} de ${progSecciones.length} — ${cursoLabels[cursoActual] || cursoActual}`;
   document.getElementById('prog-progreso-texto').textContent = `${progSeccionActual} de ${progSecciones.length} completadas`;
   document.getElementById('prog-progreso-barra').style.width = progreso + '%';
   document.getElementById('prog-input-usuario').value = '';
@@ -11432,7 +11400,7 @@ function tarjetas_usarTemario() {
 }
 
 async function generarTarjetas() {
-  const cantidad = parseInt(document.getElementById('tarjetas-cantidad').value) || 15;
+  const cantidad = Math.min(parseInt(document.getElementById('tarjetas-cantidad').value) || 8, 12);
   const tipo = document.getElementById('tarjetas-tipo').value;
   document.getElementById('tarjetas-config').style.display = 'none';
   document.getElementById('loading-tarjetas').classList.add('visible');
