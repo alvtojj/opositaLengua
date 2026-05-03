@@ -1076,9 +1076,9 @@ body.is-app header {
         <div class="field">
           <label>Número de preguntas</label>
           <select id="test-cantidad">
-            <option value="10">10 preguntas (repaso rápido)</option>
-            <option value="15" selected>15 preguntas (sesión estándar)</option>
-            <option value="20">20 preguntas (sesión completa)</option>
+            <option value="5">5 preguntas (repaso rápido)</option>
+            <option value="10" selected>10 preguntas (sesión estándar)</option>
+            <option value="15">15 preguntas (sesión completa)</option>
           </select>
         </div>
 
@@ -2177,12 +2177,9 @@ body.is-app header {
           </div>
           <div class="field" id="ud-upload-col" style="display:none;">
             <label>Sube tu SA existente</label>
-            <div id="ud-upload-zona" style="border:2px dashed var(--border); border-radius:4px; padding:1rem; text-align:center; cursor:pointer;" id="ud-drop-zone" onclick="if(document.getElementById('ud-punto-selector').value !== '') document.getElementById('file-ud-existente').click(); else alert('Primero selecciona qué parte vas a subir.')">
+            <div id="ud-upload-zona" style="border:2px dashed var(--border); border-radius:4px; padding:1rem; text-align:center; cursor:pointer;" id="ud-drop-zone" onclick="document.getElementById('file-ud-existente').click()">
               <div style="font-size:1.2rem; margin-bottom:0.3rem;">📄</div>
               <div style="font-size:0.8rem;color:var(--muted);">Word (.docx) o PDF</div>
-              <select id="ud-punto-selector" style="width:100%;padding:0.4rem;border:1px solid var(--border);border-radius:4px;font-size:0.78rem;margin-top:0.4rem;background:var(--white);">
-                <option value="">— Selecciona la parte que vas a subir —</option>
-              </select>
               <input type="file" id="file-ud-existente" accept=".pdf,.docx,.txt" style="display:none" onchange="procesarUDExistente(this.files[0])">
             </div>
             <div id="ud-archivo-ok" style="display:none; margin-top:0.5rem; font-size:0.8rem; color:var(--success);"></div>
@@ -10139,7 +10136,9 @@ async function iniciarSoloLiterario() {
     document.getElementById('solo-lit-solucion').style.display = 'none';
     document.getElementById('solo-lit-valoracion').style.display = 'none';
     timerSoloLitSeconds = 2700;
-    actualizarTimerSoloLit();
+    const display = document.getElementById('timer-solo-lit');
+    if (display) display.textContent = '45:00';
+    if (_timerSoloLitInterval) { clearInterval(_timerSoloLitInterval); _timerSoloLitInterval = null; }
 
     document.getElementById('loading-solo-lit').classList.remove('visible');
     document.getElementById('practica-config').style.display = 'none';
@@ -10273,7 +10272,9 @@ Devuelve SOLO este JSON sin explicaciones ni markdown:
     document.getElementById('solo-lit-solucion').style.display = 'none';
     document.getElementById('solo-lit-valoracion').style.display = 'none';
     timerSoloLitSeconds = 2700;
-    actualizarTimerSoloLit();
+    const display = document.getElementById('timer-solo-lit');
+    if (display) display.textContent = '45:00';
+    if (_timerSoloLitInterval) { clearInterval(_timerSoloLitInterval); _timerSoloLitInterval = null; }
 
     document.getElementById('loading-solo-lit').classList.remove('visible');
     document.getElementById('practica-config').style.display = 'none';
