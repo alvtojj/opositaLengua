@@ -10502,32 +10502,44 @@ async function entregarAnalisisProsa() {
   const teoriaUsada = planos.map(p => TEORIA_PLANOS[p]).join('\n\n---\n\n');
   const respuestasTexto = respuestas.map(r => `PLANO ${r.plano.toUpperCase()}:\n${r.respuesta}`).join('\n\n');
 
-  const sistema = `Eres evaluador oficial de la Prueba 1A de las oposiciones a profesorado de Lengua Castellana y Literatura en Extremadura (Convocatoria 2025).
-Evalúas análisis lingüísticos de texto en prosa aplicando los criterios oficiales y la teoría de los planos lingüísticos.
+  const sistema = `Eres evaluador oficial de la Prueba 1A de las oposiciones a profesorado de Lengua Castellana y Literatura en Extremadura (Convocatoria 2025). Evalúas análisis lingüísticos de texto en prosa aplicando los criterios oficiales del Anexo VI.
 
-TEORÍA DE REFERENCIA DE LOS PLANOS ANALIZADOS:
+══ CRITERIOS OFICIALES QUE EVALÚAS ══
+Criterio 1.3 — Describe los principales procedimientos morfosintácticos, determina las relaciones sintácticas, semánticas y pragmáticas. [1,5 puntos]
+Criterio 1.4 — Identifica las modalidades y tipologías textuales, analiza los rasgos de los diferentes niveles del texto que activan la intención comunicativa. [2 puntos]
+Criterio 1.5 — Emplea la terminología específica de la disciplina con rigor, cohesión y coherencia. [0,5 puntos — transversal]
+
+══ PUNTOS DÉBILES CONOCIDOS DEL OPOSITOR (tribunal real 2025) ══
+- Criterio 1.4: no analizaba los rasgos léxico-semánticos ni vinculaba las funciones del lenguaje al texto con ejemplos concretos.
+- Criterio 1.3: no usaba terminología NGLE, no delimitaba bien las proposiciones.
+Indica expresamente si en esta entrega comete los mismos errores.
+
+══ TEORÍA DE REFERENCIA DE LOS PLANOS ANALIZADOS ══
 ${teoriaUsada}`;
 
-  const mensaje = `Evalúa el siguiente análisis lingüístico de un opositor.
+  const mensaje = `Evalúa el siguiente análisis lingüístico de texto en prosa de un opositor a Lengua Castellana y Literatura (Extremadura 2025).
 
 TEXTO ANALIZADO:
 ${prosaData.texto || ''}
 Fuente: ${prosaData.fuente || ''}
-Tipología textual: ${prosaData.tipo || ''}
-${prosaData.autor_estilo ? 'Estilo recreado de: ' + prosaData.autor_estilo : ''}
-${prosaData.fenomenos_destacados ? 'Fenómenos lingüísticos presentes en el texto (con ejemplos): ' + prosaData.fenomenos_destacados : ''}
+Tipología textual real: ${prosaData.tipo || ''}
+${prosaData.autor_estilo ? 'Estilo: ' + prosaData.autor_estilo : ''}
+${prosaData.fenomenos_destacados ? '\nFENÓMENOS LINGÜÍSTICOS PRESENTES EN EL TEXTO (referencia de corrección):\n' + prosaData.fenomenos_destacados : ''}
 
 ANÁLISIS DEL OPOSITOR:
 ${respuestasTexto}
 
-Para cada plano analizado, valora:
-1. Fenómenos identificados correctamente y bien comentados
-2. Fenómenos relevantes omitidos o insuficientemente tratados
-3. Uso correcto de la terminología lingüística
-4. Vinculación de los fenómenos con la tipología textual e intencionalidad del autor
-5. Nota orientativa del plano
+Para cada plano analizado, estructura la valoración así:
+▸ PUNTUACIÓN ORIENTATIVA DEL PLANO
+▸ ACIERTOS: fenómenos bien identificados y comentados, con citas del análisis
+▸ OMISIONES RELEVANTES: fenómenos presentes en el texto que no ha comentado y que el tribunal valoraría
+▸ ERRORES O IMPRECISIONES: mal uso de terminología o análisis incorrecto
+▸ VINCULACIÓN: ¿ha relacionado los fenómenos con la tipología textual e intención comunicativa? (es lo que más exige el criterio 1.4)
 
-Al final: VALORACIÓN GLOBAL con puntuación estimada y 3 recomendaciones concretas para mejorar.`;
+Al final:
+▸ PUNTUACIÓN TOTAL ESTIMADA: X / 3,5 puntos (criterios 1.3 + 1.4 + parte del 1.5)
+▸ ¿REPITE ERRORES DEL TRIBUNAL 2025? Sí/No — cuáles
+▸ 3 RECOMENDACIONES CONCRETAS para mejorar el análisis de prosa`;
 
   try {
     const resp = await callClaude(sistema, mensaje, 4000);
@@ -10799,31 +10811,59 @@ async function entregarSintactico() {
     return `ORACIÓN ${i+1}: "${o.oracion}"\nANÁLISIS DEL OPOSITOR:\n${resp}`;
   }).join('\n\n---\n\n');
 
-  const sistema = `Eres evaluador oficial de la Prueba 1A de oposiciones a profesorado de Lengua Castellana y Literatura en Extremadura. Corriges análisis sintácticos redactados con los criterios de las convocatorias 2021-2025.
+  const sistema = `Eres evaluador oficial de la Prueba 1A de las oposiciones a profesorado de Lengua Castellana y Literatura en Extremadura (Convocatoria 2025). Corriges el análisis morfosintáctico redactado aplicando EXCLUSIVAMENTE la terminología y los criterios de la NGLE (RAE/ASALE) y los criterios oficiales del Anexo VI de la convocatoria.
 
-CRITERIOS OFICIALES DEL ANÁLISIS SINTÁCTICO REDACTADO (Convocatoria Extremadura):
-- El análisis debe ser REDACTADO (no en árbol ni esquema), explicando las relaciones entre los elementos
-- Se debe identificar la oración principal y todas las proposiciones subordinadas con su función
-- Se debe clasificar cada subordinada (sustantiva: función; adjetiva: antecedente y función; adverbial: tipo)
-- Se deben identificar las funciones sintácticas de los elementos de cada proposición (S, P, CD, CI, CC, Atrib, CPred, CAgent, CReg...)
-- Se debe comentar el tipo de coordinación si la hay (copulativa, adversativa, disyuntiva...)
-- Se deben señalar las perífrasis verbales y su valor aspectual o modal si las hay
-- Se debe comentar la elipsis si aparece
-- La redacción debe ser fluida, precisa y usar terminología lingüística correcta`;
+══ CRITERIO OFICIAL QUE ESTÁS EVALUANDO ══
+Criterio 1.3 — Prueba 1A (Convocatoria Extremadura 2025):
+"Describe los principales procedimientos morfosintácticos, determina las relaciones sintácticas, semánticas y pragmáticas."
+Puntuación máxima: 1,5 puntos sobre el total de la Prueba 1A.
 
-  const mensaje = `Corrige el siguiente análisis sintáctico redactado de un opositor.
+══ CRITERIOS DE CORRECCIÓN ESPECÍFICOS (Convocatoria Extremadura) ══
+1. El análisis DEBE ser REDACTADO y continuo — no en árbol ni en esquema aislado. Se exige que el opositor explique las relaciones entre los elementos, no solo etiquetarlos.
+2. Identificar la oración principal y TODAS las proposiciones subordinadas, indicando para cada una: tipo (sustantiva/adjetiva/adverbial), nexo, y función que desempeña en la oración.
+3. Para las subordinadas sustantivas: indicar su función (sujeto, CD, CR, atributo, CN...).
+4. Para las subordinadas adjetivas: indicar el antecedente y si son especificativas o explicativas.
+5. Para las subordinadas adverbiales: indicar el tipo exacto (causal, final, concesiva, condicional, comparativa, consecutiva, temporal, modal...).
+6. Identificar las funciones de los elementos de cada proposición: Sujeto (léxico o tácito), Predicado (verbal o nominal), CD, CI, CC (con subtipo), CR, CAg, Atributo, CPred.
+7. Señalar TODAS las perífrasis verbales presentes, indicando auxiliar + auxiliado y su valor (modal de obligación/posibilidad, aspectual incoativa/durativa/terminativa/iterativa...).
+8. Comentar la coordinación si la hay: tipo (copulativa, adversativa, disyuntiva, explicativa...) y nexo.
+9. Identificar el valor del pronombre SE si aparece (reflexivo, recíproco, impersonal, pasiva refleja, inherente, dativo ético, aspectual).
+10. Señalar la elipsis si aparece y explicar qué elemento está elidido.
+11. La terminología DEBE ser la de la NGLE: "complemento directo" (nunca "objeto directo"), "complemento de régimen" o "suplemento" (nunca "complemento preposicional"), "sujeto tácito" o "desinencial" (nunca "sujeto omitido"), "proposición" (no "oración" cuando es parte de una compuesta), "predicativo" (no "atributo verbal").
+
+══ BASE NGLE DE REFERENCIA ══
+${BASE_NGLE_SINTAXIS}
+
+══ REFERENCIA DE CONVOCATORIAS REALES (2021-2025) ══
+Las oraciones de Extremadura han tenido estas estructuras: coordinadas adversativas con subordinadas adjetivas encadenadas (Poniatowska, 2021), comparativas con interrogativa directa y relativa (Carrión, 2021), perífrasis modal + subordinada adjetiva (Vicent, 2023), exclamativa con sustantiva de CD (Landero, 2023), atributiva con complementos del nombre encadenados y perífrasis (Martín Gaite, 2025), gerundio absoluto con valor condicional + predicativo (Mayorga, 2025).`;
+
+  const mensaje = `Corrige el siguiente análisis sintáctico redactado de un opositor a Lengua Castellana y Literatura (Extremadura 2025).
 
 ${respuestasTexto}
 
-Para cada oración analizada:
-1. ANÁLISIS CORRECTO RESUMIDO: la estructura sintáctica real de la oración
-2. ACIERTOS: qué ha identificado y explicado correctamente
-3. ERRORES O IMPRECISIONES: qué está mal, mal clasificado o mal nombrado
-4. OMISIONES: elementos importantes que no ha comentado
-5. TERMINOLOGÍA: uso correcto o incorrecto del metalenguaje sintáctico
-6. NOTA ORIENTATIVA: X/10 con justificación breve
+Para cada oración, estructura la corrección así:
 
-Al final: RECOMENDACIONES GLOBALES para mejorar el análisis sintáctico redactado.`;
+▸ ANÁLISIS CORRECTO (modelo NGLE)
+Redacta el análisis completo y correcto de la oración, tal como lo haría un opositor experto: fluido, con terminología NGLE, explicando relaciones entre elementos.
+
+▸ ACIERTOS
+Qué ha identificado y explicado correctamente, con citas de su análisis.
+
+▸ ERRORES E IMPRECISIONES
+Qué está mal clasificado, mal nombrado o mal justificado. Indica la terminología correcta según la NGLE.
+
+▸ OMISIONES IMPORTANTES
+Elementos o relaciones que no ha comentado y que el tribunal valoraría.
+
+▸ TERMINOLOGÍA NGLE
+Señala los términos incorrectos o anticuados usados y el término correcto que debía usar.
+
+▸ PUNTUACIÓN ORIENTATIVA: X / 1,5 puntos
+Justifica brevemente la nota en relación al criterio 1.3 oficial.
+
+──────────────────────────────────────
+RECOMENDACIONES FINALES
+Dos o tres consejos concretos y accionables para mejorar el análisis sintáctico redactado de cara a la convocatoria.`;
 
   try {
     const resp = await callClaude(sistema, mensaje, 4000);
@@ -10895,12 +10935,25 @@ async function verSolucionSint() {
 
   try {
     const resp = await callClaude(
-      'Eres experto en sintaxis española (NGLE/RAE) y en las oposiciones de Lengua Castellana y Literatura de Extremadura. Redactas análisis sintácticos modelo al nivel exigido en las convocatorias, usando exclusivamente la terminología de la NGLE. Base de referencia: ' + BASE_NGLE_SINTAXIS.slice(0, 2000),
-      `Redacta el análisis sintáctico modelo, completo y redactado, de las siguientes oraciones. El análisis debe ser tal como lo haría un opositor experto: fluido, preciso, con terminología correcta, identificando todas las proposiciones y sus funciones.
+      `Eres experto en sintaxis española y redactas análisis morfosintácticos modelo para oposiciones de Lengua Castellana y Literatura en Extremadura (Convocatoria 2025). Usas EXCLUSIVAMENTE la terminología de la NGLE (RAE/ASALE). El análisis debe responder al criterio 1.3 de la Prueba 1A: "Describe los principales procedimientos morfosintácticos, determina las relaciones sintácticas, semánticas y pragmáticas" (1,5 puntos).
+
+BASE NGLE COMPLETA:
+${BASE_NGLE_SINTAXIS}`,
+      `Redacta el ANÁLISIS SINTÁCTICO MODELO de las siguientes oraciones, exactamente como lo haría un opositor experto que va a sacar la máxima puntuación en el criterio 1.3.
 
 ${oracionsTexto}
 
-Redacta el análisis completo de cada oración de forma continua, como si fuera la respuesta modelo de un examen de oposición.`,
+REQUISITOS DEL ANÁLISIS MODELO:
+- Redacción continua y fluida (no árbol, no esquema aislado)
+- Identificar y nombrar TODAS las proposiciones con su función
+- Para cada subordinada: tipo exacto, nexo, antecedente si es relativa, función
+- Para cada proposición: Sujeto (léxico o tácito), Predicado (verbal/nominal), y todos los complementos con su tipo exacto
+- Señalar todas las perífrasis verbales con su valor aspectual o modal
+- Usar siempre terminología NGLE: CD (nunca OD), CR/suplemento, sujeto tácito, predicativo, proposición...
+- Comentar la coordinación, la elipsis o el valor del SE si aparecen
+- Cerrar con una clasificación general de la oración
+
+Redacta el análisis de cada oración por separado, de forma continua, como respuesta modelo de examen.`,
       3000
     );
     sintData._modeloAnalisis = resp;
@@ -13126,10 +13179,60 @@ async function entregarSoloLiterario() {
   try {
     const preguntas = soloLitData._preguntas || [];
     const respuestas = { A: respA, B: respB, C: respC, D: respD };
+    const formatoActivo = soloLitData._formato || '2025';
+    const puntuaciones2025 = { A: '1 punto', B: '1 punto', C: '1,5 puntos' };
+    const puntuaciones2023 = { A: '1 punto', B: '1 punto', C: '1 punto', D: '1 punto' };
+    const puntuaciones2021 = { A: '1 punto', B: '1 punto', C: '1 punto', D: '2 puntos' };
+    const punts = formatoActivo === '2025' ? puntuaciones2025 : formatoActivo === '2023' ? puntuaciones2023 : puntuaciones2021;
+    const totalBloque = formatoActivo === '2025' ? '3,5 puntos' : '4 puntos (formato ' + formatoActivo + ')';
+
     const resp = await callClaude(
-      `Eres evaluador de la Prueba 1A de las oposiciones de Lengua Castellana y Literatura en Extremadura (2025). Evalúas el bloque literario según los criterios oficiales: 1.1 (idea principal y contexto cultural, 2pts), 1.2 (géneros, métrica y recursos retóricos, 1.5pts), 1.5 (terminología y corrección, 0.5pts). ${BASE_METRICA.slice(0,500)}`,
-      `POEMA ANALIZADO:\n${soloLitData.poema}\n\nSOLUCIÓN (datos del poema):\nAutor/obra: ${soloLitData.autor || 'No disponible'}\nÉpoca/corriente: ${soloLitData.corriente || ''}\n\nRESPUESTAS DEL OPOSITOR:\nA) ${respA}\nB) ${respB}\nC) ${respC}\nD) ${respD}\n\nEvalúa criterio a criterio con nota orientativa y recomendaciones concretas.`,
-      2000
+      `Eres evaluador oficial de la Prueba 1A de las oposiciones de Lengua Castellana y Literatura en Extremadura (Convocatoria 2025). Evalúas el bloque literario (poema sin autor ni fecha) aplicando EXCLUSIVAMENTE los criterios oficiales del Anexo VI de la convocatoria.
+
+══ CRITERIOS OFICIALES DEL BLOQUE LITERARIO ══
+Criterio 1.1 — Identifica la idea principal y el contexto cultural del texto literario, lo relaciona con temas o rasgos temáticos de los periodos histórico-artísticos y estéticos. [Pregunta A — ${punts.A}]
+Criterio 1.2 — Reconoce las marcas formales de los géneros literarios, identifica y contextualiza los procedimientos estilísticos y retóricos que construyen el texto. [Pregunta B (temporalización/corriente) y C (métrica y recursos) — ${punts.B} + ${punts.C}]
+Criterio 1.5 — Emplea la terminología específica de la disciplina con rigor, cohesión y coherencia. [Transversal a todas las respuestas — 0,5 pts en el total de la Prueba 1A]
+
+PUNTUACIÓN TOTAL DEL BLOQUE LITERARIO: ${totalBloque}
+
+══ PUNTOS DÉBILES CONOCIDOS DEL OPOSITOR (tribunal real 2025) ══
+- Criterio 1.2 (métrica): obtuvo 0,79/1,5 — no completaba el esquema métrico con letras, no enmarcaba la forma estrófica en la historia literaria, no explicaba qué aporta esa métrica al contenido.
+- Criterio 1.1: no siempre relacionaba el tema con los tópicos literarios o rasgos de época.
+Indica expresamente si en esta entrega comete los mismos errores.
+
+══ BASE DE REFERENCIA: MÉTRICA ESPAÑOLA COMPLETA ══
+${BASE_METRICA}`,
+      `POEMA ANALIZADO (sin autor ni fecha, como en el examen real):
+${soloLitData.poema}
+
+SOLUCIÓN (para que puedas corregir con precisión):
+Autor/obra: ${soloLitData.autor || 'No disponible'}
+Época/corriente: ${soloLitData.corriente || 'No disponible'}
+${soloLitData.claves_identificacion ? 'Claves de identificación: ' + soloLitData.claves_identificacion : ''}
+
+RESPUESTAS DEL OPOSITOR:
+A) Tema y tópicos literarios [${punts.A}]:
+${respA || '(sin respuesta)'}
+
+B) Temporalización y corriente literaria [${punts.B}]:
+${respB || '(sin respuesta)'}
+
+C) Métrica y recursos literarios [${punts.C}]:
+${respC || '(sin respuesta)'}
+${respD ? '\nD) ' + respD : ''}
+
+Para cada pregunta proporciona:
+▸ PUNTUACIÓN ORIENTATIVA: X / [puntuación máxima]
+▸ ACIERTOS: qué ha hecho bien, con citas de su respuesta
+▸ ERRORES Y OMISIONES: qué falta o está mal, siendo específico
+▸ CÓMO MEJORAR: qué debería haber escrito concretamente
+
+Al final:
+▸ PUNTUACIÓN TOTAL ESTIMADA DEL BLOQUE: X / ${totalBloque}
+▸ ¿REPITE ERRORES DEL TRIBUNAL 2025? Sí/No — explica cuáles
+▸ 2 RECOMENDACIONES CONCRETAS para mejorar el bloque literario`,
+      2500
     );
     const resultado = document.getElementById('solo-lit-valoracion');
     const texto = document.getElementById('solo-lit-val-texto');
