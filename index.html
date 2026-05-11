@@ -6352,7 +6352,7 @@ Proporciona valoración estructurado en estas secciones:
 Sé honesto pero constructivo. No puntúes numéricamente (la oposición es subjetiva), pero sí da indicaciones claras de nivel.`;
 
   try {
-    const respuesta = await callClaude(sistema, mensaje);
+    const respuesta = await callClaude(sistema, mensaje, 4000);
     textoDesarrollo = texto;
     // Guardar valoración y llevar a lectura oral (paso 4)
     document.getElementById('valoracion-text').textContent = respuesta;
@@ -6629,7 +6629,7 @@ Incluye referencias explícitas a:
 Estructura el documento con epígrafes numerados y claros. Advierte si algún elemento podría acarrear penalización según la convocatoria.`;
 
   try {
-    const respuesta = await callClaude(sistema, mensaje);
+    const respuesta = await callClaude(sistema, mensaje, 3000);
     document.getElementById('prog-titulo-generada').textContent = `${tipoTexto} — ${curso}`;
     document.getElementById('prog-content').textContent = respuesta;
     document.getElementById('prog-generada').style.display = 'block';
@@ -6654,7 +6654,7 @@ ${contenidoActual.slice(-1500)}
 Continúa a partir de aquí con nuevas secciones o mayor desarrollo de las existentes.`;
 
   try {
-    const respuesta = await callClaude(sistema, mensaje);
+    const respuesta = await callClaude(sistema, mensaje, 3000);
     document.getElementById('prog-content').textContent += '\n\n---\n\n' + respuesta;
   } catch (e) { alert('Error.'); }
   if (document.getElementById('loading-prog')) document.getElementById('loading-prog').classList.remove('visible');
@@ -6716,7 +6716,7 @@ Evalúa la respuesta con estos criterios oficiales:
 6. REFORMULACIÓN SUGERIDA: cómo podría haber respondido mejor (en 3-4 líneas)`;
 
   try {
-    const resp = await callClaude(sistema, mensaje);
+    const resp = await callClaude(sistema, mensaje, 2000);
     if(document.getElementById('valoracion-tribunal-text')) document.getElementById('valoracion-tribunal-text').textContent = resp;
     if(document.getElementById('valoracion-tribunal')) document.getElementById('valoracion-tribunal').classList.add('visible');
   } catch (e) { alert('Error al conectar con la IA.'); }
@@ -6734,7 +6734,7 @@ Las preguntas deben ser variadas: sobre normativa, metodología, evaluación, at
 Devuelve solo las 4 preguntas, una por línea, sin numeración ni explicaciones.`;
 
   try {
-    const resp = await callClaude(sistema, mensaje);
+    const resp = await callClaude(sistema, mensaje, 1500);
     const preguntas = resp.split('\n').filter(p => p.trim().length > 20).slice(0, 4);
     const contenedor = document.getElementById('preguntas-tribunal');
     contenedor.innerHTML = '';
@@ -7108,7 +7108,7 @@ async function evaluarRespuestaTribunalProg() {
 RESPUESTA: ${respuesta}
 
 Evalúa: pertinencia, fundamentación normativa, rigor didáctico, lenguaje técnico. Indica qué ha faltado y cómo mejorarla.`,
-      700
+      2000
     );
     document.getElementById('valoracion-tribunal-prog-text').textContent = resp;
     document.getElementById('valoracion-tribunal-prog').classList.add('visible');
@@ -7546,7 +7546,7 @@ PREGUNTA: ${udPreguntaActual}
 RESPUESTA: ${respuesta}
 
 Evalúa pertinencia, fundamentación normativa, rigor didáctico, lenguaje técnico. Indica qué faltó y cómo mejorarla.`,
-      700
+      2000
     );
     document.getElementById('valoracion-resp-ud-text').textContent = resp;
     document.getElementById('valoracion-resp-ud').classList.add('visible');
@@ -10228,7 +10228,7 @@ Devuelve SOLO este JSON sin explicaciones ni markdown:
   "corriente": "corriente o movimiento literario específico",
   "claves_identificacion": "3-5 marcas internas del texto (léxico, métrica, temas, recursos) que delatan época y autor, con citas del poema"
 }`,
-        1500
+      2000
       );
 
       const clean = resp.replace(/```json|```/g, '').trim();
@@ -10866,7 +10866,7 @@ RECOMENDACIONES FINALES
 Dos o tres consejos concretos y accionables para mejorar el análisis sintáctico redactado de cara a la convocatoria.`;
 
   try {
-    const resp = await callClaude(sistema, mensaje, 4000);
+    const resp = await callClaude(sistema, mensaje, 6000);
     document.getElementById('sint-val-texto').textContent = resp;
     document.getElementById('sint-valoracion').style.display = 'block';
     document.getElementById('sint-valoracion').scrollIntoView({ behavior: 'smooth' });
@@ -10954,7 +10954,7 @@ REQUISITOS DEL ANÁLISIS MODELO:
 - Cerrar con una clasificación general de la oración
 
 Redacta el análisis de cada oración por separado, de forma continua, como respuesta modelo de examen.`,
-      3000
+      6000
     );
     sintData._modeloAnalisis = resp;
     document.getElementById('sint-solucion-texto').textContent = resp;
@@ -11334,7 +11334,7 @@ async function generarResumenSocratico() {
     const resp = await callClaude(
       `Eres un preparador experto de oposiciones. Generas un resumen de evaluación de una sesión socrática de estudio.`,
       `${temaContexto}\n\nSESIÓN COMPLETA:\n${historialResumen}\n\nGenera un RESUMEN DE EVALUACIÓN con:\n1. PUNTOS FUERTES: qué ha demostrado saber bien (con ejemplos de sus respuestas)\n2. LAGUNAS DETECTADAS: qué aspectos del tema no dominaba o respondió incorrectamente\n3. ASPECTOS A REPASAR: lista concreta de conceptos o epígrafes que debe estudiar más\n4. VALORACIÓN GLOBAL: nota orientativa del dominio del tema (1-10) con justificación\n5. CONSEJO PARA LA EXPOSICIÓN ORAL: una recomendación práctica para mejorar la defensa del tema ante el tribunal`,
-      1200
+      2000
     );
     document.getElementById('socratico-resumen-content').innerHTML =
       resp.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
@@ -13311,7 +13311,7 @@ Al final:
 ▸ PUNTUACIÓN TOTAL ESTIMADA DEL BLOQUE: X / ${totalBloque}
 ▸ ¿REPITE ERRORES DEL TRIBUNAL 2025? Sí/No — explica cuáles
 ▸ 2 RECOMENDACIONES CONCRETAS para mejorar el bloque literario`,
-      2500
+      4000
     );
     const resultado = document.getElementById('solo-lit-valoracion');
     const texto = document.getElementById('solo-lit-val-texto');
