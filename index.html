@@ -12112,7 +12112,7 @@ let _fb = null;
 
 function _calUserId() {
   // Usa la API key como identificador único (ya la tiene el usuario)
-  const key = localStorage.getItem('opositaLengua_apiKey') || getCookie('opositaLengua_apiKey') || '';
+  const key = getApiKeyCookie();
   if (!key) return null;
   // Hash simple para no exponer la key completa en Firebase
   let hash = 0;
@@ -13361,6 +13361,8 @@ function guardarApiKey() {
   const overlay = document.getElementById('apikey-overlay');
   if (overlay) overlay.style.display = 'none';
   if (errorDiv) errorDiv.style.display = 'none';
+  // Recuperar el historial del calendario asociado a esta key inmediatamente
+  calCargarDatosFirebase();
 
   // Show confirmation
   const btn = document.querySelector('#apikey-overlay .btn-primary');
