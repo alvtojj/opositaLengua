@@ -609,6 +609,9 @@ body.is-app header {
       <button id="temas-tab-test" class="btn" onclick="setModoTemas('test')" style="flex:1; border-radius:0; background:var(--cream); color:var(--muted); border:none; font-size:0.82rem; padding:0.65rem 0.5rem;">
         📝 Tipo test
       </button>
+      <button id="temas-tab-reconstruccion" class="btn" onclick="setModoTemas('reconstruccion')" style="flex:1; border-radius:0; background:var(--cream); color:var(--muted); border:none; font-size:0.82rem; padding:0.65rem 0.5rem;">
+        🔄 Reconstrucción activa
+      </button>
     </div>
 
     <!-- ── MODO PRACTICAR (pasos 1-5) ── -->
@@ -617,8 +620,7 @@ body.is-app header {
       <div class="step active" id="step-1">1. Tema</div>
       <div class="step" id="step-2">2. Esquema</div>
       <div class="step" id="step-3">3. Desarrollo</div>
-      <div class="step" id="step-4">4. Lectura oral</div>
-      <div class="step" id="step-5">5. Valoración</div>
+      <div class="step" id="step-5">4. Valoración</div>
     </div>
 
     <!-- PASO 1: Selección de tema -->
@@ -742,35 +744,6 @@ body.is-app header {
       </div>
     </div>
 
-    <!-- PASO 4: Lectura oral -->
-    <div id="temas-paso4" style="display:none">
-      <div class="card">
-        <h3 id="lectura-titulo">Lectura oral del tema</h3>
-        <div class="info-box">
-          En la oposición real, tras el examen escrito, el tribunal te convoca para leer en voz alta exactamente lo que has escrito. Tienen una copia del examen y verifican que el texto leído coincide con el escrito al pie de la letra. Cualquier desajuste supone 0 puntos en toda la prueba.<br><br>
-          <strong>Graba tu lectura</strong> en directo o <strong>sube un audio</strong> ya grabado. La app transcribirá la lectura, la comparará con tu texto escrito y valorará fluidez, pronunciación, claridad y coincidencia con el original.
-        </div>
-
-        <div class="two-col" style="margin-bottom:1.5rem;">
-          <div class="info-box" style="margin-bottom:1rem;font-size:0.82rem;">💡 Graba tu defensa con el móvil y usa el campo de mejora para recibir feedback.</div>
-        </div>
-
-        <div class="loading" id="loading-transcripcion">
-          <div class="spinner"></div>
-          Transcribiendo y analizando la lectura...
-        </div>
-
-        <div class="response-box" id="valoracion-lectura">
-          <h4>📋 Valoración de la lectura oral</h4>
-          <div class="response-content" id="valoracion-lectura-text"></div>
-        </div>
-
-        <div class="btn-row" style="margin-top:1.5rem;">
-          <button class="btn btn-primary" onclick="nuevoTema()">Nuevo tema</button>
-          <button class="btn btn-ghost" onclick="nuevoTema()">Nuevo tema</button>
-        </div>
-      </div>
-    </div>
   </div>
     <!-- PASO 5: Valoración -->
     <div id="temas-paso5" style="display:none">
@@ -1156,6 +1129,46 @@ body.is-app header {
       </div>
 
     </div> <!-- end temas-modo-test -->
+
+    <!-- ── MODO RECONSTRUCCIÓN ACTIVA ── -->
+    <div id="temas-modo-reconstruccion" style="display:none;">
+      <div class="card">
+        <h3 style="font-size:0.95rem; margin-bottom:0.5rem;">Reconstrucción activa</h3>
+        <p style="font-size:0.82rem; color:var(--muted); margin-bottom:1rem;">Escribe de memoria todo lo que recuerdes del tema, sin mirar nada. Cuando termines, sube el Word del tema real para comparar y ver qué te faltó.</p>
+
+        <select id="recon-tema-sel" style="width:100%; margin-bottom:0.75rem;" onchange="reconMostrarFeedbackPrevio()">
+          <option value="">— Selecciona un tema —</option>
+        </select>
+        <div id="recon-feedback-previo"></div>
+        <div id="recon-historial-tema"></div>
+
+        <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.75rem; margin-top:0.75rem;">
+          <span id="recon-timer-display" style="font-family:monospace; font-size:1.1rem; min-width:70px;">00:00</span>
+          <button class="btn btn-secondary" id="recon-timer-btn" onclick="reconToggleTimer()">Iniciar cronómetro</button>
+        </div>
+
+        <textarea id="recon-texto" placeholder="Escribe aquí de memoria todo lo que recuerdes del tema: introducción, epígrafes, contenido, conclusión..." style="min-height:280px; width:100%;"></textarea>
+
+        <div style="margin-top:0.75rem;">
+          <button class="btn btn-secondary" onclick="document.getElementById('recon-docx-upload').click()">📄 Subir Word del tema real (.docx)</button>
+          <input type="file" id="recon-docx-upload" accept=".docx" style="display:none;" onchange="cargarReconDocx(this)">
+          <span id="recon-docx-nombre" style="font-size:0.78rem; color:var(--muted); margin-left:0.5rem;"></span>
+        </div>
+
+        <div class="btn-row" style="margin-top:1.25rem;">
+          <button class="btn btn-primary" onclick="evaluarReconstruccion()">Comparar con el original</button>
+          <button class="btn btn-secondary" onclick="mostrarMatrizTemas()">Ver matriz de los 72 temas</button>
+        </div>
+
+        <div id="recon-resultado" style="margin-top:1.5rem;"></div>
+      </div>
+
+      <div class="card" id="recon-matriz-card" style="display:none; margin-top:1.5rem;">
+        <h3 style="font-size:0.95rem; margin-bottom:0.75rem;">Matriz de seguimiento — 72 temas</h3>
+        <div id="recon-matriz-resumen" style="font-size:0.82rem; color:var(--muted); margin-bottom:1rem;"></div>
+        <div id="recon-matriz-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:0.5rem;"></div>
+      </div>
+    </div> <!-- end temas-modo-reconstruccion
 
 
 
@@ -2417,11 +2430,19 @@ body.is-app header {
 
     <div id="cal-aviso-hoy" style="display:none; margin-bottom:1rem;"></div>
 
+    <div style="display:flex; gap:0.5rem; margin-bottom:1rem; flex-wrap:wrap;">
+      <button class="btn btn-secondary" style="font-size:0.78rem; padding:0.45rem 0.75rem;" onclick="calExportarDatos()">⬇️ Exportar calendario (copia de seguridad / pasar a otro dispositivo)</button>
+      <button class="btn btn-secondary" style="font-size:0.78rem; padding:0.45rem 0.75rem;" onclick="document.getElementById('cal-import-input').click()">⬆️ Importar y fusionar</button>
+      <input type="file" id="cal-import-input" accept=".json" style="display:none;" onchange="calImportarDatos(this)">
+    </div>
+    <div id="cal-import-resultado" style="margin-bottom:1rem;"></div>
+
     <div style="display:flex; gap:0; margin-bottom:1.5rem; border:1px solid var(--border); border-radius:4px; overflow:hidden;">
       <button id="cal-tab-calendario" class="btn" onclick="setCalTab('calendario')" style="flex:1; border-radius:0; background:var(--accent); color:var(--white); border:none; font-size:0.78rem; padding:0.6rem 0.3rem;">📅 Calendario</button>
       <button id="cal-tab-planificar" class="btn" onclick="setCalTab('planificar')" style="flex:1; border-radius:0; background:var(--cream); color:var(--muted); border:none; font-size:0.78rem; padding:0.6rem 0.3rem;">🎯 Planificar</button>
       <button id="cal-tab-registro" class="btn" onclick="setCalTab('registro')" style="flex:1; border-radius:0; background:var(--cream); color:var(--muted); border:none; font-size:0.78rem; padding:0.6rem 0.3rem;">📋 Registro</button>
       <button id="cal-tab-estadisticas" class="btn" onclick="setCalTab('estadisticas')" style="flex:1; border-radius:0; background:var(--cream); color:var(--muted); border:none; font-size:0.78rem; padding:0.6rem 0.3rem;">📊 Estadísticas</button>
+      <button id="cal-tab-temas" class="btn" onclick="setCalTab('temas')" style="flex:1; border-radius:0; background:var(--cream); color:var(--muted); border:none; font-size:0.78rem; padding:0.6rem 0.3rem;">📑 Control de temas</button>
     </div>
 
     <!-- CALENDARIO -->
@@ -2529,6 +2550,16 @@ body.is-app header {
       <div class="card">
         <h3 style="font-size:0.9rem; margin-bottom:1.25rem;">📊 Tu progreso de preparación</h3>
         <div id="cal-stats-contenido"></div>
+      </div>
+    </div>
+
+    <!-- CONTROL DE TEMAS — tabla editable de seguimiento -->
+    <div id="cal-panel-temas" style="display:none;">
+      <div class="card">
+        <h3 style="font-size:0.9rem; margin-bottom:0.5rem;">📑 Control de los 72 temas</h3>
+        <p style="font-size:0.8rem; color:var(--muted); margin-bottom:1rem;">Haz clic en un tema para desplegarlo y anotar cada vuelta: fecha y una nota libre.</p>
+        <div id="ct-resumen" style="font-size:0.82rem; color:var(--muted); margin-bottom:1rem;"></div>
+        <div id="ct-lista"></div>
       </div>
     </div>
 
@@ -5045,7 +5076,7 @@ function showModule(name) {
 // Reset temas module state when leaving it
 function resetTemasState() {
   // Hide study modes but NOT practicar (paso1 lives inside it)
-  ['temas-modo-estudiar','temas-modo-tarjetas','temas-modo-test'].forEach(id => {
+  ['temas-modo-estudiar','temas-modo-tarjetas','temas-modo-test','temas-modo-reconstruccion'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = 'none';
   });
@@ -5053,7 +5084,7 @@ function resetTemasState() {
   const modoPracticar = document.getElementById('temas-modo-practicar');
   if (modoPracticar) modoPracticar.style.display = 'block';
   // Reset subtab styles - highlight practicar
-  ['temas-tab-practicar','temas-tab-estudiar','temas-tab-tarjetas','temas-tab-test'].forEach(id => {
+  ['temas-tab-practicar','temas-tab-estudiar','temas-tab-tarjetas','temas-tab-test','temas-tab-reconstruccion'].forEach(id => {
     const el = document.getElementById(id);
     if (el) { el.style.background = 'var(--cream)'; el.style.color = 'var(--muted)'; }
   });
@@ -5064,7 +5095,7 @@ function resetTemasState() {
     // Use internal reset: show paso1, hide pasos 2-5
     const paso1 = document.getElementById('temas-paso1');
     if (paso1) paso1.style.display = 'block';
-    ['temas-paso2','temas-paso3','temas-paso4','temas-paso5'].forEach(id => {
+    ['temas-paso2','temas-paso3','temas-paso5'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.style.display = 'none';
     });
@@ -6354,26 +6385,16 @@ Sé honesto pero constructivo. No puntúes numéricamente (la oposición es subj
   try {
     const respuesta = await callClaude(sistema, mensaje, 4000);
     textoDesarrollo = texto;
-    // Guardar valoración y llevar a lectura oral (paso 4)
+    // Guardar valoración y mostrarla directamente (paso 5)
     document.getElementById('valoracion-text').textContent = respuesta;
-    setStep(4);
+    setStep(5);
     document.getElementById('temas-paso3').style.display = 'none';
-    document.getElementById('temas-paso4').style.display = 'block';
-    const etqLectura = temaSeleccionado ? `Lectura oral — Tema ${temaSeleccionado.num}` : 'Lectura oral';
-    if (document.getElementById('lectura-titulo')) {
-      document.getElementById('lectura-titulo').textContent = etqLectura;
-    }
+    document.getElementById('temas-paso5').style.display = 'block';
   } catch (e) {
     alert('Error al conectar con la IA. Inténtalo de nuevo.');
   }
   document.getElementById('loading-evaluacion').classList.remove('visible');
   document.getElementById('btn-evaluar').disabled = false;
-}
-
-function verEsquemaFinal() {
-  document.getElementById('temas-paso4').style.display = 'none';
-  document.getElementById('temas-paso2').style.display = 'block';
-  setStep(2);
 }
 
 function verEsquema() {
@@ -6383,7 +6404,7 @@ function verEsquema() {
 }
 
 function nuevoTema() {
-  ['temas-paso2','temas-paso3','temas-paso4','temas-paso5'].forEach(id => {
+  ['temas-paso2','temas-paso3','temas-paso5'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = 'none';
   });
@@ -6393,27 +6414,6 @@ function nuevoTema() {
   textoDesarrollo = '';
   document.getElementById('btn-esquema').disabled = !window._temaPropio;
   document.querySelectorAll('.tema-item').forEach(i => i.classList.remove('selected'));
-  detenerGrabacion();
-  document.getElementById('audio-preview').style.display = 'none';
-  document.getElementById('btn-enviar-audio').style.display = 'none';
-  document.getElementById('rec-estado').textContent = '';
-  document.getElementById('valoracion-lectura').classList.remove('visible');
-}
-
-function irALecturaOral() {
-  // Tras escribir el desarrollo, ir a lectura oral (paso 4)
-  document.getElementById('temas-paso3').style.display = 'none';
-  document.getElementById('temas-paso4').style.display = 'block';
-  const etqLectura = temaSeleccionado ? `Lectura oral — Tema ${temaSeleccionado.num}` : 'Lectura oral';
-  document.getElementById('lectura-titulo').textContent = etqLectura;
-  setStep(4);
-}
-
-function irAValoracion() {
-  // Tras la lectura oral, ir a valoración (paso 5)
-  document.getElementById('temas-paso4').style.display = 'none';
-  document.getElementById('temas-paso5').style.display = 'block';
-  setStep(5);
 }
 
 function verEsquemaFinal() {
@@ -10979,6 +10979,218 @@ function nuevoSintactico() {
 }
 
 // ═══════════════════════════════════════════════════════
+// RECONSTRUCCIÓN ACTIVA — nuevo método de estudio
+// ═══════════════════════════════════════════════════════
+
+const RECON_KEY = 'opositaLengua_temasEstado';
+let reconDocxTexto = '';
+let reconTimerInterval = null;
+let reconTimerSegundos = 0;
+let reconTimerActivo = false;
+
+// ── Poblar el selector de temas desde el listado oficial TEMAS ──
+(function() {
+  const sel = document.getElementById('recon-tema-sel');
+  if (!sel || typeof TEMAS === 'undefined') return;
+  TEMAS.forEach(t => {
+    const opt = document.createElement('option');
+    opt.value = String(t.num);
+    opt.textContent = 'Tema ' + t.num + ': ' + t.titulo;
+    sel.appendChild(opt);
+  });
+})();
+
+function reconToggleTimer() {
+  const btn = document.getElementById('recon-timer-btn');
+  if (!reconTimerActivo) {
+    reconTimerActivo = true;
+    btn.textContent = 'Pausar';
+    reconTimerInterval = setInterval(() => {
+      reconTimerSegundos++;
+      const m = String(Math.floor(reconTimerSegundos / 60)).padStart(2, '0');
+      const s = String(reconTimerSegundos % 60).padStart(2, '0');
+      const disp = document.getElementById('recon-timer-display');
+      if (disp) disp.textContent = m + ':' + s;
+    }, 1000);
+  } else {
+    reconTimerActivo = false;
+    btn.textContent = 'Reanudar';
+    clearInterval(reconTimerInterval);
+  }
+}
+
+async function cargarReconDocx(input) {
+  const file = input.files[0];
+  if (!file) return;
+  document.getElementById('recon-docx-nombre').textContent = file.name;
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+    const result = await mammoth.extractRawText({ arrayBuffer });
+    const texto = result.value.trim();
+    if (texto) {
+      reconDocxTexto = texto;
+    } else {
+      alert('No se pudo extraer texto del archivo. Asegúrate de que es un .docx válido.');
+    }
+  } catch (e) {
+    alert('Error al leer el archivo Word. Asegúrate de que es un .docx válido.');
+  }
+}
+
+function reconCargarEstado() {
+  try {
+    return JSON.parse(localStorage.getItem(RECON_KEY)) || {};
+  } catch { return {}; }
+}
+
+function reconGuardarEstado(estado) {
+  try { localStorage.setItem(RECON_KEY, JSON.stringify(estado)); } catch {}
+}
+
+// ── Muestra el feedback del intento más reciente y el historial completo del tema seleccionado ──
+function reconMostrarFeedbackPrevio() {
+  const numTema = document.getElementById('recon-tema-sel').value;
+  const divFeedback = document.getElementById('recon-feedback-previo');
+  const divHistorial = document.getElementById('recon-historial-tema');
+  if (!divFeedback || !divHistorial) return;
+  if (!numTema) { divFeedback.innerHTML = ''; divHistorial.innerHTML = ''; return; }
+
+  const estado = reconCargarEstado();
+  const t = estado[numTema];
+
+  if (!t || !t.historial || t.historial.length === 0) {
+    divFeedback.innerHTML = '<p style="font-size:0.78rem; color:var(--muted); margin-top:0.5rem;">Aún no has trabajado este tema con reconstrucción activa.</p>';
+    divHistorial.innerHTML = '';
+    return;
+  }
+
+  const ultimo = t.historial[t.historial.length - 1];
+  divFeedback.innerHTML = '<div class="card" style="background:var(--cream); margin-top:0.5rem;">' +
+    '<p style="font-size:0.78rem; color:var(--muted); margin-bottom:0.4rem;">Último intento (' + ultimo.fecha + ', nº ' + t.historial.length + ') — esto te faltó entonces:</p>' +
+    '<div style="white-space:pre-wrap; font-size:0.82rem; max-height:160px; overflow-y:auto;">' + (ultimo.feedback || '').replace(/</g, '&lt;') + '</div></div>';
+
+  // Historial completo, plegado, más antiguo primero
+  let html = '<details style="margin-top:0.5rem;"><summary style="font-size:0.78rem; color:var(--muted); cursor:pointer;">Ver historial completo (' + t.historial.length + ' intento' + (t.historial.length === 1 ? '' : 's') + ')</summary>';
+  t.historial.forEach((h, i) => {
+    html += '<div style="border-left:3px solid var(--border); padding:0.5rem 0.75rem; margin-top:0.5rem;">' +
+      '<p style="font-size:0.76rem; font-weight:600; margin-bottom:0.3rem;">Intento ' + (i + 1) + ' — ' + h.fecha + '</p>' +
+      '<div style="white-space:pre-wrap; font-size:0.78rem; color:var(--muted);">' + (h.feedback || '').replace(/</g, '&lt;') + '</div></div>';
+  });
+  html += '</details>';
+  divHistorial.innerHTML = html;
+}
+
+function reconActualizarTema(numTema, exito, feedback) {
+  const estado = reconCargarEstado();
+  const actual = estado[numTema] || { fase: 'sin_empezar', historial: [] };
+  if (!actual.historial) actual.historial = [];
+  const hoy = new Date().toISOString().slice(0, 10);
+  actual.historial.push({ fecha: hoy, feedback: feedback || '' });
+  const intentos = actual.historial.length;
+
+  if (exito && actual.fase === 'reconstruccion' && intentos >= 2) {
+    actual.fase = 'consolidado';
+  } else if (actual.fase === 'consolidado' && !exito) {
+    actual.fase = 'reconstruccion';
+  } else {
+    actual.fase = 'reconstruccion';
+  }
+
+  // Repetición espaciada simple: 1, 3, 7, 15, 30 días según número de intentos
+  const escalones = [1, 3, 7, 15, 30];
+  const dias = escalones[Math.min(intentos - 1, escalones.length - 1)];
+  const prox = new Date();
+  prox.setDate(prox.getDate() + dias);
+  actual.proximoRepaso = prox.toISOString().slice(0, 10);
+
+  estado[numTema] = actual;
+  reconGuardarEstado(estado);
+
+  if (typeof calRegistrarActividad === 'function') {
+    const tInfo = (typeof TEMAS !== 'undefined') ? TEMAS.find(x => String(x.num) === String(numTema)) : null;
+    const nombreTema = tInfo ? ('Tema ' + tInfo.num) : ('Tema ' + numTema);
+    calRegistrarActividad('reconstruccion', 'Reconstrucción activa — ' + nombreTema + ' (intento ' + intentos + ')');
+  }
+}
+
+async function evaluarReconstruccion() {
+  const numTema = document.getElementById('recon-tema-sel').value;
+  const texto = document.getElementById('recon-texto').value.trim();
+  const resultadoDiv = document.getElementById('recon-resultado');
+
+  if (!numTema) { alert('Selecciona un tema de la lista.'); return; }
+  if (!texto || texto.length < 30) { alert('Escribe tu intento de reconstrucción antes de comparar.'); return; }
+  if (!reconDocxTexto) { alert('Sube primero el Word con el contenido real del tema.'); return; }
+
+  const tInfo = (typeof TEMAS !== 'undefined') ? TEMAS.find(x => String(x.num) === String(numTema)) : null;
+  const tituloCompleto = tInfo ? ('Tema ' + tInfo.num + ': ' + tInfo.titulo) : ('Tema ' + numTema);
+
+  resultadoDiv.innerHTML = '<p style="color:var(--muted);">Comparando...</p>';
+
+  const systemPrompt = 'Eres un asistente de estudio que ayuda a un opositor a identificar qué le falta por dominar de un tema, comparando lo que ha escrito de memoria con el contenido real del tema. No puntúas como un tribunal, no das una nota. Tu objetivo es señalar de forma clara y concreta: 1) qué bloques de contenido o ideas clave del tema real NO aparecen en su reconstrucción, 2) qué partes aparecen pero distorsionadas o incompletas, 3) qué hizo bien y debe mantener. Sé breve, concreto, y organiza la respuesta en esos tres bloques con encabezados claros.';
+  const userMessage = 'TEMA: ' + tituloCompleto + '\n\nCONTENIDO REAL DEL TEMA:\n' + reconDocxTexto + '\n\nMI RECONSTRUCCIÓN DE MEMORIA:\n' + texto;
+
+  try {
+    const respuesta = await callClaude(systemPrompt, userMessage, 4000);
+    resultadoDiv.innerHTML = '<div class="card" style="background:var(--cream);"><div style="white-space:pre-wrap; font-size:0.88rem;">' + respuesta.replace(/</g, '&lt;') + '</div></div>';
+
+    const exito = texto.length > reconDocxTexto.length * 0.4;
+    reconActualizarTema(numTema, exito, respuesta);
+    reconMostrarFeedbackPrevio();
+  } catch (e) {
+    resultadoDiv.innerHTML = '<p style="color:var(--accent);">Error al comparar. Inténtalo de nuevo.</p>';
+  }
+}
+
+// ── Matriz de los 72 temas, recorriendo siempre el listado oficial TEMAS (incluidos los que aún no se han tocado) ──
+function mostrarMatrizTemas() {
+  const card = document.getElementById('recon-matriz-card');
+  const grid = document.getElementById('recon-matriz-grid');
+  const resumen = document.getElementById('recon-matriz-resumen');
+  if (!card || !grid || typeof TEMAS === 'undefined') return;
+
+  const estado = reconCargarEstado();
+  const hoy = new Date().toISOString().slice(0, 10);
+
+  let consolidados = 0, enReconstruccion = 0, sinEmpezar = 0;
+
+  grid.innerHTML = '';
+  TEMAS.forEach(tInfo => {
+    const t = estado[String(tInfo.num)];
+    let fase = 'sin_empezar';
+    let color = 'var(--muted)';
+    let detalle = 'Sin empezar';
+    if (t && t.fase) {
+      fase = t.fase;
+      if (fase === 'consolidado') { color = '#3B6D11'; detalle = 'Consolidado'; }
+      else if (fase === 'reconstruccion') { color = '#BA7517'; detalle = 'En reconstrucción'; }
+    }
+    if (fase === 'consolidado') consolidados++;
+    else if (fase === 'reconstruccion') enReconstruccion++;
+    else sinEmpezar++;
+
+    const intentos = (t && t.historial) ? t.historial.length : 0;
+    const toca = t && t.proximoRepaso && t.proximoRepaso <= hoy;
+
+    const div = document.createElement('div');
+    div.style = 'border:1px solid var(--border); border-radius:4px; padding:0.5rem 0.6rem; font-size:0.78rem; cursor:pointer;';
+    div.title = tInfo.titulo;
+    div.onclick = () => {
+      const sel = document.getElementById('recon-tema-sel');
+      if (sel) { sel.value = String(tInfo.num); reconMostrarFeedbackPrevio(); sel.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    };
+    div.innerHTML = '<div style="display:flex; justify-content:space-between; align-items:center;"><span style="font-weight:600;">Tema ' + tInfo.num + '</span><span style="width:8px; height:8px; border-radius:50%; background:' + color + '; display:inline-block;"></span></div>' +
+      '<div style="color:var(--muted); margin-top:0.2rem;">' + detalle + (intentos > 0 ? ' · ' + intentos + ' intento' + (intentos === 1 ? '' : 's') : '') + '</div>' +
+      (toca ? '<div style="color:#BA7517; font-weight:600; margin-top:0.2rem;">Repasar hoy</div>' : '');
+    grid.appendChild(div);
+  });
+
+  resumen.textContent = (consolidados + enReconstruccion) + ' de ' + TEMAS.length + ' temas iniciados · ' + consolidados + ' consolidados · ' + enReconstruccion + ' en reconstrucción · ' + sinEmpezar + ' sin empezar';
+
+  card.style.display = 'block';
+}
+
+// ═══════════════════════════════════════════════════════
 // MODO SOCRÁTICO — ESTUDIO ACTIVO CON IA
 // ═══════════════════════════════════════════════════════
 
@@ -11002,8 +11214,8 @@ let socraticoMaxPreguntas = 10;
 })();
 
 function setModoTemas(modo) {
-  const panels = { practicar: 'temas-modo-practicar', estudiar: 'temas-modo-estudiar', tarjetas: 'temas-modo-tarjetas', test: 'temas-modo-test' };
-  const tabs   = { practicar: 'temas-tab-practicar',  estudiar: 'temas-tab-estudiar',  tarjetas: 'temas-tab-tarjetas', test: 'temas-tab-test' };
+  const panels = { practicar: 'temas-modo-practicar', estudiar: 'temas-modo-estudiar', tarjetas: 'temas-modo-tarjetas', test: 'temas-modo-test', reconstruccion: 'temas-modo-reconstruccion' };
+  const tabs   = { practicar: 'temas-tab-practicar',  estudiar: 'temas-tab-estudiar',  tarjetas: 'temas-tab-tarjetas', test: 'temas-tab-test', reconstruccion: 'temas-tab-reconstruccion' };
   Object.entries(panels).forEach(([k, id]) => {
     const el = document.getElementById(id);
     if (el) el.style.display = k === modo ? 'block' : 'none';
@@ -12165,6 +12377,59 @@ function calGuardarDatos(datos) {
   } catch(e) {}
 }
 
+// ── Exportar el calendario a un archivo .json (copia de seguridad o para pasar a otro dispositivo) ──
+function calExportarDatos() {
+  const datos = calCargarDatos();
+  const blob = new Blob([JSON.stringify(datos, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const fecha = new Date().toISOString().slice(0, 10);
+  a.href = url;
+  a.download = 'opositaLengua_calendario_' + fecha + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// ── Importar un archivo exportado y fusionarlo con el calendario actual, sin duplicar entradas ──
+function calImportarDatos(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const resultadoDiv = document.getElementById('cal-import-resultado');
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const importado = JSON.parse(e.target.result);
+      if (!importado || !Array.isArray(importado.entradas)) {
+        resultadoDiv.innerHTML = '<p style="color:var(--accent);">El archivo no tiene el formato esperado.</p>';
+        return;
+      }
+      const actual = calCargarDatos();
+      const idsActuales = new Set(actual.entradas.map(en => en.id));
+      let anadidas = 0;
+      importado.entradas.forEach(en => {
+        if (!idsActuales.has(en.id)) {
+          actual.entradas.push(en);
+          idsActuales.add(en.id);
+          anadidas++;
+        }
+      });
+      actual.entradas.sort((a, b) => (a.fecha || '').localeCompare(b.fecha || ''));
+      calGuardarDatos(actual);
+      resultadoDiv.innerHTML = '<p style="color:#27ae60;">Importación completada: ' + anadidas + ' entradas nuevas añadidas (' + (importado.entradas.length - anadidas) + ' ya existían y se omitieron).</p>';
+      renderCalendario();
+      renderRegistro();
+      renderStats();
+      renderProximas();
+    } catch (err) {
+      resultadoDiv.innerHTML = '<p style="color:var(--accent);">Error al leer el archivo. Asegúrate de que es un .json exportado desde esta misma app.</p>';
+    }
+  };
+  reader.readAsText(file);
+  input.value = '';
+}
+
 // ── Registrar actividad automáticamente ──
 function calRegistrarActividad(tipo, descripcion) {
   const datos = calCargarDatos();
@@ -12516,6 +12781,119 @@ function renderStats() {
   document.getElementById('cal-stats-contenido').innerHTML = html;
 }
 
+// ═══════════════════════════════════════════════════════
+// CONTROL DE TEMAS — tabla editable de vueltas por tema
+// ═══════════════════════════════════════════════════════
+
+const CT_KEY = 'opositaLengua_controlTemas';
+let ctTemaAbierto = null;
+
+function ctCargarDatos() {
+  try { return JSON.parse(localStorage.getItem(CT_KEY)) || {}; } catch { return {}; }
+}
+
+function ctGuardarDatos(datos) {
+  try { localStorage.setItem(CT_KEY, JSON.stringify(datos)); } catch {}
+}
+
+function ctAnadirVuelta(numTema) {
+  const datos = ctCargarDatos();
+  const t = datos[numTema] || { vueltas: [], estado: 'SE' };
+  if (!t.vueltas) t.vueltas = [];
+  t.vueltas.push({ fecha: new Date().toISOString().slice(0, 10), nota: '' });
+  datos[numTema] = t;
+  ctGuardarDatos(datos);
+  renderControlTemas();
+}
+
+function ctEliminarVuelta(numTema, idx) {
+  const datos = ctCargarDatos();
+  const t = datos[numTema];
+  if (!t || !t.vueltas) return;
+  t.vueltas.splice(idx, 1);
+  ctGuardarDatos(datos);
+  renderControlTemas();
+}
+
+function ctActualizarVuelta(numTema, idx, campo, valor) {
+  const datos = ctCargarDatos();
+  const t = datos[numTema];
+  if (!t || !t.vueltas || !t.vueltas[idx]) return;
+  t.vueltas[idx][campo] = valor;
+  ctGuardarDatos(datos);
+}
+
+function ctActualizarEstado(numTema, estado) {
+  const datos = ctCargarDatos();
+  const t = datos[numTema] || { vueltas: [] };
+  t.estado = estado;
+  datos[numTema] = t;
+  ctGuardarDatos(datos);
+  renderControlTemas();
+}
+
+function ctToggleDetalle(numTema) {
+  const el = document.getElementById('ct-detalle-' + numTema);
+  if (!el) return;
+  const abrir = el.style.display === 'none';
+  el.style.display = abrir ? 'block' : 'none';
+  ctTemaAbierto = abrir ? numTema : null;
+}
+
+function renderControlTemas() {
+  const lista = document.getElementById('ct-lista');
+  const resumen = document.getElementById('ct-resumen');
+  if (!lista || typeof TEMAS === 'undefined') return;
+
+  const datos = ctCargarDatos();
+  const estadoColores = { SE: 'var(--muted)', F: '#C0392B', R: '#BA7517', B: '#3B6D11' };
+  const estadoLabels = { SE: 'Sin empezar', F: 'Flojo', R: 'Regular', B: 'Bien' };
+
+  let contador = { SE: 0, F: 0, R: 0, B: 0 };
+
+  let html = '';
+  TEMAS.forEach(tInfo => {
+    const t = datos[tInfo.num] || { vueltas: [], estado: 'SE' };
+    const estado = t.estado || 'SE';
+    contador[estado] = (contador[estado] || 0) + 1;
+    const numVueltas = (t.vueltas || []).length;
+
+    html += `
+    <div style="border:1px solid var(--border); border-radius:4px; margin-bottom:0.5rem; overflow:hidden;">
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:0.6rem 0.75rem; cursor:pointer; background:var(--cream);" onclick="ctToggleDetalle(${tInfo.num})">
+        <div style="display:flex; align-items:center; gap:0.6rem; min-width:0; flex:1;">
+          <span style="width:10px; height:10px; border-radius:50%; background:${estadoColores[estado]}; flex-shrink:0;"></span>
+          <span style="font-size:0.84rem; font-weight:600; flex-shrink:0;">Tema ${tInfo.num}</span>
+          <span style="font-size:0.78rem; color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${tInfo.titulo.replace(/</g, '&lt;')}</span>
+        </div>
+        <span style="font-size:0.74rem; color:var(--muted); flex-shrink:0; margin-left:0.5rem;">${numVueltas} vuelta${numVueltas === 1 ? '' : 's'} ▾</span>
+      </div>
+      <div id="ct-detalle-${tInfo.num}" style="display:${ctTemaAbierto === tInfo.num ? 'block' : 'none'}; padding:0.75rem; border-top:1px solid var(--border);">
+        <div style="margin-bottom:0.75rem;">
+          <label style="font-size:0.76rem; color:var(--muted); margin-right:0.5rem;">Estado:</label>
+          <select onchange="ctActualizarEstado(${tInfo.num}, this.value)" style="font-size:0.8rem; padding:0.2rem 0.4rem;">
+            ${Object.keys(estadoLabels).map(k => `<option value="${k}" ${k === estado ? 'selected' : ''}>${estadoLabels[k]}</option>`).join('')}
+          </select>
+        </div>
+        <div id="ct-vueltas-${tInfo.num}">
+          ${(t.vueltas || []).map((v, idx) => `
+            <div style="display:flex; gap:0.5rem; align-items:flex-start; margin-bottom:0.5rem;">
+              <span style="font-size:0.76rem; color:var(--muted); padding-top:0.3rem; min-width:18px;">${idx + 1}.</span>
+              <input type="date" value="${v.fecha || ''}" onchange="ctActualizarVuelta(${tInfo.num}, ${idx}, 'fecha', this.value)" style="font-size:0.78rem; padding:0.3rem; width:130px; flex-shrink:0;">
+              <input type="text" value="${(v.nota || '').replace(/"/g, '&quot;')}" placeholder="Notas de esta vuelta (qué te faltó, cómo fue...)" onchange="ctActualizarVuelta(${tInfo.num}, ${idx}, 'nota', this.value)" style="font-size:0.78rem; padding:0.3rem; flex:1; min-width:0;">
+              <button class="btn btn-ghost" style="font-size:0.72rem; padding:0.2rem 0.4rem; flex-shrink:0;" onclick="ctEliminarVuelta(${tInfo.num}, ${idx})">✕</button>
+            </div>
+          `).join('')}
+        </div>
+        <button class="btn btn-secondary" style="font-size:0.76rem; padding:0.35rem 0.7rem; margin-top:0.25rem;" onclick="ctAnadirVuelta(${tInfo.num})">+ Añadir vuelta</button>
+      </div>
+    </div>`;
+  });
+
+  resumen.textContent = `${contador.B} bien · ${contador.R} regular · ${contador.F} flojo · ${contador.SE} sin empezar (de ${TEMAS.length} temas)`;
+  lista.innerHTML = html;
+}
+
 // ── Aviso de tareas pendientes al abrir la app ──
 function calComprobarAvisos() {
   const datos = calCargarDatos();
@@ -12577,7 +12955,7 @@ function calComprobarAvisos() {
 
 // ── Tab switcher ──
 function setCalTab(tab) {
-  ['calendario','registro','planificar','estadisticas'].forEach(t => {
+  ['calendario','registro','planificar','estadisticas','temas'].forEach(t => {
     const panel = document.getElementById('cal-panel-' + t);
     const btn = document.getElementById('cal-tab-' + t);
     if (panel) panel.style.display = t === tab ? 'block' : 'none';
@@ -12590,6 +12968,7 @@ function setCalTab(tab) {
   if (tab === 'registro') renderRegistro();
   if (tab === 'planificar') renderProximas();
   if (tab === 'estadisticas') renderStats();
+  if (tab === 'temas') renderControlTemas();
 }
 
 // ── Init when calendar module is shown ──
