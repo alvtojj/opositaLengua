@@ -597,19 +597,19 @@ body.is-app header {
 
     <!-- Selector de modo: Practicar / Estudiar -->
     <div style="display:flex; gap:0; margin-bottom:1.5rem; border:1px solid var(--border); border-radius:4px; overflow:hidden;">
-      <button id="temas-tab-practicar" class="btn" onclick="setModoTemas('practicar')" style="flex:1; border-radius:0; background:var(--accent); color:var(--white); border:none; font-size:0.82rem; padding:0.65rem 0.5rem;">
+      <button id="temas-tab-practicar" class="btn" onclick="setModoTemas('practicar')" style="flex:1; border-radius:0; background:var(--accent); color:var(--white); border:none; font-size:0.82rem; padding:0.65rem 0.5rem; min-height:3.4rem; display:flex; align-items:center; justify-content:center; text-align:center;">
         ✍️ Simulacro real de temas
       </button>
-      <button id="temas-tab-estudiar" class="btn" onclick="setModoTemas('estudiar')" style="flex:1; border-radius:0; background:var(--cream); color:var(--muted); border:none; font-size:0.82rem; padding:0.65rem 0.5rem;">
+      <button id="temas-tab-estudiar" class="btn" onclick="setModoTemas('estudiar')" style="flex:1; border-radius:0; background:var(--cream); color:var(--muted); border:none; font-size:0.82rem; padding:0.65rem 0.5rem; min-height:3.4rem; display:flex; align-items:center; justify-content:center; text-align:center;">
         ❓ Preguntas de estudio
       </button>
-      <button id="temas-tab-tarjetas" class="btn" onclick="setModoTemas('tarjetas')" style="flex:1; border-radius:0; background:var(--cream); color:var(--muted); border:none; font-size:0.82rem; padding:0.65rem 0.5rem;">
+      <button id="temas-tab-tarjetas" class="btn" onclick="setModoTemas('tarjetas')" style="flex:1; border-radius:0; background:var(--cream); color:var(--muted); border:none; font-size:0.82rem; padding:0.65rem 0.5rem; min-height:3.4rem; display:flex; align-items:center; justify-content:center; text-align:center;">
         🃏 Tarjetas de estudio
       </button>
-      <button id="temas-tab-test" class="btn" onclick="setModoTemas('test')" style="flex:1; border-radius:0; background:var(--cream); color:var(--muted); border:none; font-size:0.82rem; padding:0.65rem 0.5rem;">
+      <button id="temas-tab-test" class="btn" onclick="setModoTemas('test')" style="flex:1; border-radius:0; background:var(--cream); color:var(--muted); border:none; font-size:0.82rem; padding:0.65rem 0.5rem; min-height:3.4rem; display:flex; align-items:center; justify-content:center; text-align:center;">
         📝 Tipo test
       </button>
-      <button id="temas-tab-reconstruccion" class="btn" onclick="setModoTemas('reconstruccion')" style="flex:1; border-radius:0; background:var(--cream); color:var(--muted); border:none; font-size:0.82rem; padding:0.65rem 0.5rem;">
+      <button id="temas-tab-reconstruccion" class="btn" onclick="setModoTemas('reconstruccion')" style="flex:1; border-radius:0; background:var(--cream); color:var(--muted); border:none; font-size:0.82rem; padding:0.65rem 0.5rem; min-height:3.4rem; display:flex; align-items:center; justify-content:center; text-align:center;">
         🔄 Reconstrucción activa
       </button>
     </div>
@@ -772,14 +772,6 @@ body.is-app header {
           <div id="socratico-archivo-nombre" style="display:none; font-size:0.82rem; color:var(--success); margin-top:0.5rem; padding:0.5rem; background:var(--cream); border-radius:3px;"></div>
         </div>
 
-        <!-- Tema del temario (alternativa) -->
-        <div class="field" style="margin-top:0.5rem;">
-          <label>O elige un tema del temario oficial</label>
-          <select id="socratico-tema-sel" onchange="socratico_usarTemario()">
-            <option value="">— Elige un tema del BOE —</option>
-          </select>
-        </div>
-
         <!-- Dificultad -->
         <div class="field">
           <label>Nivel de las preguntas</label>
@@ -881,13 +873,6 @@ body.is-app header {
             <input type="file" id="tarjetas-file" accept=".pdf,.docx,.doc" style="display:none" onchange="cargarTemasTarjetas(this.files[0])">
           </div>
           <div id="tarjetas-archivo-nombre" style="display:none; font-size:0.82rem; color:var(--success); margin-top:0.5rem; padding:0.5rem; background:var(--cream); border-radius:3px;"></div>
-        </div>
-
-        <div class="field">
-          <label>O elige un tema del temario oficial</label>
-          <select id="tarjetas-tema-sel" onchange="tarjetas_usarTemario()">
-            <option value="">— Elige un tema del BOE —</option>
-          </select>
         </div>
 
         <div class="field">
@@ -1021,13 +1006,6 @@ body.is-app header {
             <input type="file" id="test-file" accept=".pdf,.docx,.doc" style="display:none" onchange="cargarTemasTest(this.files[0])">
           </div>
           <div id="test-archivo-nombre" style="display:none; font-size:0.82rem; color:var(--success); margin-top:0.5rem; padding:0.5rem; background:var(--cream); border-radius:3px;"></div>
-        </div>
-
-        <div class="field">
-          <label>O elige un tema del temario oficial</label>
-          <select id="test-tema-sel" onchange="test_usarTemario()">
-            <option value="">— Elige un tema del BOE —</option>
-          </select>
         </div>
 
         <div class="field">
@@ -11197,19 +11175,6 @@ let socraticoHistorial = [];   // [{role:'ia'|'opositor', texto, feedback}]
 let socraticoNumPregunta = 0;
 let socraticoMaxPreguntas = 10;
 
-// ── Poblar selector de temas del temario ──
-(function() {
-  const sel = document.getElementById('socratico-tema-sel');
-  if (!sel) return;
-  TEMAS.forEach(t => {
-    const opt = document.createElement('option');
-    opt.value = t.id || t.titulo;
-    opt.textContent = t.titulo;
-    opt.dataset.bloque = t.bloque || '';
-    sel.appendChild(opt);
-  });
-})();
-
 function setModoTemas(modo) {
   const panels = { practicar: 'temas-modo-practicar', estudiar: 'temas-modo-estudiar', tarjetas: 'temas-modo-tarjetas', test: 'temas-modo-test', reconstruccion: 'temas-modo-reconstruccion' };
   const tabs   = { practicar: 'temas-tab-practicar',  estudiar: 'temas-tab-estudiar',  tarjetas: 'temas-tab-tarjetas', test: 'temas-tab-test', reconstruccion: 'temas-tab-reconstruccion' };
@@ -11282,7 +11247,6 @@ async function cargarTemasSocratico(file) {
 
     socraticoTextoTema = texto.slice(0, 12000); // max context
     socraticoTituloTema = file.name.replace(/\.[^.]+$/, '');
-    document.getElementById('socratico-tema-sel').value = '';
     nombre.textContent = '✓ ' + file.name + ' — ' + texto.length.toLocaleString() + ' caracteres';
     nombre.style.color = 'var(--success)';
     document.getElementById('btn-iniciar-socratico').disabled = false;
@@ -11290,16 +11254,6 @@ async function cargarTemasSocratico(file) {
     nombre.textContent = '✗ Error: ' + e.message;
     nombre.style.color = 'var(--error, #c0392b)';
   }
-}
-
-function socratico_usarTemario() {
-  const sel = document.getElementById('socratico-tema-sel');
-  const titulo = sel.options[sel.selectedIndex]?.text || '';
-  if (!titulo || titulo.startsWith('—')) return;
-  socraticoTextoTema = '';  // IA usará su conocimiento del temario
-  socraticoTituloTema = titulo;
-  document.getElementById('socratico-archivo-nombre').style.display = 'none';
-  document.getElementById('btn-iniciar-socratico').disabled = false;
 }
 
 // ── Iniciar sesión socrática ──
@@ -11573,7 +11527,6 @@ function nuevaSesionSocratica() {
   document.getElementById('socratico-resumen').style.display = 'none';
   document.getElementById('socratico-historial').innerHTML = '';
   document.getElementById('socratico-archivo-nombre').style.display = 'none';
-  document.getElementById('socratico-tema-sel').value = '';
   document.getElementById('btn-iniciar-socratico').disabled = true;
   document.getElementById('socratico-upload-zona').style.borderColor = 'var(--border)';
 }
@@ -11589,18 +11542,6 @@ let tarjetasMazo = [];        // [{anverso, reverso, categoria, sabida}]
 let tarjetaActual = 0;
 let tarjetasVoltada = false;
 let tarjetasMazoActivo = [];  // subset being reviewed
-
-// Populate selector
-(function() {
-  const sel = document.getElementById('tarjetas-tema-sel');
-  if (!sel) return;
-  TEMAS.forEach(t => {
-    const opt = document.createElement('option');
-    opt.value = t.titulo;
-    opt.textContent = t.titulo;
-    sel.appendChild(opt);
-  });
-})();
 
 function handleDropTarjetas(e) {
   e.preventDefault();
@@ -11648,7 +11589,6 @@ async function cargarTemasTarjetas(file) {
     if (!texto || texto.length < 80) throw new Error('No se pudo extraer texto suficiente.');
     tarjetasTextoTema = texto.slice(0, 12000);
     tarjetasTituloTema = file.name.replace(/\.[^.]+$/, '');
-    document.getElementById('tarjetas-tema-sel').value = '';
     nombre.textContent = '✓ ' + file.name + ' cargado — ' + texto.length.toLocaleString() + ' caracteres';
     nombre.style.color = 'var(--success)';
     document.getElementById('btn-generar-tarjetas').disabled = false;
@@ -11656,16 +11596,6 @@ async function cargarTemasTarjetas(file) {
     nombre.textContent = '✗ Error: ' + e.message;
     nombre.style.color = 'var(--error, #c0392b)';
   }
-}
-
-function tarjetas_usarTemario() {
-  const sel = document.getElementById('tarjetas-tema-sel');
-  const titulo = sel.options[sel.selectedIndex]?.text || '';
-  if (!titulo || titulo.startsWith('—')) return;
-  tarjetasTextoTema = '';
-  tarjetasTituloTema = titulo;
-  document.getElementById('tarjetas-archivo-nombre').style.display = 'none';
-  document.getElementById('btn-generar-tarjetas').disabled = false;
 }
 
 async function generarTarjetas() {
@@ -11868,7 +11798,6 @@ function nuevasTarjetas() {
   document.getElementById('tarjetas-resultado').style.display = 'none';
   document.getElementById('tarjetas-config').style.display = 'block';
   document.getElementById('tarjetas-archivo-nombre').style.display = 'none';
-  document.getElementById('tarjetas-tema-sel').value = '';
   document.getElementById('btn-generar-tarjetas').disabled = true;
 }
 
@@ -13010,18 +12939,6 @@ let testAciertos = 0;
 let testFalladas = [];
 let testRespondida = false;
 
-// Populate selector
-(function() {
-  const sel = document.getElementById('test-tema-sel');
-  if (!sel) return;
-  TEMAS.forEach(t => {
-    const opt = document.createElement('option');
-    opt.value = t.titulo;
-    opt.textContent = t.titulo;
-    sel.appendChild(opt);
-  });
-})();
-
 function handleDropTest(e) {
   e.preventDefault();
   document.getElementById('test-upload-zona').style.borderColor = 'var(--border)';
@@ -13068,7 +12985,6 @@ async function cargarTemasTest(file) {
     if (!texto || texto.length < 80) throw new Error('No se pudo extraer texto suficiente.');
     testTextoTema = texto.slice(0, 12000);
     testTituloTema = file.name.replace(/\.[^.]+$/, '');
-    document.getElementById('test-tema-sel').value = '';
     nombre.textContent = '✓ ' + file.name + ' — ' + texto.length.toLocaleString() + ' caracteres';
     nombre.style.color = 'var(--success)';
     document.getElementById('btn-generar-test').disabled = false;
@@ -13076,16 +12992,6 @@ async function cargarTemasTest(file) {
     nombre.textContent = '✗ Error: ' + e.message;
     nombre.style.color = 'var(--error, #c0392b)';
   }
-}
-
-function test_usarTemario() {
-  const sel = document.getElementById('test-tema-sel');
-  const titulo = sel.options[sel.selectedIndex]?.text || '';
-  if (!titulo || titulo.startsWith('—')) return;
-  testTextoTema = '';
-  testTituloTema = titulo;
-  document.getElementById('test-archivo-nombre').style.display = 'none';
-  document.getElementById('btn-generar-test').disabled = false;
 }
 
 async function generarTest() {
@@ -13331,7 +13237,6 @@ function nuevoTest() {
   document.getElementById('test-resultado').style.display = 'none';
   document.getElementById('test-config').style.display = 'block';
   document.getElementById('test-archivo-nombre').style.display = 'none';
-  document.getElementById('test-tema-sel').value = '';
   document.getElementById('btn-generar-test').disabled = true;
 }
 
