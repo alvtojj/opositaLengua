@@ -13674,14 +13674,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // ── Cookie helpers for API key ──
+// Sistema de guardado con triple respaldo: localStorage + sessionStorage + variable global
+// para garantizar persistencia en WebView de Android aunque se deslice para cerrar
+let _cachedApiKey = '';
+
 function setApiKeyCookie(key) {
+  _cachedApiKey = key;
   localStorage.setItem('opositaLengua_apikey', key);
+  sessionStorage.setItem('opositaLengua_apikey', key);
+  try { document.cookie = 'opositaLengua_apikey=' + encodeURIComponent(key) + '; path=/; SameSite=Lax'; } catch(e) {}
 }
 function getApiKeyCookie() {
-  return localStorage.getItem('opositaLengua_apikey') || '';
+  if (_cachedApiKey) return _cachedApiKey;
+  const fromLocal = localStorage.getItem('opositaLengua_apikey');
+  if (fromLocal) { _cachedApiKey = fromLocal; return fromLocal; }
+  const fromSession = sessionStorage.getItem('opositaLengua_apikey');
+  if (fromSession) { _cachedApiKey = fromSession; localStorage.setItem('opositaLengua_apikey', fromSession); return fromSession; }
+  try {
+    const cookies = document.cookie.split(';');
+    for (let c of cookies) {
+      const parts = c.trim().split('=');
+      if (parts[0] === 'opositaLengua_apikey') {
+        const val = decodeURIComponent(parts.slice(1).join('=') || '');
+        if (val) { _cachedApiKey = val; localStorage.setItem('opositaLengua_apikey', val); return val; }
+      }
+    }
+  } catch(e) {}
+  return '';
 }
 function removeApiKeyCookie() {
+  _cachedApiKey = '';
   localStorage.removeItem('opositaLengua_apikey');
+  sessionStorage.removeItem('opositaLengua_apikey');
+  try { document.cookie = 'opositaLengua_apikey=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'; } catch(e) {}
 }
 // ── Timer bloque literario ──
 let _timerSoloLitInterval = null;
