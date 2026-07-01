@@ -6132,7 +6132,7 @@ async function callClaude(systemPrompt, userMessage, maxTokens = 1000) {
   let data;
   try { data = JSON.parse(text); } catch(e) { throw new Error('Error de conexión. Inténtalo de nuevo.'); }
   if (data.error) {
-    if (data.error.type === 'authentication_error') { removeApiKeyCookie(); mostrarOverlayApiKey(); throw new Error('Clave incorrecta.'); }
+    if (data.error.type === 'authentication_error') {  mostrarOverlayApiKey(); throw new Error('Clave incorrecta.'); }
     throw new Error(data.error.message || JSON.stringify(data.error));
   }
   const texto = data.content?.[0]?.text;
@@ -13675,24 +13675,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ── Cookie helpers for API key ──
 function setApiKeyCookie(key) {
-  const expires = new Date();
-  expires.setFullYear(expires.getFullYear() + 2);
-  document.cookie = 'opositaLengua_apikey=' + encodeURIComponent(key) + '; expires=' + expires.toUTCString() + '; path=/; SameSite=Lax';
   localStorage.setItem('opositaLengua_apikey', key);
 }
 function getApiKeyCookie() {
-  const cookies = document.cookie.split(';');
-  for (let c of cookies) {
-    const parts = c.trim().split('=');
-    if (parts[0] === 'opositaLengua_apikey') return decodeURIComponent(parts.slice(1).join('=') || '');
-  }
   return localStorage.getItem('opositaLengua_apikey') || '';
 }
 function removeApiKeyCookie() {
-  document.cookie = 'opositaLengua_apikey=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
   localStorage.removeItem('opositaLengua_apikey');
 }
-
 // ── Timer bloque literario ──
 let _timerSoloLitInterval = null;
 function actualizarTimerSoloLit() {
