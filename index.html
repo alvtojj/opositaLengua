@@ -635,7 +635,7 @@ body.is-app header {
             <div style="font-size:1.5rem; margin-bottom:0.5rem;">📄</div>
             <div style="font-size:0.85rem; color:var(--muted);">Arrastra aquí tu tema o <span style="color:var(--accent); font-weight:500;">haz clic para seleccionar</span></div>
             <div style="font-size:0.75rem; color:var(--muted); margin-top:0.3rem;">PDF, Word (.docx) o texto plano (.txt)</div>
-            <input type="file" id="file-tema" accept=".pdf,.docx,.txt" style="display:none" onchange="procesarArchivoTema(this.files[0])">
+            <input type="file" id="file-tema" accept=".pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain" style="display:none" onchange="procesarArchivoTema(this.files[0])">
           </div>
           <div id="archivo-cargado" style="display:none; margin-top:0.75rem;" class="info-box">
             <span id="archivo-nombre" style="color:var(--success); font-weight:500;"></span>
@@ -767,7 +767,7 @@ body.is-app header {
             <div style="font-size:1.5rem; margin-bottom:0.4rem;">📄</div>
             <div style="font-size:0.82rem; color:var(--muted);">Arrastra aquí tu tema o <span style="color:var(--accent); font-weight:500;">haz clic para seleccionar</span></div>
             <div style="font-size:0.75rem; color:var(--muted); margin-top:0.3rem;">PDF, DOCX, DOC</div>
-            <input type="file" id="socratico-file" accept=".pdf,.docx,.doc" style="display:none" onchange="cargarTemasSocratico(this.files[0])">
+            <input type="file" id="socratico-file" accept=".pdf,.docx,.doc,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword" style="display:none" onchange="cargarTemasSocratico(this.files[0])">
           </div>
           <div id="socratico-archivo-nombre" style="display:none; font-size:0.82rem; color:var(--success); margin-top:0.5rem; padding:0.5rem; background:var(--cream); border-radius:3px;"></div>
         </div>
@@ -870,7 +870,7 @@ body.is-app header {
             <div style="font-size:1.5rem; margin-bottom:0.4rem;">📄</div>
             <div style="font-size:0.82rem; color:var(--muted);">Arrastra aquí tu tema o <span style="color:var(--accent); font-weight:500;">haz clic para seleccionar</span></div>
             <div style="font-size:0.75rem; color:var(--muted); margin-top:0.3rem;">PDF, DOCX, DOC</div>
-            <input type="file" id="tarjetas-file" accept=".pdf,.docx,.doc" style="display:none" onchange="cargarTemasTarjetas(this.files[0])">
+            <input type="file" id="tarjetas-file" accept=".pdf,.docx,.doc,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword" style="display:none" onchange="cargarTemasTarjetas(this.files[0])">
           </div>
           <div id="tarjetas-archivo-nombre" style="display:none; font-size:0.82rem; color:var(--success); margin-top:0.5rem; padding:0.5rem; background:var(--cream); border-radius:3px;"></div>
         </div>
@@ -1003,7 +1003,7 @@ body.is-app header {
             <div style="font-size:1.5rem; margin-bottom:0.4rem;">📄</div>
             <div style="font-size:0.82rem; color:var(--muted);">Arrastra tu tema o <span style="color:var(--accent); font-weight:500;">haz clic para seleccionar</span></div>
             <div style="font-size:0.75rem; color:var(--muted); margin-top:0.3rem;">PDF, DOCX, DOC</div>
-            <input type="file" id="test-file" accept=".pdf,.docx,.doc" style="display:none" onchange="cargarTemasTest(this.files[0])">
+            <input type="file" id="test-file" accept=".pdf,.docx,.doc,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword" style="display:none" onchange="cargarTemasTest(this.files[0])">
           </div>
           <div id="test-archivo-nombre" style="display:none; font-size:0.82rem; color:var(--success); margin-top:0.5rem; padding:0.5rem; background:var(--cream); border-radius:3px;"></div>
         </div>
@@ -1837,7 +1837,7 @@ body.is-app header {
                 <div style="font-size:1.5rem; margin-bottom:0.5rem;">📄</div>
                 <div style="font-size:0.83rem; color:var(--muted);">Arrastra o <span style="color:var(--accent); font-weight:500;">haz clic para seleccionar</span></div>
                 <div style="font-size:0.75rem; color:var(--muted); margin-top:0.3rem;">PDF o Word (.docx)</div>
-                <input type="file" id="file-prog" accept=".pdf,.docx,.txt" style="display:none" onchange="procesarProgExistente(this.files[0])">
+                <input type="file" id="file-prog" accept=".pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain" style="display:none" onchange="procesarProgExistente(this.files[0])">
               </div>
               <div id="prog-archivo-ok" style="display:none; margin-top:0.5rem;" class="info-box">
                 <span id="prog-archivo-nombre" style="color:var(--success); font-weight:500;"></span>
@@ -2012,7 +2012,7 @@ body.is-app header {
             <label for="file-defensa-prog-doc" class="btn btn-ghost" style="cursor:pointer; padding:0.4rem 0.9rem; font-size:0.78rem; margin:0;">
               📎 Subir mi defensa (Word o PDF)
             </label>
-            <input type="file" id="file-defensa-prog-doc" accept=".pdf,.docx,.doc" style="display:none" onchange="cargarDefensaProgDoc(this.files[0])">
+            <input type="file" id="file-defensa-prog-doc" accept=".pdf,.docx,.doc,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword" style="display:none" onchange="cargarDefensaProgDoc(this.files[0])">
             <span id="defensa-prog-doc-nombre" style="font-size:0.75rem; color:var(--muted);"></span>
           </div>
           <div id="defensa-prog-doc-ok" style="display:none; margin-top:0.75rem;">
@@ -2162,7 +2162,7 @@ body.is-app header {
             <div id="ud-upload-zona" style="border:2px dashed var(--border); border-radius:4px; padding:1rem; text-align:center; cursor:pointer;" id="ud-drop-zone" onclick="document.getElementById('file-ud-existente').click()">
               <div style="font-size:1.2rem; margin-bottom:0.3rem;">📄</div>
               <div style="font-size:0.8rem;color:var(--muted);">Word (.docx) o PDF</div>
-              <input type="file" id="file-ud-existente" accept=".pdf,.docx,.txt" style="display:none" onchange="procesarUDExistente(this.files[0])">
+              <input type="file" id="file-ud-existente" accept=".pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain" style="display:none" onchange="procesarUDExistente(this.files[0])">
             </div>
             <div id="ud-archivo-ok" style="display:none; margin-top:0.5rem; font-size:0.8rem; color:var(--success);"></div>
             <div class="loading" id="loading-ud-archivo"><div class="spinner"></div>Procesando...</div>
@@ -2306,7 +2306,7 @@ body.is-app header {
               <label for="file-defensa-sa-doc" class="btn btn-ghost" style="cursor:pointer; padding:0.4rem 0.9rem; font-size:0.78rem; margin:0;">
                 📎 Subir mi defensa (Word o PDF)
               </label>
-              <input type="file" id="file-defensa-sa-doc" accept=".pdf,.docx,.doc" style="display:none" onchange="cargarDefensaSADoc(this.files[0])">
+              <input type="file" id="file-defensa-sa-doc" accept=".pdf,.docx,.doc,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword" style="display:none" onchange="cargarDefensaSADoc(this.files[0])">
               <span id="defensa-sa-doc-nombre" style="font-size:0.75rem; color:var(--muted);"></span>
             </div>
             <div id="defensa-sa-doc-ok" style="display:none; margin-top:0.75rem;">
@@ -6060,25 +6060,25 @@ async function procesarArchivoTema(file) {
   document.getElementById('loading-archivo').classList.add('visible');
   try {
     if (ext === 'txt') {
-      window._temaPropio = (await file.text()).slice(0, 12000);
+      window._temaPropio = (await file.text()).slice(0, 60000);
     } else if (ext === 'docx') {
       const ab = await file.arrayBuffer();
       const result = await mammoth.extractRawText({ arrayBuffer: ab });
       const texto = result.value.trim();
       if (!texto || texto.length < 20) throw new Error('No se pudo extraer texto del .docx.');
-      window._temaPropio = texto.slice(0, 12000);
+      window._temaPropio = texto.slice(0, 60000);
     } else if (ext === 'doc') {
       throw new Error('Formato .doc no soportado. Guarda como .docx.');
     } else if (ext === 'pdf') {
       const base64 = await fileToBase64(file);
-      const data = await fetchProxy({ model: 'claude-sonnet-4-6', max_tokens: 3000,
+      const data = await fetchProxy({ model: 'claude-sonnet-4-6', max_tokens: 16000,
         messages: [{ role: 'user', content: [
           { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: base64 } },
           { type: 'text', text: 'Extrae todo el texto. Solo el texto.' }
         ]}]});
       const texto = data.content?.[0]?.text || '';
       if (!texto.trim()) throw new Error('PDF sin texto seleccionable. Usa .docx.');
-      window._temaPropio = texto.slice(0, 12000);
+      window._temaPropio = texto.slice(0, 60000);
     }
     document.getElementById('archivo-nombre').textContent = file.name;
     document.getElementById('archivo-cargado').style.display = 'flex';
@@ -6767,7 +6767,7 @@ async function procesarProgExistente(file) {
       texto = await file.text();
     } else if (ext === 'pdf') {
       const base64 = await fileToBase64(file);
-      const data = await fetchProxy({ model: 'claude-sonnet-4-6', max_tokens: 4000,
+      const data = await fetchProxy({ model: 'claude-sonnet-4-6', max_tokens: 8000,
         messages: [{ role: 'user', content: [
           { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: base64 } },
           { type: 'text', text: 'Extrae todo el texto.' }
@@ -6778,7 +6778,7 @@ async function procesarProgExistente(file) {
     const puntoSel = document.getElementById('prog-punto-selector');
     const puntoIdx = puntoSel && puntoSel.value !== '' ? parseInt(puntoSel.value) : NaN;
     const puntoNombre = (!isNaN(puntoIdx) && typeof INDICE_ESTANDAR !== 'undefined') ? INDICE_ESTANDAR[puntoIdx] : '';
-    progTextoExistente = puntoNombre ? `[SECCIÓN: ${puntoNombre}]\n\n${texto.slice(0,15000)}` : texto.slice(0,15000);
+    progTextoExistente = puntoNombre ? `[SECCIÓN: ${puntoNombre}]\n\n${texto.slice(0,20000)}` : texto.slice(0,20000);
     const label = puntoNombre ? `✓ ${file.name} — ${puntoNombre}` : `✓ ${file.name}`;
     document.getElementById('prog-archivo-nombre').textContent = label;
     document.getElementById('prog-archivo-ok').style.display = 'block';
@@ -7127,14 +7127,14 @@ async function procesarUDExistente(file) {
       : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
     const resp = await fetch('https://oposita-lengua-proxy.juanjosealvareztorres.workers.dev', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 4000,
+      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 8000,
         messages: [{ role: 'user', content: [
           { type: 'document', source: { type: 'base64', media_type: media, data: base64 } },
           { type: 'text', text: 'Extrae todo el texto de este documento. Solo el texto.' }
         ]}]})
     });
     const _rt = await resp.text(); let data; try { data = JSON.parse(_rt); } catch(e) { throw new Error('Error de conexión.'); }
-    udTextoExistente = (data.content?.[0]?.text || '').slice(0, 10000);
+    udTextoExistente = (data.content?.[0]?.text || '').slice(0, 20000);
     document.getElementById('ud-archivo-ok').textContent = '✓ ' + file.name + ' cargado';
     document.getElementById('ud-archivo-ok').style.display = 'block';
   } catch(e) { alert('Error: ' + e.message); }
@@ -11224,7 +11224,7 @@ async function cargarTemasSocratico(file) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: 'claude-sonnet-4-6',
-          max_tokens: 4000,
+          max_tokens: 16000,
           messages: [{
             role: 'user',
             content: [
@@ -11245,7 +11245,7 @@ async function cargarTemasSocratico(file) {
       throw new Error('No se pudo extraer texto suficiente del archivo.');
     }
 
-    socraticoTextoTema = texto.slice(0, 12000); // max context
+    socraticoTextoTema = texto.slice(0, 60000); // max context
     socraticoTituloTema = file.name.replace(/\.[^.]+$/, '');
     nombre.textContent = '✓ ' + file.name + ' — ' + texto.length.toLocaleString() + ' caracteres';
     nombre.style.color = 'var(--success)';
@@ -11574,7 +11574,7 @@ async function cargarTemasTarjetas(file) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: 'claude-sonnet-4-6',
-          max_tokens: 4000,
+          max_tokens: 16000,
           messages: [{ role: 'user', content: [
             { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: base64 } },
             { type: 'text', text: 'Extrae y transcribe íntegramente el texto de este documento, conservando la estructura y los epígrafes. Solo el texto, sin comentarios.' }
@@ -11587,7 +11587,7 @@ async function cargarTemasTarjetas(file) {
       texto = await file.text();
     }
     if (!texto || texto.length < 80) throw new Error('No se pudo extraer texto suficiente.');
-    tarjetasTextoTema = texto.slice(0, 12000);
+    tarjetasTextoTema = texto.slice(0, 60000);
     tarjetasTituloTema = file.name.replace(/\.[^.]+$/, '');
     nombre.textContent = '✓ ' + file.name + ' cargado — ' + texto.length.toLocaleString() + ' caracteres';
     nombre.style.color = 'var(--success)';
@@ -12970,7 +12970,7 @@ async function cargarTemasTest(file) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: 'claude-sonnet-4-6',
-          max_tokens: 4000,
+          max_tokens: 16000,
           messages: [{ role: 'user', content: [
             { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: base64 } },
             { type: 'text', text: 'Extrae y transcribe íntegramente el texto de este documento conservando la estructura. Solo el texto, sin comentarios.' }
@@ -12983,7 +12983,7 @@ async function cargarTemasTest(file) {
       texto = await file.text();
     }
     if (!texto || texto.length < 80) throw new Error('No se pudo extraer texto suficiente.');
-    testTextoTema = texto.slice(0, 12000);
+    testTextoTema = texto.slice(0, 60000);
     testTituloTema = file.name.replace(/\.[^.]+$/, '');
     nombre.textContent = '✓ ' + file.name + ' — ' + texto.length.toLocaleString() + ' caracteres';
     nombre.style.color = 'var(--success)';
