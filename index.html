@@ -11621,7 +11621,7 @@ async function generarTarjetas() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 8000,
+        max_tokens: 6000,
         system: `Eres un experto en didáctica de Lengua Castellana y Literatura y en la preparación de oposiciones a profesorado en Extremadura. Generas tarjetas de estudio didácticas, completas y rigurosas, basadas en el contenido del tema proporcionado. Devuelves SOLO JSON sin markdown.`,
         messages: [{ role: 'user', content:
           `${temaContexto}
@@ -13018,7 +13018,7 @@ async function generarTest() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 8000,
+        max_tokens: 6000,
         system: `Eres un experto en didáctica de Lengua Castellana y Literatura y en oposiciones a profesorado en Extremadura. Generas preguntas tipo test rigurosas basadas en el contenido del tema proporcionado. Devuelves SOLO JSON sin markdown.`,
         messages: [{ role: 'user', content:
           `${temaContexto}
