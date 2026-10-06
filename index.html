@@ -635,7 +635,7 @@ body.is-app header {
             <div style="font-size:1.5rem; margin-bottom:0.5rem;">📄</div>
             <div style="font-size:0.85rem; color:var(--muted);">Arrastra aquí tu tema o <span style="color:var(--accent); font-weight:500;">haz clic para seleccionar</span></div>
             <div style="font-size:0.75rem; color:var(--muted); margin-top:0.3rem;">PDF, Word (.docx) o texto plano (.txt)</div>
-            <input type="file" id="file-tema" accept=".pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain" style="display:none" onchange="procesarArchivoTema(this.files[0])">
+            <input type="file" id="file-tema" accept=".pdf,.docx,.doc,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,text/plain" style="display:none" onchange="procesarArchivoTema(this.files[0])">
           </div>
           <div id="archivo-cargado" style="display:none; margin-top:0.75rem;" class="info-box">
             <span id="archivo-nombre" style="color:var(--success); font-weight:500;"></span>
@@ -710,7 +710,7 @@ body.is-app header {
             <label for="desarrollo-docx-upload" class="btn btn-ghost" style="cursor:pointer; padding:0.4rem 0.9rem; font-size:0.78rem; margin:0;">
               📄 Subir Word (.docx)
             </label>
-            <input type="file" id="desarrollo-docx-upload" accept=".docx" style="display:none;" onchange="cargarDesarrolloDocx(this)">
+            <input type="file" id="desarrollo-docx-upload" accept=".docx,.doc,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword" style="display:none;" onchange="cargarDesarrolloDocx(this)">
             <span id="desarrollo-docx-nombre" style="font-size:0.75rem; color:var(--muted);"></span>
           </div>
           <textarea id="desarrollo-text" placeholder="Escribe aquí tu desarrollo del tema, o súbelo desde un archivo Word (.docx). Incluye introducción, epígrafes, contenido académico y conclusión..." style="min-height: 320px;"></textarea>
@@ -1113,7 +1113,7 @@ body.is-app header {
 
         <div style="margin-top:0.75rem;">
           <button class="btn btn-secondary" onclick="document.getElementById('recon-docx-upload').click()">📄 Subir Word del tema real (.docx)</button>
-          <input type="file" id="recon-docx-upload" accept=".docx" style="display:none;" onchange="cargarReconDocx(this)">
+          <input type="file" id="recon-docx-upload" accept=".docx,.doc,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword" style="display:none;" onchange="cargarReconDocx(this)">
           <span id="recon-docx-nombre" style="font-size:0.78rem; color:var(--muted); margin-left:0.5rem;"></span>
         </div>
 
@@ -1837,7 +1837,7 @@ body.is-app header {
                 <div style="font-size:1.5rem; margin-bottom:0.5rem;">📄</div>
                 <div style="font-size:0.83rem; color:var(--muted);">Arrastra o <span style="color:var(--accent); font-weight:500;">haz clic para seleccionar</span></div>
                 <div style="font-size:0.75rem; color:var(--muted); margin-top:0.3rem;">PDF o Word (.docx)</div>
-                <input type="file" id="file-prog" accept=".pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain" style="display:none" onchange="procesarProgExistente(this.files[0])">
+                <input type="file" id="file-prog" accept=".pdf,.docx,.doc,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,text/plain" style="display:none" onchange="procesarProgExistente(this.files[0])">
               </div>
               <div id="prog-archivo-ok" style="display:none; margin-top:0.5rem;" class="info-box">
                 <span id="prog-archivo-nombre" style="color:var(--success); font-weight:500;"></span>
@@ -2162,7 +2162,7 @@ body.is-app header {
             <div id="ud-upload-zona" style="border:2px dashed var(--border); border-radius:4px; padding:1rem; text-align:center; cursor:pointer;" id="ud-drop-zone" onclick="document.getElementById('file-ud-existente').click()">
               <div style="font-size:1.2rem; margin-bottom:0.3rem;">📄</div>
               <div style="font-size:0.8rem;color:var(--muted);">Word (.docx) o PDF</div>
-              <input type="file" id="file-ud-existente" accept=".pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain" style="display:none" onchange="procesarUDExistente(this.files[0])">
+              <input type="file" id="file-ud-existente" accept=".pdf,.docx,.doc,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,text/plain" style="display:none" onchange="procesarUDExistente(this.files[0])">
             </div>
             <div id="ud-archivo-ok" style="display:none; margin-top:0.5rem; font-size:0.8rem; color:var(--success);"></div>
             <div class="loading" id="loading-ud-archivo"><div class="spinner"></div>Procesando...</div>
@@ -6046,9 +6046,30 @@ function handleDrop(e) {
   if (file) procesarArchivoTema(file);
 }
 
+const MSG_DOC_ANTIGUO = 'El formato .doc (Word antiguo) no se puede leer. Ábrelo en Word o en Drive y guárdalo como .docx (o como PDF).';
+
+// ── Detección de tipo de archivo por contenido (Drive/Android a veces no da extensión) ──
+async function detectarTipoArchivo(file) {
+  try {
+    const head = new Uint8Array(await file.slice(0, 8).arrayBuffer());
+    const hex = Array.from(head).map(b => b.toString(16).padStart(2, '0')).join('');
+    if (hex.startsWith('25504446')) return 'pdf';
+    if (hex.startsWith('504b0304')) return 'docx';
+    if (hex.startsWith('d0cf11e0')) return 'doc';
+  } catch (e) {}
+  const n = (file.name || '').toLowerCase();
+  const t = (file.type || '').toLowerCase();
+  if (n.endsWith('.pdf') || t === 'application/pdf') return 'pdf';
+  if (n.endsWith('.docx') || t.includes('wordprocessingml')) return 'docx';
+  if (n.endsWith('.doc') || t === 'application/msword') return 'doc';
+  if (n.endsWith('.txt') || t.startsWith('text/')) return 'txt';
+  const m = n.match(/\.([a-z0-9]{1,5})$/);
+  return m ? 'otro' : 'txt';
+}
+
 async function procesarArchivoTema(file) {
   if (!file) return;
-  const ext = file.name.split('.').pop().toLowerCase();
+  const ext = await detectarTipoArchivo(file);
   if (!['pdf','docx','doc','txt'].includes(ext)) {
     alert('Formato no admitido. Usa .docx, .pdf o .txt');
     return;
@@ -6068,7 +6089,7 @@ async function procesarArchivoTema(file) {
       if (!texto || texto.length < 20) throw new Error('No se pudo extraer texto del .docx.');
       window._temaPropio = texto.slice(0, 60000);
     } else if (ext === 'doc') {
-      throw new Error('Formato .doc no soportado. Guarda como .docx.');
+      throw new Error(MSG_DOC_ANTIGUO);
     } else if (ext === 'pdf') {
       const base64 = await fileToBase64(file);
       const data = await fetchProxy({ model: 'claude-sonnet-4-6', max_tokens: 16000,
@@ -6255,6 +6276,9 @@ function verEsquema() {
 async function cargarDesarrolloDocx(input) {
   const file = input.files[0];
   if (!file) return;
+  const tipoDocx = await detectarTipoArchivo(file);
+  if (tipoDocx === 'doc') { alert(MSG_DOC_ANTIGUO); input.value = ''; return; }
+  if (tipoDocx !== 'docx') { alert('Aquí solo se admite Word (.docx).'); input.value = ''; return; }
   document.getElementById('desarrollo-docx-nombre').textContent = file.name;
   try {
     const arrayBuffer = await file.arrayBuffer();
@@ -6757,7 +6781,7 @@ async function procesarProgExistente(file) {
   if (!file) return;
   document.getElementById('loading-prog-archivo').classList.add('visible');
   try {
-    const ext = file.name.split('.').pop().toLowerCase();
+    const ext = await detectarTipoArchivo(file);
     let texto = '';
     if (ext === 'docx') {
       const ab = await file.arrayBuffer();
@@ -6773,7 +6797,7 @@ async function procesarProgExistente(file) {
           { type: 'text', text: 'Extrae todo el texto.' }
         ]}]});
       texto = data.content?.[0]?.text || '';
-    } else throw new Error('Usa .docx, .txt o .pdf.');
+    } else throw new Error(ext === 'doc' ? MSG_DOC_ANTIGUO : 'Usa .docx, .txt o .pdf.');
     if (!texto.trim()) throw new Error('No se pudo extraer texto.');
     const puntoSel = document.getElementById('prog-punto-selector');
     const puntoIdx = puntoSel && puntoSel.value !== '' ? parseInt(puntoSel.value) : NaN;
@@ -7122,19 +7146,30 @@ async function procesarUDExistente(file) {
   if (!file) return;
   document.getElementById('loading-ud-archivo').classList.add('visible');
   try {
-    const base64 = await fileToBase64(file);
-    const media = file.name.endsWith('.pdf') ? 'application/pdf'
-      : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-    const resp = await fetch('https://oposita-lengua-proxy.juanjosealvareztorres.workers.dev', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 8000,
-        messages: [{ role: 'user', content: [
-          { type: 'document', source: { type: 'base64', media_type: media, data: base64 } },
-          { type: 'text', text: 'Extrae todo el texto de este documento. Solo el texto.' }
-        ]}]})
-    });
-    const _rt = await resp.text(); let data; try { data = JSON.parse(_rt); } catch(e) { throw new Error('Error de conexión.'); }
-    udTextoExistente = (data.content?.[0]?.text || '').slice(0, 20000);
+    const tipoUD = await detectarTipoArchivo(file);
+    let textoUD = '';
+    if (tipoUD === 'doc') throw new Error(MSG_DOC_ANTIGUO);
+    if (tipoUD === 'docx') {
+      const ab = await file.arrayBuffer();
+      const r = await mammoth.extractRawText({ arrayBuffer: ab });
+      textoUD = r.value.trim();
+    } else if (tipoUD === 'txt') {
+      textoUD = await file.text();
+    } else {
+      const base64 = await fileToBase64(file);
+      const resp = await fetch('https://oposita-lengua-proxy.juanjosealvareztorres.workers.dev', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 8000,
+          messages: [{ role: 'user', content: [
+            { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: base64 } },
+            { type: 'text', text: 'Extrae todo el texto de este documento. Solo el texto.' }
+          ]}]})
+      });
+      const _rt = await resp.text(); let data; try { data = JSON.parse(_rt); } catch(e) { throw new Error('Error de conexión.'); }
+      textoUD = data.content?.[0]?.text || '';
+    }
+    if (!textoUD.trim()) throw new Error('No se pudo extraer texto.');
+    udTextoExistente = textoUD.slice(0, 20000);
     document.getElementById('ud-archivo-ok').textContent = '✓ ' + file.name + ' cargado';
     document.getElementById('ud-archivo-ok').style.display = 'block';
   } catch(e) { alert('Error: ' + e.message); }
@@ -10997,6 +11032,9 @@ function reconToggleTimer() {
 async function cargarReconDocx(input) {
   const file = input.files[0];
   if (!file) return;
+  const tipoDocx = await detectarTipoArchivo(file);
+  if (tipoDocx === 'doc') { alert(MSG_DOC_ANTIGUO); input.value = ''; return; }
+  if (tipoDocx !== 'docx') { alert('Aquí solo se admite Word (.docx).'); input.value = ''; return; }
   document.getElementById('recon-docx-nombre').textContent = file.name;
   try {
     const arrayBuffer = await file.arrayBuffer();
@@ -11207,11 +11245,13 @@ async function cargarTemasSocratico(file) {
 
   try {
     let texto = '';
-    if (file.name.endsWith('.docx') || file.name.endsWith('.doc')) {
+    const tipoArch = await detectarTipoArchivo(file);
+    if (tipoArch === 'doc') throw new Error(MSG_DOC_ANTIGUO);
+    if (tipoArch === 'docx') {
       const arrayBuffer = await file.arrayBuffer();
       const result = await mammoth.extractRawText({ arrayBuffer });
       texto = result.value.trim();
-    } else if (file.name.endsWith('.pdf')) {
+    } else if (tipoArch === 'pdf') {
       // For PDF: read as base64 and send to Claude for extraction
       const base64 = await new Promise((res, rej) => {
         const reader = new FileReader();
@@ -11558,11 +11598,13 @@ async function cargarTemasTarjetas(file) {
   nombre.style.color = 'var(--muted)';
   try {
     let texto = '';
-    if (file.name.match(/\.docx?$/i)) {
+    const tipoArch = await detectarTipoArchivo(file);
+    if (tipoArch === 'doc') throw new Error(MSG_DOC_ANTIGUO);
+    if (tipoArch === 'docx') {
       const arrayBuffer = await file.arrayBuffer();
       const result = await mammoth.extractRawText({ arrayBuffer });
       texto = result.value.trim();
-    } else if (file.name.match(/\.pdf$/i)) {
+    } else if (tipoArch === 'pdf') {
       const base64 = await new Promise((res, rej) => {
         const reader = new FileReader();
         reader.onload = () => res(reader.result.split(',')[1]);
@@ -12954,11 +12996,13 @@ async function cargarTemasTest(file) {
   nombre.style.color = 'var(--muted)';
   try {
     let texto = '';
-    if (file.name.match(/\.docx?$/i)) {
+    const tipoArch = await detectarTipoArchivo(file);
+    if (tipoArch === 'doc') throw new Error(MSG_DOC_ANTIGUO);
+    if (tipoArch === 'docx') {
       const arrayBuffer = await file.arrayBuffer();
       const result = await mammoth.extractRawText({ arrayBuffer });
       texto = result.value.trim();
-    } else if (file.name.match(/\.pdf$/i)) {
+    } else if (tipoArch === 'pdf') {
       const base64 = await new Promise((res, rej) => {
         const reader = new FileReader();
         reader.onload = () => res(reader.result.split(',')[1]);
@@ -13345,7 +13389,9 @@ async function cargarDefensaProgDoc(file) {
   document.getElementById('loading-defensa-doc-txt').textContent = 'Leyendo ' + file.name + '...';
   try {
     let texto = '';
-    if (file.name.match(/\.docx?$/i)) {
+    const tipoArch = await detectarTipoArchivo(file);
+    if (tipoArch === 'doc') throw new Error(MSG_DOC_ANTIGUO);
+    if (tipoArch === 'docx') {
       const ab = await file.arrayBuffer();
       const result = await mammoth.extractRawText({ arrayBuffer: ab });
       texto = result.value.trim();
@@ -13411,7 +13457,9 @@ async function cargarDefensaSADoc(file) {
   document.getElementById('loading-defensa-sa-doc').classList.add('visible');
   try {
     let texto = '';
-    if (file.name.match(/\.docx?$/i)) {
+    const tipoArch = await detectarTipoArchivo(file);
+    if (tipoArch === 'doc') throw new Error(MSG_DOC_ANTIGUO);
+    if (tipoArch === 'docx') {
       const ab = await file.arrayBuffer();
       const result = await mammoth.extractRawText({ arrayBuffer: ab });
       texto = result.value.trim();
