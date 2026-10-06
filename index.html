@@ -635,7 +635,7 @@ body.is-app header {
             <div style="font-size:1.5rem; margin-bottom:0.5rem;">📄</div>
             <div style="font-size:0.85rem; color:var(--muted);">Arrastra aquí tu tema o <span style="color:var(--accent); font-weight:500;">haz clic para seleccionar</span></div>
             <div style="font-size:0.75rem; color:var(--muted); margin-top:0.3rem;">PDF, Word (.docx) o texto plano (.txt)</div>
-            <input type="file" id="file-tema" accept=".pdf,.docx,.doc,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,text/plain" style="display:none" onchange="procesarArchivoTema(this.files[0])">
+            <input type="file" id="file-tema" accept=".pdf,.docx,.doc,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,text/plain,application/vnd.google-apps.document" style="display:none" onchange="procesarArchivoTema(this.files[0])">
           </div>
           <div id="archivo-cargado" style="display:none; margin-top:0.75rem;" class="info-box">
             <span id="archivo-nombre" style="color:var(--success); font-weight:500;"></span>
@@ -710,7 +710,7 @@ body.is-app header {
             <label for="desarrollo-docx-upload" class="btn btn-ghost" style="cursor:pointer; padding:0.4rem 0.9rem; font-size:0.78rem; margin:0;">
               📄 Subir Word (.docx)
             </label>
-            <input type="file" id="desarrollo-docx-upload" accept=".docx,.doc,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword" style="display:none;" onchange="cargarDesarrolloDocx(this)">
+            <input type="file" id="desarrollo-docx-upload" accept=".docx,.doc,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,application/vnd.google-apps.document" style="display:none;" onchange="cargarDesarrolloDocx(this)">
             <span id="desarrollo-docx-nombre" style="font-size:0.75rem; color:var(--muted);"></span>
           </div>
           <textarea id="desarrollo-text" placeholder="Escribe aquí tu desarrollo del tema, o súbelo desde un archivo Word (.docx). Incluye introducción, epígrafes, contenido académico y conclusión..." style="min-height: 320px;"></textarea>
@@ -767,7 +767,7 @@ body.is-app header {
             <div style="font-size:1.5rem; margin-bottom:0.4rem;">📄</div>
             <div style="font-size:0.82rem; color:var(--muted);">Arrastra aquí tu tema o <span style="color:var(--accent); font-weight:500;">haz clic para seleccionar</span></div>
             <div style="font-size:0.75rem; color:var(--muted); margin-top:0.3rem;">PDF, DOCX, DOC</div>
-            <input type="file" id="socratico-file" accept=".pdf,.docx,.doc,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword" style="display:none" onchange="cargarTemasSocratico(this.files[0])">
+            <input type="file" id="socratico-file" accept=".pdf,.docx,.doc,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,application/vnd.google-apps.document" style="display:none" onchange="cargarTemasSocratico(this.files[0])">
           </div>
           <div id="socratico-archivo-nombre" style="display:none; font-size:0.82rem; color:var(--success); margin-top:0.5rem; padding:0.5rem; background:var(--cream); border-radius:3px;"></div>
         </div>
@@ -870,7 +870,7 @@ body.is-app header {
             <div style="font-size:1.5rem; margin-bottom:0.4rem;">📄</div>
             <div style="font-size:0.82rem; color:var(--muted);">Arrastra aquí tu tema o <span style="color:var(--accent); font-weight:500;">haz clic para seleccionar</span></div>
             <div style="font-size:0.75rem; color:var(--muted); margin-top:0.3rem;">PDF, DOCX, DOC</div>
-            <input type="file" id="tarjetas-file" accept=".pdf,.docx,.doc,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword" style="display:none" onchange="cargarTemasTarjetas(this.files[0])">
+            <input type="file" id="tarjetas-file" accept=".pdf,.docx,.doc,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,application/vnd.google-apps.document" style="display:none" onchange="cargarTemasTarjetas(this.files[0])">
           </div>
           <div id="tarjetas-archivo-nombre" style="display:none; font-size:0.82rem; color:var(--success); margin-top:0.5rem; padding:0.5rem; background:var(--cream); border-radius:3px;"></div>
         </div>
@@ -1003,7 +1003,7 @@ body.is-app header {
             <div style="font-size:1.5rem; margin-bottom:0.4rem;">📄</div>
             <div style="font-size:0.82rem; color:var(--muted);">Arrastra tu tema o <span style="color:var(--accent); font-weight:500;">haz clic para seleccionar</span></div>
             <div style="font-size:0.75rem; color:var(--muted); margin-top:0.3rem;">PDF, DOCX, DOC</div>
-            <input type="file" id="test-file" accept=".pdf,.docx,.doc,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword" style="display:none" onchange="cargarTemasTest(this.files[0])">
+            <input type="file" id="test-file" accept=".pdf,.docx,.doc,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,application/vnd.google-apps.document" style="display:none" onchange="cargarTemasTest(this.files[0])">
           </div>
           <div id="test-archivo-nombre" style="display:none; font-size:0.82rem; color:var(--success); margin-top:0.5rem; padding:0.5rem; background:var(--cream); border-radius:3px;"></div>
         </div>
@@ -1113,7 +1113,7 @@ body.is-app header {
 
         <div style="margin-top:0.75rem;">
           <button class="btn btn-secondary" onclick="document.getElementById('recon-docx-upload').click()">📄 Subir Word del tema real (.docx)</button>
-          <input type="file" id="recon-docx-upload" accept=".docx,.doc,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword" style="display:none;" onchange="cargarReconDocx(this)">
+          <input type="file" id="recon-docx-upload" accept=".docx,.doc,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,application/vnd.google-apps.document" style="display:none;" onchange="cargarReconDocx(this)">
           <span id="recon-docx-nombre" style="font-size:0.78rem; color:var(--muted); margin-left:0.5rem;"></span>
         </div>
 
@@ -1837,7 +1837,7 @@ body.is-app header {
                 <div style="font-size:1.5rem; margin-bottom:0.5rem;">📄</div>
                 <div style="font-size:0.83rem; color:var(--muted);">Arrastra o <span style="color:var(--accent); font-weight:500;">haz clic para seleccionar</span></div>
                 <div style="font-size:0.75rem; color:var(--muted); margin-top:0.3rem;">PDF o Word (.docx)</div>
-                <input type="file" id="file-prog" accept=".pdf,.docx,.doc,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,text/plain" style="display:none" onchange="procesarProgExistente(this.files[0])">
+                <input type="file" id="file-prog" accept=".pdf,.docx,.doc,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,text/plain,application/vnd.google-apps.document" style="display:none" onchange="procesarProgExistente(this.files[0])">
               </div>
               <div id="prog-archivo-ok" style="display:none; margin-top:0.5rem;" class="info-box">
                 <span id="prog-archivo-nombre" style="color:var(--success); font-weight:500;"></span>
@@ -2012,7 +2012,7 @@ body.is-app header {
             <label for="file-defensa-prog-doc" class="btn btn-ghost" style="cursor:pointer; padding:0.4rem 0.9rem; font-size:0.78rem; margin:0;">
               📎 Subir mi defensa (Word o PDF)
             </label>
-            <input type="file" id="file-defensa-prog-doc" accept=".pdf,.docx,.doc,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword" style="display:none" onchange="cargarDefensaProgDoc(this.files[0])">
+            <input type="file" id="file-defensa-prog-doc" accept=".pdf,.docx,.doc,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,application/vnd.google-apps.document" style="display:none" onchange="cargarDefensaProgDoc(this.files[0])">
             <span id="defensa-prog-doc-nombre" style="font-size:0.75rem; color:var(--muted);"></span>
           </div>
           <div id="defensa-prog-doc-ok" style="display:none; margin-top:0.75rem;">
@@ -2162,7 +2162,7 @@ body.is-app header {
             <div id="ud-upload-zona" style="border:2px dashed var(--border); border-radius:4px; padding:1rem; text-align:center; cursor:pointer;" id="ud-drop-zone" onclick="document.getElementById('file-ud-existente').click()">
               <div style="font-size:1.2rem; margin-bottom:0.3rem;">📄</div>
               <div style="font-size:0.8rem;color:var(--muted);">Word (.docx) o PDF</div>
-              <input type="file" id="file-ud-existente" accept=".pdf,.docx,.doc,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,text/plain" style="display:none" onchange="procesarUDExistente(this.files[0])">
+              <input type="file" id="file-ud-existente" accept=".pdf,.docx,.doc,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,text/plain,application/vnd.google-apps.document" style="display:none" onchange="procesarUDExistente(this.files[0])">
             </div>
             <div id="ud-archivo-ok" style="display:none; margin-top:0.5rem; font-size:0.8rem; color:var(--success);"></div>
             <div class="loading" id="loading-ud-archivo"><div class="spinner"></div>Procesando...</div>
@@ -2306,7 +2306,7 @@ body.is-app header {
               <label for="file-defensa-sa-doc" class="btn btn-ghost" style="cursor:pointer; padding:0.4rem 0.9rem; font-size:0.78rem; margin:0;">
                 📎 Subir mi defensa (Word o PDF)
               </label>
-              <input type="file" id="file-defensa-sa-doc" accept=".pdf,.docx,.doc,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword" style="display:none" onchange="cargarDefensaSADoc(this.files[0])">
+              <input type="file" id="file-defensa-sa-doc" accept=".pdf,.docx,.doc,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,application/vnd.google-apps.document" style="display:none" onchange="cargarDefensaSADoc(this.files[0])">
               <span id="defensa-sa-doc-nombre" style="font-size:0.75rem; color:var(--muted);"></span>
             </div>
             <div id="defensa-sa-doc-ok" style="display:none; margin-top:0.75rem;">
