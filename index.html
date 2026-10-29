@@ -8046,6 +8046,49 @@ TERMINOLOGÍA NGLE OBLIGATORIA (usar siempre estos términos):
   — Verbo auxiliar + auxiliado (en perífrasis)
 `;
 
+const REGLAS_NGLE_APUNTES = `
+══ REGLAS DE LA CASA (apuntes NGLE del opositor; PREVALECEN sobre cualquier otra indicación) ══
+
+A. NEXO Y FUNCIÓN
+ 1. Subordinada sustantiva con "que"/"si": el nexo NO desempeña función. Se indica la función de la subordinada entera (sujeto, CD, CR, CN, atributo...).
+ 2. Pronombre/adverbio RELATIVO = nexo + función dentro de su proposición (que→CD/Suj; donde, cuando, como→CC). Hay que decir las dos cosas.
+ 3. Interrogativas indirectas totales (si) y parciales (qué, quién, cuándo, cómo, dónde...): son sustantivas; en las parciales el interrogativo tiene función propia dentro de la subordinada.
+
+B. DONDE / CUANDO / COMO / CUANTO → RELATIVAS, NO ADVERBIALES
+ 4. "cuando los niños dejan de soñar", "donde vive", "como dijiste": proposición de relativo (libre si no hay antecedente; con antecedente si lo hay: "el día en que / cuando"). El adverbio relativo es nexo + CC (tiempo/lugar/modo) dentro de ella. NO etiquetar como "subordinada adverbial temporal/locativa/modal".
+ 5. Subordinadas adverbiales propiamente dichas solo cuando las introduce una conjunción/locución conjuntiva (mientras, apenas, en cuanto, a medida que, nada más que, antes de que, después de que, hasta que, desde que, porque, para que, aunque, si, como si...). En ellas el nexo NO lleva función; la proposición entera es CC (tiempo, causa, finalidad, concesión, condición...).
+ 6. "mientras": conjunción → solo nexo; la proposición es OSAdv con función de CCT.
+ 7. "al + infinitivo", "de + infinitivo", gerundio y participio absolutos: construcciones no personales con valor circunstancial (temporal, condicional, causal, modal...). Indicar el valor y razonarlo.
+
+C. COMPARATIVAS Y CONSECUTIVAS
+ 8. tan/tanto/tal ... que (consecutiva intensiva) y más/menos/tan ... que/como (comparativas): construcciones cuantitativas (cuantificador + complemento con "que"/"como"). Describir el cuantificador y su complemento; no limitarse a "subordinada adverbial consecutiva/comparativa". †(admitir ambas etiquetas si el opositor razona)
+ 9. Comparativas con elipsis o valor hipotético ("que si nos ocupásemos en..."): señalar el verbo/elementos elididos y el valor condicional-hipotético.
+
+D. SE (orden de decisión)
+ 10. ¿Se puede sustituir por "sí mismo/a / uno a otro"? → reflexivo / recíproco (CD o CI; en recíprocos, CD/CI recíproco).
+ 11. ¿Es variante de "le/les" ante lo/la/los/las ("se lo dije")? → CI.
+ 12. ¿Verbo siempre pronominal (arrepentirse, quejarse, atreverse) o con "se" cuyo valor es aspectual/intensivo (irse, dormirse, comerse)? → "se" sin función sintáctica.
+ 13. ¿Verbo transitivo en 3ª, "se" + SN concordante con el verbo, sin agente? → PASIVA REFLEJA: el SN es sujeto paciente y "se" no tiene función.
+ 14. ¿"se" + verbo en 3ª sg., sin sujeto, con CD de persona ("Se vio a los niños") o intransitivo? → impersonal refleja.
+ 15. La lista "7 valores" del bloque base está mal contada; usar estos cinco (reflexivo/recíproco, CI "se lo", pronominal/sin función, pasiva refleja, impersonal).
+ 16. "Llaman a la puerta", "cuando estudias, apruebas" NO son oraciones impersonales: tienen sujeto tácito (indeterminado/genérico). †
+
+E. COMPLEMENTOS
+ 17. Complemento indirecto: "a" (no "para"). "para + SN" benefactivo = CC de finalidad/destinatario, salvo que lo exija el verbo y sea duplicable por "le". †
+ 18. Régimen vs CC: el verbo exige la preposición y no admite cambiarla (soñar CON, confiar EN, depender DE) → complemento de régimen (también la subordinada con preposición: "dudo DE que...").
+ 19. Atributo (verbo copulativo, conmutable por "lo") vs predicativo (verbo no copulativo, concuerda con sujeto o CD, es opcional). "Quizás/tal vez/acaso": modificador oracional epistémico (no CC). †
+ 20. Una locución o un sintagma adverbial ("demasiado tarde") es grupo adverbial: no SN.
+ 21. Perífrasis: auxiliar + auxiliado; el sujeto del auxiliar y del auxiliado coinciden. "empezar a + infinitivo" = incoativa; "dejar de" = terminativa; "ir a" = ingresiva/prospectiva; "venir a" = aproximativa. No contar "haber + participio" como perífrasis.
+ 22. Si el opositor copió mal la oración, señalarlo como incidencia aparte; corregir su análisis coherente con lo copiado y puntuar con benevolencia el error de copia.
+
+F. MÉTODO DE CORRECCIÓN
+ 23. Antes de corregir, elabora internamente el ANÁLISIS DE REFERENCIA de la oración aplicando A–E y revisa que no contradiga ninguna regla. Si una etiqueta es discutible entre manuales, di "† admisible también: …" en vez de darla por error.
+ 24. Corrige primero la estructura global (oración principal, coordinación/yuxtaposición, subordinadas y su función), luego complementos, luego perífrasis/se, luego terminología.
+ 25. Pesa los errores: confundir la función de una subordinada o el tipo de proposición pesa más que un lapsus de etiqueta (p. ej. "nexo" por "núcleo").
+ 26. La puntuación sobre 1,5 se desglosa en: estructura y subordinadas (0,6) · funciones de complementos (0,4) · perífrasis/se/elipsis/valores (0,2) · redacción de relaciones sintácticas, semánticas y pragmáticas (0,3). †(reparto orientativo, no oficial)
+ 27. Cierra con una línea de qué correspondería en el criterio 1.5 (terminología, 0,5): términos NGLE bien/mal empleados.
+`;
+
 
 const BASE_METRICA = `
 ══════════════════════════════════════════════════════════════
@@ -9938,6 +9981,7 @@ Evalúas con los criterios oficiales del documento CS-3.2, siendo riguroso pero 
 
 BASES DE REFERENCIA PARA EVALUAR CON PRECISIÓN:
 SINTAXIS Y NGLE: ${BASE_NGLE_SINTAXIS}
+${REGLAS_NGLE_APUNTES}
 MÉTRICA ESPAÑOLA: ${BASE_METRICA}
 TIPOLOGÍA TEXTUAL Y NIVELES DE ANÁLISIS: ${BASE_TIPOLOGIA_TEXTUAL}
 
@@ -10697,7 +10741,7 @@ async function iniciarSintactico() {
       } else {
 
       const resp = await callClaude(
-        `Eres experto en sintaxis española (NGLE/RAE) y en las oposiciones de Lengua Castellana y Literatura de Extremadura. Generas oraciones para práctica de análisis sintáctico redactado. Base NGLE: ${BASE_NGLE_SINTAXIS.slice(0,1500)}. Devuelves SOLO JSON sin markdown.`,
+        `Eres experto en sintaxis española (NGLE/RAE) y en las oposiciones de Lengua Castellana y Literatura de Extremadura. Generas oraciones para práctica de análisis sintáctico redactado. Base NGLE: ${REGLAS_NGLE_APUNTES}. Devuelves SOLO JSON sin markdown.`,
         `Genera ${cantidad} oración${cantidad > 1 ? 'es' : ''} para práctica de análisis sintáctico redactado al nivel de las convocatorias de Extremadura 2021-2025.
 
 TIPO DE ESTRUCTURA SOLICITADA: ${tipoTexto}
@@ -10845,6 +10889,8 @@ Puntuación máxima: 1,5 puntos sobre el total de la Prueba 1A.
 ══ BASE NGLE DE REFERENCIA ══
 ${BASE_NGLE_SINTAXIS}
 
+${REGLAS_NGLE_APUNTES}
+
 ══ REFERENCIA DE CONVOCATORIAS REALES (2021-2025) ══
 Las oraciones de Extremadura han tenido estas estructuras: coordinadas adversativas con subordinadas adjetivas encadenadas (Poniatowska, 2021), comparativas con interrogativa directa y relativa (Carrión, 2021), perífrasis modal + subordinada adjetiva (Vicent, 2023), exclamativa con sustantiva de CD (Landero, 2023), atributiva con complementos del nombre encadenados y perífrasis (Martín Gaite, 2025), gerundio absoluto con valor condicional + predicativo (Mayorga, 2025).`;
 
@@ -10949,7 +10995,9 @@ async function verSolucionSint() {
       `Eres experto en sintaxis española y redactas análisis morfosintácticos modelo para oposiciones de Lengua Castellana y Literatura en Extremadura (Convocatoria 2025). Usas EXCLUSIVAMENTE la terminología de la NGLE (RAE/ASALE). El análisis debe responder al criterio 1.3 de la Prueba 1A: "Describe los principales procedimientos morfosintácticos, determina las relaciones sintácticas, semánticas y pragmáticas" (1,5 puntos).
 
 BASE NGLE COMPLETA:
-${BASE_NGLE_SINTAXIS}`,
+${BASE_NGLE_SINTAXIS}
+
+${REGLAS_NGLE_APUNTES}`,
       `Redacta el ANÁLISIS SINTÁCTICO MODELO de las siguientes oraciones, exactamente como lo haría un opositor experto que va a sacar la máxima puntuación en el criterio 1.3.
 
 ${oracionsTexto}
@@ -13585,10 +13633,10 @@ function toggleTimerSoloLit() {
 // Entregar bloque literario solo y recibir valoración
 async function entregarSoloLiterario() {
   if (!soloLitData) { alert('No hay poema cargado.'); return; }
-  const respA = document.getElementById('solo-lit-resp-A')?.value?.trim() || '';
-  const respB = document.getElementById('solo-lit-resp-B')?.value?.trim() || '';
-  const respC = document.getElementById('solo-lit-resp-C')?.value?.trim() || '';
-  const respD = document.getElementById('solo-lit-resp-D')?.value?.trim() || '';
+  const respA = document.getElementById('sl-A')?.value?.trim() || '';
+  const respB = document.getElementById('sl-B')?.value?.trim() || '';
+  const respC = document.getElementById('sl-C')?.value?.trim() || '';
+  const respD = document.getElementById('sl-D')?.value?.trim() || '';
   if (!respA && !respB && !respC && !respD) {
     alert('Escribe al menos una respuesta antes de entregar.');
     return;
